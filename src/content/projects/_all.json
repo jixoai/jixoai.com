@@ -1,0 +1,41 @@
+[
+  {
+    "name": "skill-creator",
+    "description": null,
+    "url": "https://github.com/jixoai/skill-creator",
+    "homepage": null,
+    "stars": 1,
+    "forks": 0,
+    "language": "TypeScript",
+    "topics": [],
+    "archived": false,
+    "createdAt": "2025-10-17T12:50:50Z",
+    "updatedAt": "2025-11-25T04:15:57Z"
+  },
+  {
+    "name": "ccai",
+    "description": null,
+    "url": "https://github.com/jixoai/ccai",
+    "homepage": null,
+    "stars": 1,
+    "forks": 0,
+    "language": "TypeScript",
+    "topics": [],
+    "archived": false,
+    "createdAt": "2025-10-28T14:11:16Z",
+    "updatedAt": "2025-11-25T04:16:41Z"
+  },
+  {
+    "name": "ccski",
+    "description": null,
+    "url": "https://github.com/jixoai/ccski",
+    "homepage": null,
+    "stars": 0,
+    "forks": 0,
+    "language": "TypeScript",
+    "topics": [],
+    "archived": false,
+    "createdAt": "2025-11-21T08:03:36Z",
+    "updatedAt": "2025-11-25T04:17:36Z"
+  }
+]

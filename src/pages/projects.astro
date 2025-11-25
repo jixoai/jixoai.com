@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/projects/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection('projects');
+const sortedProjects = projects.sort((a, b) => b.data.stars - a.data.stars);
+---
+
+<BaseLayout title="Projects - Jixo AI">
+  <section class="container mx-auto px-4 py-16">
+    <h1 class="text-4xl font-bold mb-8">Our Projects</h1>
+    <p class="text-xl text-muted-foreground mb-12">
+      Explore our open source projects on GitHub
+    </p>
+
+    {sortedProjects.length === 0 ? (
+      <div class="text-center py-16">
+        <p class="text-muted-foreground">
+          No projects found. Run <code class="bg-secondary px-2 py-1 rounded">pnpm run fetch:projects</code> to fetch projects from GitHub.
+        </p>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedProjects.map((project) => (
+          <ProjectCard project={project.data} />
+        ))}
+      </div>
+    )}
+  </section>
+</BaseLayout>

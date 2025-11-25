@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { groupDocsByPath, formatGroupName } from '../../utils/docs.js';
+
+interface Props {
+  docs: CollectionEntry<'docs'>[];
+  currentSlug: string;
+}
+
+const { docs, currentSlug } = Astro.props;
+const groups = groupDocsByPath(docs);
+---
+
+<aside class="w-64 flex-shrink-0 border-r pr-6 sticky top-4 h-[calc(100vh-4rem)] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[color-mix(in_srgb,currentColor,transparent)]">
+  <nav class="space-y-6">
+    {groups.map((group) => (
+      <div>
+        <h3 class="font-semibold mb-2 text-sm uppercase text-muted-foreground">
+          {formatGroupName(group.name)}
+        </h3>
+        <ul class="space-y-1">
+          {group.docs.map((doc) => {
+            const isActive = doc.slug === currentSlug;
+            const fileName = doc.slug.split('/').pop() || doc.slug;
+            const title = doc.data.title || fileName;
+
+            return (
+              <li>
+                <a
+                  href={`/docs/${doc.slug}`}
+                  class={`block px-3 py-1.5 rounded text-sm transition-colors ${
+                    isActive
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                  }`}
+                >
+                  {title}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))}
+  </nav>
+</aside>

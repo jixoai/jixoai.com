@@ -1,0 +1,36 @@
+---
+interface Props {
+  prev?: { slug: string; title: string };
+  next?: { slug: string; title: string };
+}
+
+const { prev, next } = Astro.props;
+---
+
+{(prev || next) && (
+  <nav class="flex justify-between items-center gap-4 mt-12 pt-8 border-t">
+    {prev ? (
+      <a
+        href={`/docs/${prev.slug}`}
+        class="flex flex-col items-start gap-1 px-4 py-3 rounded-lg border hover:bg-secondary transition-colors flex-1"
+      >
+        <span class="text-sm text-muted-foreground">← Previous</span>
+        <span class="font-medium">{prev.title}</span>
+      </a>
+    ) : (
+      <div class="flex-1"></div>
+    )}
+
+    {next ? (
+      <a
+        href={`/docs/${next.slug}`}
+        class="flex flex-col items-end gap-1 px-4 py-3 rounded-lg border hover:bg-secondary transition-colors flex-1"
+      >
+        <span class="text-sm text-muted-foreground">Next →</span>
+        <span class="font-medium">{next.title}</span>
+      </a>
+    ) : (
+      <div class="flex-1"></div>
+    )}
+  </nav>
+)}
