@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Button } from '../../components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/card';
+import { Badge } from '../../components/ui/badge';
+import { BlurFade } from '../../components/magicui/blur-fade';
+import { Star, GitFork, ExternalLink, BookOpen } from 'lucide-react';
+import type { GitHubProject } from '../../types';
+import projectsData from '../../content/projects/_all.json';
+
+const projects = projectsData as GitHubProject[];
+
+// Sort projects by stars
+const sortedProjects = [...projects].sort((a, b) => b.stars - a.stars);
+---
+
+<BaseLayout title="Projects - Jixo AI">
+  <section class="container mx-auto px-4 py-16">
+    <div class="text-center mb-16">
+      <h1 class="text-4xl font-bold mb-4">Our Projects</h1>
+      <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+        Explore our open source contributions to the AI ecosystem.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sortedProjects.map((project, index) => (
+        <BlurFade delay={0.1 * index} inView client:load>
+          <Card className="h-full flex flex-col hover:border-primary/50 transition-colors">
+            <CardHeader>
+              <div class="flex justify-between items-start mb-4">
+                {project.logo ? (
+                  <img src={project.logo} alt={`${project.name} logo`} class="h-12 w-12 rounded-md object-contain bg-muted p-1" />
+                ) : (
+                  <div class="h-12 w-12 rounded-md bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
+                    {project.name.substring(0, 2).toUpperCase()}
+                  </div>
+                )}
+                <Badge variant="outline">{project.language || 'Unknown'}</Badge>
+              </div>
+              <CardTitle className="text-xl mb-2">{project.name}</CardTitle>
+              <CardDescription className="line-clamp-3">
+                {project.description || 'No description available.'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1">
+              <div class="flex flex-wrap gap-2 mb-4">
+                {project.topics.slice(0, 3).map(topic => (
+                  <Badge variant="secondary" className="text-xs">{topic}</Badge>
+                ))}
+              </div>
+              <div class="flex gap-4 text-sm text-muted-foreground">
+                <div class="flex items-center gap-1">
+                  <Star className="h-4 w-4" />
+                  <span>{project.stars}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <GitFork className="h-4 w-4" />
+                  <span>{project.forks}</span>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="gap-2">
+              <Button variant="default" className="flex-1 gap-2" asChild>
+                <a href={`/docs/${project.name}`}>
+                  <BookOpen className="h-4 w-4" /> Docs
+                </a>
+              </Button>
+              <Button variant="outline" size="icon" asChild>
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              </Button>
+            </CardFooter>
+          </Card>
+        </BlurFade>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

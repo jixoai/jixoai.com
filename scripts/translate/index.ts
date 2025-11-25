@@ -2,25 +2,24 @@
 
 import { OpenAI } from 'openai';
 import { readFile, writeFile, mkdir } from 'fs/promises';
-import { join, dirname, relative, sep } from 'path';
+import { dirname, join, relative, sep } from 'path';
 import { createHash } from 'crypto';
 import { languages, type Language, defaultLanguage } from '../../src/types/index.js';
+import { loadConfig } from '../config.js';
 import { I18nCacheManager } from './cache-manager.js';
 import { MarkdownFileScanner } from './file-scanner.js';
 import { I18nRulesResolver } from './rules-resolver.js';
 import { ContentTranslator } from './translator.js';
 import type { TranslationCache } from './types.js';
 
-const API_KEY = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || '';
-const API_BASE_URL = process.env.API_BASE_URL || 'https://api.deepseek.com';
+// Load config (this also loads .env.local)
+const config = loadConfig();
 
-const CONTENT_DIRS = [
-  join(process.cwd(), 'src', 'content', 'blog'),
-  join(process.cwd(), 'src', 'content', 'docs'),
-];
-
-const I18N_CACHE_FILE = join(process.cwd(), 'i18n.zip');
-const I18N_CACHE_DIR = join(process.cwd(), '.i18n-cache');
+const API_KEY = config.ai.apiKey;
+const API_BASE_URL = config.ai.baseUrl;
+const CONTENT_DIRS = config.paths.contentDirs;
+const I18N_CACHE_FILE = config.paths.i18nCacheFile;
+const I18N_CACHE_DIR = config.paths.i18nCacheDir;
 
 function md5(content: string): string {
   return createHash('md5').update(content).digest('hex');

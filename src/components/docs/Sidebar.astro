@@ -1,0 +1,32 @@
+---
+import { ScrollArea } from '../ui/scroll-area';
+
+interface Props {
+  project: string;
+  currentSlug: string;
+  sidebarItems: { title: string; href: string }[];
+}
+
+const { project, currentSlug, sidebarItems } = Astro.props;
+---
+
+<aside class="hidden lg:block w-64 shrink-0 sticky top-24 h-[calc(100vh-8rem)]">
+  <ScrollArea className="h-full pr-4">
+    <div class="space-y-4">
+      <div class="font-semibold text-lg mb-2 capitalize">{project}</div>
+      <div class="flex flex-col space-y-1">
+        {sidebarItems.map(item => (
+          <a
+            href={item.href}
+            class:list={[
+              "px-3 py-2 text-sm rounded-md transition-colors hover:bg-accent hover:text-accent-foreground block",
+              currentSlug === item.href ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground"
+            ]}
+          >
+            {item.title}
+          </a>
+        ))}
+      </div>
+    </div>
+  </ScrollArea>
+</aside>

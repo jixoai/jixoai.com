@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Privacy Policy - Jixo AI">
+  <section class="container mx-auto px-4 py-16 max-w-4xl">
+    <h1 class="text-4xl font-bold mb-8">Privacy Policy</h1>
+    <p class="text-muted-foreground mb-8">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+
+    <div class="prose prose-invert max-w-none">
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Introduction</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          Jixo AI ("we", "us", or "our") respects your privacy and is committed to protecting your personal data.
+          This privacy policy explains how we collect, use, and safeguard your information when you visit our website
+          or use our open source projects.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Information We Collect</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          We may collect the following types of information:
+        </p>
+        <ul class="list-disc list-inside text-muted-foreground space-y-2 mb-4">
+          <li><strong>Usage Data:</strong> Information about how you interact with our website, including pages visited, time spent, and navigation patterns.</li>
+          <li><strong>Technical Data:</strong> Browser type, device information, IP address, and operating system.</li>
+          <li><strong>Contact Data:</strong> Information you voluntarily provide when contacting us or contributing to our projects.</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">How We Use Your Information</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          We use the collected information for the following purposes:
+        </p>
+        <ul class="list-disc list-inside text-muted-foreground space-y-2 mb-4">
+          <li>To improve and maintain our website and services</li>
+          <li>To analyze usage patterns and optimize user experience</li>
+          <li>To respond to your inquiries and provide support</li>
+          <li>To communicate updates about our projects</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Data Security</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          We implement appropriate technical and organizational measures to protect your personal data against
+          unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over
+          the Internet is 100% secure, and we cannot guarantee absolute security.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Third-Party Services</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          Our website may contain links to third-party websites and services, including GitHub, Twitter, and Discord.
+          We are not responsible for the privacy practices of these third parties. We encourage you to review
+          their privacy policies before providing any personal information.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Cookies</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          We may use cookies and similar tracking technologies to enhance your browsing experience.
+          You can control cookie preferences through your browser settings.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Your Rights</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          Depending on your location, you may have the following rights regarding your personal data:
+        </p>
+        <ul class="list-disc list-inside text-muted-foreground space-y-2 mb-4">
+          <li>Right to access your personal data</li>
+          <li>Right to correct inaccurate data</li>
+          <li>Right to request deletion of your data</li>
+          <li>Right to restrict processing</li>
+          <li>Right to data portability</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Changes to This Policy</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          We may update this privacy policy from time to time. We will notify you of any changes by posting
+          the new privacy policy on this page and updating the "Last updated" date.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
+        <p class="text-muted-foreground leading-relaxed mb-4">
+          If you have any questions about this privacy policy or our data practices, please contact us through
+          our <a href="https://github.com/jixoai" class="text-primary hover:underline">GitHub organization</a>.
+        </p>
+      </section>
+    </div>
+  </section>
+</BaseLayout>

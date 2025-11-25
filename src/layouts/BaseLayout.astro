@@ -1,17 +1,22 @@
 ---
 import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
+import type { Language } from '../types';
 
 interface Props {
   title: string;
   description?: string;
-  lang?: string;
+  lang?: Language;
 }
 
 const { title, description = 'Jixo AI - Open Source AI Projects', lang = 'en' } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -19,30 +24,13 @@ const { title, description = 'Jixo AI - Open Source AI Projects', lang = 'en' } 
     <link rel="icon" type="image/jpeg" href="/logo.jpg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <ViewTransitions />
   </head>
-  <body class="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[color-mix(in_srgb,currentColor,transparent)]">
-    <header class="border-b">
-      <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="text-2xl font-bold">
-          <img src="/logo.jpg" alt="Jixo AI" class="h-10 inline-block mr-2" />
-          Jixo AI
-        </a>
-        <div class="flex gap-6">
-          <a href="/projects" class="hover:text-primary">Projects</a>
-          <a href="/blog" class="hover:text-primary">Blog</a>
-          <a href="/docs" class="hover:text-primary">Docs</a>
-        </div>
-      </nav>
-    </header>
-
-    <main>
+  <body class="min-h-screen bg-background font-sans antialiased scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[color-mix(in_srgb,currentColor,transparent)]">
+    <Header client:load currentLang={lang} currentPath={currentPath} />
+    <main class="flex-1 pt-16">
       <slot />
     </main>
-
-    <footer class="border-t mt-16">
-      <div class="container mx-auto px-4 py-8 text-center text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} Jixo AI. Open Source Projects.</p>
-      </div>
-    </footer>
+    <Footer />
   </body>
 </html>

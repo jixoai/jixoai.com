@@ -8,12 +8,12 @@ loadEnv({ path: join(process.cwd(), '.env') });
 
 export const ConfigSchema = z.object({
   github: z.object({
-    token: z.string().min(1, 'GitHub token is required'),
+    token: z.string().default(''),
     org: z.string().default('jixoai'),
   }),
   ai: z.object({
-    apiKey: z.string().min(1, 'AI API key is required'),
-    baseUrl: z.string().url().default('https://api.deepseek.com'),
+    apiKey: z.string().default(''),
+    baseUrl: z.string().default('https://api.deepseek.com'),
     model: z.string().default('deepseek-chat'),
   }),
   paths: z.object({

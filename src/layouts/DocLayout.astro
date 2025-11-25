@@ -1,72 +1,75 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import DocSidebar from '../components/markdown/DocSidebar.astro';
-import TableOfContents from '../components/markdown/TableOfContents.astro';
-import DocNavigation from '../components/markdown/DocNavigation.astro';
-import { getCollection } from 'astro:content';
-import { getDocNavigation } from '../utils/docs.js';
-import type { MarkdownHeading } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ScrollArea } from '../components/ui/scroll-area';
+import { Separator } from '../components/ui/separator';
+import { Button } from '../components/ui/button';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
+import Sidebar from '../components/docs/Sidebar.astro';
 
 interface Props {
   title: string;
-  description?: string;
-  slug: string;
-  headings?: MarkdownHeading[];
+  headings: { depth: number; slug: string; text: string }[];
+  currentSlug: string;
+  project: string;
 }
 
-const { title, description, slug, headings = [] } = Astro.props;
+const { title, headings, currentSlug, project } = Astro.props;
 
-const allDocs = await getCollection('docs');
-const navigation = getDocNavigation(allDocs, slug);
+// This would typically come from a content collection or prop
+// For now, we'll mock the sidebar structure or fetch it
+// In a real implementation, we'd generate this from the file structure
+const sidebarItems = [
+  { title: 'Introduction', href: `/docs/${project}/introduction` },
+  { title: 'Getting Started', href: `/docs/${project}/getting-started` },
+  { title: 'API Reference', href: `/docs/${project}/api` },
+];
+
 ---
 
-<BaseLayout title={title} description={description}>
-  <div class="container mx-auto px-4 py-8">
-    <div class="flex gap-8">
-      <DocSidebar docs={allDocs} currentSlug={slug} />
+<BaseLayout title={`${title} - Documentation`}>
+  <div class="container mx-auto px-4 flex gap-8 py-8">
+    {/* Sidebar */}
+    <Sidebar project={project} currentSlug={currentSlug} sidebarItems={sidebarItems} />
 
-      <article class="flex-1 min-w-0 prose prose-slate dark:prose-invert max-w-none">
-        <h1>{title}</h1>
-        {description && <p class="lead">{description}</p>}
-
+    {/* Main Content */}
+    <main class="flex-1 min-w-0">
+      <div class="prose prose-invert max-w-none">
+        <h1 class="text-4xl font-bold mb-8">{title}</h1>
         <slot />
-
-        <DocNavigation
-          prev={navigation.prev ? { slug: navigation.prev.slug, title: navigation.prev.data.title } : undefined}
-          next={navigation.next ? { slug: navigation.next.slug, title: navigation.next.data.title } : undefined}
-        />
-      </article>
-
-      <div class="w-64 flex-shrink-0">
-        <TableOfContents headings={headings} />
       </div>
-    </div>
+
+      <Separator className="my-10" />
+
+      <div class="flex justify-between">
+        <Button variant="ghost" className="gap-2">
+          <ChevronLeft className="h-4 w-4" /> Previous
+        </Button>
+        <Button variant="ghost" className="gap-2">
+          Next <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+    </main>
+
+    {/* Table of Contents */}
+    <aside class="hidden xl:block w-64 shrink-0 sticky top-24 h-[calc(100vh-8rem)]">
+      <div class="space-y-4">
+        <div class="font-semibold text-sm">On This Page</div>
+        <ScrollArea className="h-full">
+          <div class="flex flex-col space-y-2 text-sm">
+            {headings.map(heading => (
+              <a
+                href={`#${heading.slug}`}
+                class:list={[
+                  "text-muted-foreground hover:text-foreground transition-colors block",
+                  heading.depth === 3 && "pl-4"
+                ]}
+              >
+                {heading.text}
+              </a>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
+    </aside>
   </div>
 </BaseLayout>
-
-<style>
-  /* Custom prose styles */
-  :global(.prose) {
-    @apply text-foreground;
-  }
-
-  :global(.prose h1, .prose h2, .prose h3, .prose h4) {
-    @apply scroll-mt-4;
-  }
-
-  :global(.prose a) {
-    @apply text-primary hover:underline;
-  }
-
-  :global(.prose code) {
-    @apply bg-secondary px-1.5 py-0.5 rounded text-sm;
-  }
-
-  :global(.prose pre) {
-    @apply bg-secondary rounded-lg p-4;
-  }
-
-  :global(.prose pre code) {
-    @apply bg-transparent p-0;
-  }
-</style>

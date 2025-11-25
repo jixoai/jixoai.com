@@ -1,37 +1,190 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import { Meteors } from '../components/magicui/meteors';
+import { BlurFade } from '../components/magicui/blur-fade';
+import { Marquee } from '../components/magicui/marquee';
+import { ArrowRight, Star, GitFork, ExternalLink } from 'lucide-react';
+
+// Mock data for development - will be replaced by real data fetch
+const featuredProjects = [
+  {
+    name: 'jixoai.com',
+    description: 'The official website and documentation hub for Jixo AI projects.',
+    stars: 120,
+    forks: 45,
+    language: 'TypeScript',
+    url: 'https://github.com/jixoai/jixoai.com'
+  },
+  {
+    name: 'ccski',
+    description: 'A powerful AI-driven ski resort management system.',
+    stars: 89,
+    forks: 12,
+    language: 'Python',
+    url: 'https://github.com/jixoai/ccski'
+  },
+  {
+    name: 'agent-core',
+    description: 'Core framework for building autonomous AI agents.',
+    stars: 256,
+    forks: 67,
+    language: 'Rust',
+    url: 'https://github.com/jixoai/agent-core'
+  }
+];
+
+const latestNews = [
+  {
+    title: 'Announcing Jixo AI 2.0',
+    date: '2023-10-25',
+    excerpt: 'We are thrilled to announce the next generation of our AI platform...',
+    slug: 'announcing-jixo-ai-2-0'
+  },
+  {
+    title: 'Community Spotlight: October',
+    date: '2023-10-15',
+    excerpt: 'Highlighting the amazing contributions from our community members...',
+    slug: 'community-spotlight-october'
+  }
+];
 ---
 
 <BaseLayout title="Jixo AI - Open Source AI Projects">
-  <section class="container mx-auto px-4 py-16">
-    <div class="text-center">
-      <h1 class="text-5xl font-bold mb-4">Welcome to Jixo AI</h1>
-      <p class="text-xl text-muted-foreground mb-8">
-        Building the future of AI with open source
-      </p>
-      <div class="flex gap-4 justify-center">
-        <a
-          href="/projects"
-          class="px-6 py-3 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-opacity"
-        >
-          Explore Projects
-        </a>
-        <a
-          href="https://github.com/jixoai"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="px-6 py-3 border border-border rounded-md hover:bg-secondary transition-colors"
-        >
-          View on GitHub
-        </a>
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden py-24 md:py-32 lg:py-40">
+    <Meteors number={30} />
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-4xl mx-auto text-center">
+        <BlurFade delay={0.2} client:load>
+          <Badge variant="secondary" className="mb-6 px-4 py-1 text-sm">
+            Building the Future of AI
+          </Badge>
+        </BlurFade>
+        
+        <BlurFade delay={0.3} client:load>
+          <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
+            Open Source AI <br /> for Everyone
+          </h1>
+        </BlurFade>
+        
+        <BlurFade delay={0.4} client:load>
+          <p class="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+            Jixo AI provides powerful, accessible, and open-source tools to help developers build the next generation of intelligent applications.
+          </p>
+        </BlurFade>
+        
+        <BlurFade delay={0.5} client:load>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="gap-2" asChild>
+              <a href="/projects">
+                Explore Projects <ArrowRight className="h-4 w-4" />
+              </a>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <a href="https://github.com/jixoai" target="_blank" rel="noopener noreferrer">
+                View on GitHub
+              </a>
+            </Button>
+          </div>
+        </BlurFade>
       </div>
     </div>
   </section>
 
-  <section class="container mx-auto px-4 py-16">
-    <h2 class="text-3xl font-bold mb-8 text-center">Featured Projects</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Projects will be dynamically loaded during build -->
+  <!-- Featured Projects -->
+  <section class="py-20 bg-secondary/20">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-end mb-12">
+        <div>
+          <h2 class="text-3xl font-bold mb-2">Featured Projects</h2>
+          <p class="text-muted-foreground">Our most popular open source contributions</p>
+        </div>
+        <Button variant="ghost" asChild className="hidden md:flex">
+          <a href="/projects" class="gap-2">View All <ArrowRight className="h-4 w-4" /></a>
+        </Button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {featuredProjects.map((project, index) => (
+          <BlurFade delay={0.2 + index * 0.1} inView client:load>
+            <Card className="h-full flex flex-col hover:border-primary/50 transition-colors">
+              <CardHeader>
+                <div class="flex justify-between items-start mb-2">
+                  <CardTitle className="text-xl">{project.name}</CardTitle>
+                  <Badge variant="outline">{project.language}</Badge>
+                </div>
+                <CardDescription className="line-clamp-2">
+                  {project.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex-1">
+                <div class="flex gap-4 text-sm text-muted-foreground">
+                  <div class="flex items-center gap-1">
+                    <Star className="h-4 w-4" />
+                    <span>{project.stars}</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <GitFork className="h-4 w-4" />
+                    <span>{project.forks}</span>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="secondary" className="w-full gap-2" asChild>
+                  <a href={project.url} target="_blank" rel="noopener noreferrer">
+                    View Code <ExternalLink className="h-3 w-3" />
+                  </a>
+                </Button>
+              </CardFooter>
+            </Card>
+          </BlurFade>
+        ))}
+      </div>
+      
+      <div class="mt-8 text-center md:hidden">
+        <Button variant="ghost" asChild>
+          <a href="/projects" class="gap-2">View All Projects <ArrowRight className="h-4 w-4" /></a>
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technologies Marquee -->
+  <section class="py-20 overflow-hidden">
+    <div class="container mx-auto px-4 mb-10 text-center">
+      <h2 class="text-2xl font-bold text-muted-foreground">Powered by Modern Tech Stack</h2>
+    </div>
+    
+    <Marquee className="[--duration:20s]" pauseOnHover client:load>
+      {['TypeScript', 'React', 'Astro', 'Tailwind CSS', 'Python', 'Rust', 'OpenAI', 'TensorFlow', 'PyTorch', 'Docker', 'Kubernetes'].map((tech) => (
+        <div class="mx-8 text-xl font-semibold text-muted-foreground/50 hover:text-foreground transition-colors cursor-default">
+          {tech}
+        </div>
+      ))}
+    </Marquee>
+  </section>
+
+  <!-- Latest News -->
+  <section class="py-20 border-t border-border">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-12 text-center">Latest from the Blog</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        {latestNews.map((news, index) => (
+          <BlurFade delay={0.2 + index * 0.1} inView client:load>
+            <a href={`/blog/${news.slug}`} class="group block">
+              <article class="p-6 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors">
+                <time class="text-sm text-muted-foreground mb-2 block">{news.date}</time>
+                <h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{news.title}</h3>
+                <p class="text-muted-foreground">{news.excerpt}</p>
+              </article>
+            </a>
+          </BlurFade>
+        ))}
+      </div>
     </div>
   </section>
 </BaseLayout>

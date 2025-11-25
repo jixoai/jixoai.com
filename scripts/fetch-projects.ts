@@ -9,6 +9,7 @@ import type { GitHubProject } from '../src/types/index.js';
 
 const config = loadConfig();
 const OUTPUT_DIR = config.paths.projectsOutputDir;
+const LOGO_OUTPUT_DIR = join(process.cwd(), 'public', 'projects');
 
 // Zod schema for GitHub API response validation
 const GitHubRepoSchema = z.object({
@@ -43,7 +44,33 @@ function repoToProject(repo: GitHubRepo): GitHubProject {
   };
 }
 
-async function fetchProjects(client: GitHubClient): Promise<GitHubProject[]> {
+async function fetchProjectLogo(
+  client: GitHubClient,
+  repo: string
+): Promise<{ filename: string; buffer: Buffer } | null> {
+  const LOGO_EXTENSIONS = ['png', 'jpg', 'jpeg', 'avif', 'webp'];
+  
+  try {
+    const rootContents = await client.getRepoContent(repo, '');
+    
+    for (const item of rootContents) {
+      if (item.type === 'file') {
+        const lowerName = item.name.toLowerCase();
+        if (lowerName.startsWith('logo.') && LOGO_EXTENSIONS.some(ext => lowerName.endsWith(`.${ext}`))) {
+          const buffer = await client.downloadBinaryFile(repo, item.name);
+          const ext = item.name.split('.').pop();
+          return { filename: `${repo}.${ext}`, buffer };
+        }
+      }
+    }
+  } catch (error) {
+    // console.warn(`Failed to check logo for ${repo}:`, error);
+  }
+
+  return null;
+}
+
+async function fetchProjects(client: GitHubClient): Promise<{ projects: GitHubProject[], logos: Map<string, Buffer> }> {
   console.log(`Fetching repositories for organization: ${config.github.org}`);
 
   const { data: repos } = await client.listOrgRepos();
@@ -53,26 +80,39 @@ async function fetchProjects(client: GitHubClient): Promise<GitHubProject[]> {
 
   console.log(`Found ${activeRepos.length} active repositories (${repos.length - activeRepos.length} archived)`);
 
+  const logos = new Map<string, Buffer>();
+
   // Validate and transform each repo
-  const projects: GitHubProject[] = activeRepos
-    .map(repo => {
-      const validated = GitHubRepoSchema.safeParse(repo);
+  const projects = await Promise.all(activeRepos.map(async repo => {
+    const validated = GitHubRepoSchema.safeParse(repo);
 
-      if (!validated.success) {
-        console.warn(`Skipping invalid repo ${repo.name}:`, validated.error.message);
-        return null;
-      }
+    if (!validated.success) {
+      console.warn(`Skipping invalid repo ${repo.name}:`, validated.error.message);
+      return null;
+    }
 
-      return repoToProject(validated.data);
-    })
-    .filter((p): p is GitHubProject => p !== null);
+    const project = repoToProject(validated.data);
+    
+    // Check for logo
+    const logo = await fetchProjectLogo(client, repo.name);
+    if (logo) {
+      project.logo = `/projects/${logo.filename}`;
+      logos.set(logo.filename, logo.buffer);
+    }
 
-  return projects;
+    return project;
+  }));
+
+  return { 
+    projects: projects.filter((p): p is GitHubProject => p !== null),
+    logos
+  };
 }
 
-async function saveProjects(projects: GitHubProject[]): Promise<void> {
-  // Ensure output directory exists
+async function saveProjects(projects: GitHubProject[], logos: Map<string, Buffer>): Promise<void> {
+  // Ensure output directories exist
   await mkdir(OUTPUT_DIR, { recursive: true });
+  await mkdir(LOGO_OUTPUT_DIR, { recursive: true });
 
   // Save as individual JSON files for each project
   for (const project of projects) {
@@ -80,6 +120,13 @@ async function saveProjects(projects: GitHubProject[]): Promise<void> {
     const filepath = join(OUTPUT_DIR, filename);
     await writeFile(filepath, JSON.stringify(project, null, 2));
     console.log(`Saved ${filename}`);
+  }
+
+  // Save logos
+  for (const [filename, buffer] of logos.entries()) {
+    const filepath = join(LOGO_OUTPUT_DIR, filename);
+    await writeFile(filepath, new Uint8Array(buffer));
+    console.log(`Saved logo ${filename}`);
   }
 
   // Also save as a combined file for easy access
@@ -94,8 +141,8 @@ async function main() {
     org: config.github.org,
   });
 
-  const projects = await fetchProjects(client);
-  await saveProjects(projects);
+  const { projects, logos } = await fetchProjects(client);
+  await saveProjects(projects, logos);
   console.log('Projects fetch completed successfully');
 }
 

@@ -8,8 +8,6 @@ import { loadConfig } from './config.js';
 
 const config = loadConfig();
 const DOCS_OUTPUT_DIR = config.paths.docsOutputDir;
-const LOGO_OUTPUT_DIR = config.paths.logoOutputDir;
-const LOGO_EXTENSIONS = config.build.logoExtensions;
 
 // Zod schema for GitHub content item
 const GitHubContentItemSchema = z.object({
@@ -61,30 +59,6 @@ async function fetchDocsRecursive(
   return results;
 }
 
-async function fetchProjectLogo(
-  client: GitHubClient,
-  repo: string
-): Promise<{ filename: string; buffer: Buffer } | null> {
-  const rootContents = await client.getRepoContent(repo, '');
-
-  for (const item of rootContents) {
-    const validated = GitHubContentItemSchema.safeParse(item);
-    if (!validated.success) continue;
-
-    const contentItem = validated.data;
-    if (contentItem.type === 'file') {
-      const lowerName = contentItem.name.toLowerCase();
-      if (lowerName.startsWith('logo.') && LOGO_EXTENSIONS.some(ext => lowerName.endsWith(`.${ext}`))) {
-        const buffer = await client.downloadBinaryFile(repo, contentItem.name);
-        const ext = contentItem.name.split('.').pop();
-        return { filename: `${repo}.${ext}`, buffer };
-      }
-    }
-  }
-
-  return null;
-}
-
 async function saveDocs(docs: RepoDoc[]): Promise<void> {
   for (const doc of docs) {
     // Convert path like "docs/guide.md" to "project-name/guide.md"
@@ -100,13 +74,6 @@ async function saveDocs(docs: RepoDoc[]): Promise<void> {
   }
 }
 
-async function saveLogo(_repo: string, logo: { filename: string; buffer: Buffer }): Promise<void> {
-  await mkdir(LOGO_OUTPUT_DIR, { recursive: true });
-  const outputPath = join(LOGO_OUTPUT_DIR, logo.filename);
-  await writeFile(outputPath, new Uint8Array(logo.buffer));
-  console.log(`  Saved logo: ${logo.filename}`);
-}
-
 async function main() {
   const client = new GitHubClient({
     token: config.github.token,
@@ -120,7 +87,6 @@ async function main() {
   console.log(`Found ${activeRepos.length} active repositories\n`);
 
   let totalDocs = 0;
-  let totalLogos = 0;
 
   for (const repo of activeRepos) {
     console.log(`Processing ${repo.name}...`);
@@ -135,19 +101,10 @@ async function main() {
       console.log(`  No docs found`);
     }
 
-    // Fetch logo
-    const logo = await fetchProjectLogo(client, repo.name);
-    if (logo) {
-      await saveLogo(repo.name, logo);
-      totalLogos++;
-    } else {
-      console.log(`  No logo found`);
-    }
-
     console.log('');
   }
 
-  console.log(`Completed: ${totalDocs} docs, ${totalLogos} logos from ${activeRepos.length} projects`);
+  console.log(`Completed: ${totalDocs} docs from ${activeRepos.length} projects`);
 }
 
 main().catch(error => {

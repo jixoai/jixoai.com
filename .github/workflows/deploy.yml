@@ -4,6 +4,16 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Run daily at 00:00 UTC to fetch updates from sub-projects
+    - cron: '0 0 * * *'
+  repository_dispatch:
+    # Allow other repos to trigger a rebuild via API
+    # curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+    #   -H "Accept: application/vnd.github.v3+json" \
+    #   https://api.github.com/repos/jixoai/jixoai.com/dispatches \
+    #   -d '{"event_type":"rebuild"}'
+    types: [rebuild]
 
 permissions:
   contents: read
