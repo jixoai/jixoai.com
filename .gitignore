@@ -1,0 +1,7 @@
+node_modules/
+dist/
+public/
+.svelte-kit/
+src/lib/projects.generated.json
+.DS_Store
+*.log

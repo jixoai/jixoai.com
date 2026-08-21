@@ -1,0 +1,34 @@
+{
+  "projects": [
+    {
+      "repo": "unipty",
+      "name": "UniPty",
+      "description": "Runtime-neutral PTY for Node, Bun, and Deno — one public contract, developer-selectable Backends, evidence-gated support claims."
+    },
+    {
+      "repo": "openspecui",
+      "name": "OpenSpecUI",
+      "description": "The web UI companion for OpenSpec-driven development — serve, preview, and export spec-driven projects with one command."
+    },
+    {
+      "repo": "ui",
+      "name": "jixoai/ui",
+      "description": "The jixoai design language as a shadcn registry: terminal aesthetics, the OKLCH one-hue law, and mono-first components you own after copying."
+    },
+    {
+      "repo": "opentray",
+      "name": "OpenTray",
+      "description": "Desktop status runtime for CLI and AI-skill ecosystems — tray-first apps running on Node, Bun, and Deno."
+    },
+    {
+      "repo": "proxy",
+      "name": "Proxy",
+      "description": "Bun-based HTTP proxy server and viewer — record, replay, and inspect every request that crosses the wire."
+    },
+    {
+      "repo": "skill-creator",
+      "name": "Skill Creator",
+      "description": "Composite CLI and subagent for creating and managing agent skills — one workflow from scaffold to publish."
+    }
+  ]
+}

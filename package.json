@@ -1,0 +1,26 @@
+{
+  "name": "jixoai.com",
+  "version": "0.1.0",
+  "private": true,
+  "description": "jixoai.com — the jixoai organization site: mission and flagship projects, with release versions auto-updated from GitHub Releases at build time.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/fetch-projects.mjs && vite dev",
+    "build": "node scripts/build-site.mjs",
+    "fetch": "node scripts/fetch-projects.mjs",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.2.8",
+    "@fontsource/share-tech-mono": "^5.2.7",
+    "@sveltejs/adapter-static": "^3.0.10",
+    "@sveltejs/kit": "^2.59.1",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@tailwindcss/vite": "^4.2.1",
+    "svelte": "^5.55.5",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.7.2",
+    "vite": "^8.0.0"
+  }
+}
