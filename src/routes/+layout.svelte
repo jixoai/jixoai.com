@@ -25,6 +25,14 @@
       subtitle="the jixoai open-source lab"
       {items}
     >
+      {#snippet logo()}
+        <img
+          src="/logo.webp"
+          alt="jixoai logo"
+          class="h-8 w-8 object-contain"
+          draggable="false"
+        />
+      {/snippet}
       {#snippet switcher()}
         <ThemeToggle variant="compact" />
       {/snippet}
