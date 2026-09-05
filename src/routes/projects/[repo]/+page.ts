@@ -2,7 +2,7 @@
 //
 // Orthogonal intents (maintained 2026-09-06): param resolution — the
 // slug is the repo path with `/` replaced by `--` (org repos stay bare,
-// foreign owners read `gaubee--dweb`); README rendering — markdown →
+// owner-qualified repos read `jixoai--<name>`); README rendering — markdown →
 // HTML at build time (marked, repo-relative URLs absolutized); prerender
 // enumeration — the entries export lists every roster slug so the
 // prerenderer never depends on the link graph alone.

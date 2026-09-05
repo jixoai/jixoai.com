@@ -10,7 +10,7 @@
  * never code edits.
  *
  * Owner-aware repos (2026-09-06, project-hub spec): a bare name
- * ("opentray") means the jixoai org; "Gaubee/dweb" carries a foreign
+ * ("opentray") means the jixoai org; "owner/name" entries carry an explicit
  * owner and resolves identically — the releases URL, the repoUrl
  * concatenation and the README raw path all split owner/name.
  *

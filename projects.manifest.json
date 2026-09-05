@@ -29,17 +29,17 @@
       "logo": "/logos/opentray.png"
     },
     {
-      "repo": "Gaubee/dweb",
+      "repo": "opendweb",
       "name": "OpenDWeb",
       "description": "Application-level networking platform: multi-device applications form invite-based logical networks over QUIC direct links with self-hostable relay fallback.",
-      "site": "https://gaubee.github.io/dweb",
+      "site": "https://jixoai.github.io/opendweb",
       "logo": "/logos/dweb.png"
     },
     {
-      "repo": "iweb",
+      "repo": "openiweb",
       "name": "OpenIWeb",
       "description": "Open-source personal application node — an AI coding agent deploys and operates apps on your own node through MCP; the owner manages everything with one key.",
-      "site": "https://jixoai.github.io/iweb",
+      "site": "https://jixoai.github.io/openiweb",
       "logo": "/logos/iweb.svg"
     }
   ]

@@ -11,7 +11,7 @@
 import generated from './projects.generated.json';
 
 export interface GeneratedProject {
-  /** owner-aware repo path from the manifest: "opentray" | "Gaubee/dweb" */
+  /** owner-aware repo path from the manifest: "opentray" | "jixoai/opendweb" */
   repo: string;
   /** route slug: repo path with `/` → `--` (org repos stay bare) */
   slug: string;
