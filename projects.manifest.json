@@ -3,32 +3,44 @@
     {
       "repo": "unipty",
       "name": "UniPty",
-      "description": "Runtime-neutral PTY for Node, Bun, and Deno — one public contract, developer-selectable Backends, evidence-gated support claims."
+      "description": "Runtime-neutral PTY for Node, Bun, and Deno — one public contract, developer-selectable Backends, evidence-gated support claims.",
+      "site": "https://unipty.jixoai.com",
+      "logo": "/logos/unipty.svg"
     },
     {
       "repo": "openspecui",
       "name": "OpenSpecUI",
-      "description": "The web UI companion for OpenSpec-driven development — serve, preview, and export spec-driven projects with one command."
+      "description": "The web UI companion for OpenSpec-driven development — serve, preview, and export spec-driven projects with one command.",
+      "site": "https://www.openspecui.com",
+      "logo": "/logos/openspecui.svg"
     },
     {
       "repo": "ui",
       "name": "jixoai/ui",
-      "description": "The jixoai design language as a shadcn registry: terminal aesthetics, the OKLCH one-hue law, and mono-first components you own after copying."
+      "description": "The jixoai design language as a shadcn registry: terminal aesthetics, the OKLCH one-hue law, and mono-first components you own after copying.",
+      "site": "https://ui.jixoai.com",
+      "logo": "/logo.webp"
     },
     {
       "repo": "opentray",
       "name": "OpenTray",
-      "description": "Desktop status runtime for CLI and AI-skill ecosystems — tray-first apps running on Node, Bun, and Deno."
+      "description": "Desktop status runtime for CLI and AI-skill ecosystems — tray-first apps running on Node, Bun, and Deno.",
+      "site": "https://jixoai.github.io/opentray",
+      "logo": "/logos/opentray.png"
     },
     {
-      "repo": "proxy",
-      "name": "Proxy",
-      "description": "Bun-based HTTP proxy server and viewer — record, replay, and inspect every request that crosses the wire."
+      "repo": "Gaubee/dweb",
+      "name": "OpenDWeb",
+      "description": "Application-level networking platform: multi-device applications form invite-based logical networks over QUIC direct links with self-hostable relay fallback.",
+      "site": "https://gaubee.github.io/dweb",
+      "logo": "/logos/dweb.png"
     },
     {
-      "repo": "skill-creator",
-      "name": "Skill Creator",
-      "description": "Composite CLI and subagent for creating and managing agent skills — one workflow from scaffold to publish."
+      "repo": "iweb",
+      "name": "OpenIWeb",
+      "description": "Open-source personal application node — an AI coding agent deploys and operates apps on your own node through MCP; the owner manages everything with one key.",
+      "site": "https://jixoai.github.io/iweb",
+      "logo": "/logos/iweb.svg"
     }
   ]
 }

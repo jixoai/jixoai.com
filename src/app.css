@@ -1,22 +1,32 @@
 /* -------------------------------------------------------------------------
  * jixoai.com site identity.
  *
- * The shared design-language token sheet (OKLCH one-hue law, dark -4° drift,
- * hard offset shadows, radius/bevel law, mono-first fonts, terminal surfaces,
- * reveal hook styles) is a same-source copy of
- * ui/registry/files/theme/jixoai.css installed at src/lib/jixoai.css with the
- * registry default --brand-hue: 0 (the jixoai organization red). This file
- * carries ONLY site-specific supplements: the version pill surface and the
- * base-layer mappings the registry sheet leaves open.
+ * Orthogonal intents (maintained 2026-09-06): [design-language] the
+ * shared token sheet is the verbatim registry jixoai-theme item
+ * (src/lib/jixoai.css, --brand-hue: 0 — the jixoai organization red)
+ * installed by `npx jixoai-ui init`; [supplements] this file carries
+ * ONLY site-specific additions — the base-layer rules the sheet leaves
+ * open and site surfaces (version pill; markdown body for project
+ * READMEs and blog posts with mono-styled code blocks).
+ *
+ * Original request (2026-09-06): hub relaunch — config-driven project
+ * surface + static blog, chrome from the jixoai-ui 0.3.0 registry.
  * ---------------------------------------------------------------------- */
 @import 'tailwindcss';
 @import './lib/jixoai.css';
+
+/* Tailwind mapping supplement: seal the default rounded scale (radius
+ * law: 0, bevel upgrades only); jixoai.css 0.3.0 maps every other
+ * color/font/shadow token itself. */
+@theme inline {
+  --radius-*: initial;
+  --radius: var(--radius);
+}
 
 @layer base {
   * {
     @apply border-border;
     corner-shape: bevel;
-    scrollbar-width: thin;
     accent-color: var(--primary);
   }
   html {
@@ -41,9 +51,9 @@
   }
 }
 
-/* Latest-release version pill (the small-pill rounded-full exception of the
- * design law): font-nav in markup, primary border + tint, never a link
- * decoration when it carries no release URL. */
+/* Latest-release version pill (the small-pill rounded-full exception of
+ * the design law): font-nav in markup, primary border + tint, never a
+ * link decoration when it carries no release URL. */
 .version-pill {
   align-items: center;
   background: color-mix(in oklab, var(--primary) 8%, transparent);
@@ -57,6 +67,148 @@
   white-space: nowrap;
 }
 
+/* -------------------------------------------------------------------------
+ * Site surface: rendered markdown (project README detail pages + blog
+ * posts). The mono-first voice carries into code; body text keeps the
+ * mono stack per the design law. First-party content — styled, not
+ * sanitized.
+ * ---------------------------------------------------------------------- */
+.markdown-body {
+  color: var(--foreground);
+  font-size: 13.5px;
+  line-height: 1.75;
+  word-wrap: break-word;
+}
+.markdown-body > :first-child {
+  margin-top: 0;
+}
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 2em 0 0.6em;
+}
+.markdown-body h1 {
+  font-size: 1.6em;
+}
+.markdown-body h2 {
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+  padding-bottom: 0.3em;
+  font-size: 1.35em;
+}
+.markdown-body h3 {
+  font-size: 1.15em;
+}
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  font-size: 1em;
+}
+.markdown-body p {
+  margin: 0.9em 0;
+}
+.markdown-body a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--primary) 45%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms ease, color 150ms ease;
+}
+.markdown-body a:hover {
+  text-decoration-color: var(--primary);
+}
+.markdown-body ul,
+.markdown-body ol {
+  margin: 0.9em 0;
+  padding-left: 1.6em;
+}
+.markdown-body ul {
+  list-style: disc;
+}
+.markdown-body ol {
+  list-style: decimal;
+}
+.markdown-body li {
+  margin: 0.3em 0;
+}
+.markdown-body li::marker {
+  color: var(--muted-foreground);
+}
+.markdown-body blockquote {
+  border-left: 3px solid color-mix(in oklab, var(--primary) 55%, transparent);
+  color: var(--muted-foreground);
+  margin: 1.2em 0;
+  padding: 0.1em 0 0.1em 1em;
+}
+.markdown-body code {
+  background: color-mix(in oklab, var(--muted) 55%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 35%, transparent);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.1em 0.35em;
+}
+.markdown-body pre {
+  background: color-mix(in oklab, var(--muted) 42%, var(--background));
+  border: 1px solid color-mix(in oklab, var(--border) 45%, transparent);
+  border-radius: 6px;
+  line-height: 1.6;
+  margin: 1.2em 0;
+  overflow-x: auto;
+  padding: 0.9rem 1rem;
+}
+.dark .markdown-body pre {
+  background: color-mix(in oklab, var(--muted) 78%, var(--background));
+}
+.markdown-body pre code {
+  background: none;
+  border: none;
+  font-size: 12.5px;
+  padding: 0;
+  white-space: pre;
+}
+.markdown-body table {
+  border-collapse: collapse;
+  display: block;
+  font-size: 12.5px;
+  margin: 1.2em 0;
+  max-width: 100%;
+  overflow-x: auto;
+  width: max-content;
+}
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid color-mix(in oklab, var(--border) 45%, transparent);
+  padding: 0.4rem 0.65rem;
+  text-align: left;
+  vertical-align: top;
+}
+.markdown-body th {
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.markdown-body img {
+  border-radius: 6px;
+  height: auto;
+  max-width: 100%;
+}
+.markdown-body hr {
+  border: none;
+  border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+  margin: 2em 0;
+}
+
+/* -------------------------------------------------------------------------
+ * Reduced-motion law: the registry sheet neutralizes reveal/press
+ * motion already; this covers the site's own smooth-scroll transition.
+ * ---------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

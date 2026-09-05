@@ -2,11 +2,11 @@
   "name": "jixoai.com",
   "version": "0.1.0",
   "private": true,
-  "description": "jixoai.com — the jixoai organization site: mission and flagship projects, with release versions auto-updated from GitHub Releases at build time.",
+  "description": "jixoai.com — the jixoai organization hub: config-driven project center (official sites, logos, rendered READMEs, live release versions) and a static blog; chrome from the @jixoai registry.",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/fetch-projects.mjs && vite dev",
+    "dev": "node scripts/fetch-projects.mjs && vite dev --port 13400",
     "build": "node scripts/build-site.mjs",
     "fetch": "node scripts/fetch-projects.mjs",
     "preview": "vite preview"
@@ -18,7 +18,10 @@
     "@sveltejs/kit": "^2.59.1",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@tailwindcss/vite": "^4.2.1",
+    "clsx": "^2.1.1",
+    "marked": "^18.0.11",
     "svelte": "^5.55.5",
+    "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.7.2",
     "vite": "^8.0.0"
