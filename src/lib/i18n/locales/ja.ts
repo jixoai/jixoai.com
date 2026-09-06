@@ -23,12 +23,12 @@ export const ja: Dictionary = {
   home: {
     title: 'jixoai — AI時代のための信頼できるインフラ',
     metaDescription:
-      'jixoai は AI 時代が依拠する基幹レイヤーを構築します — UniPty、OpenSpecUI、jixoai デザイン言語、OpenDWeb、OpenIWeb など。公式サイト、最新のリリースバージョン、ラボのブログ。',
+      'jixoai オープンソースラボ — AI時代のための主力インフラプロジェクト。公式サイト、最新リリース、README、ラボブログ。',
     eyebrow: 'jixoai · オープンソースラボ',
     titleLead: 'AI時代のための',
     titleEm: '信頼できるインフラ。',
     titleTail: '',
-    badges: ['オープンソース', 'MIT ライセンス', 'エビデンスゲート', 'github.com/jixoai'],
+    badges: ['オープンソース', 'MIT ライセンス'],
     summary:
       'jixoai は AI 時代が依拠する基幹レイヤーを構築します。ターミナルランタイム、デザイン言語、開発者ツール — 一度に一つの誠実な契約を届ける。オープンソース、エビデンスゲート、MIT。',
     projectsButton: 'プロジェクト ↓',
@@ -44,16 +44,16 @@ export const ja: Dictionary = {
     versionData: (date) => `バージョンデータは ${date} に GitHub Releases から取得。`,
     latestPosts: '最新の記事',
     allPosts: 'すべての記事 →',
-    noPosts: 'まだ記事はありません — ブログはリニューアルとともに始動します。',
+    noPosts: '投稿はまだありません。',
   },
 
   projectsIndex: {
     title: 'プロジェクト — jixoai',
     metaDescription:
-      'jixoai のフラッグシップ一覧：UniPty、OpenSpecUI、jixoai/ui、OpenTray、OpenDWeb、OpenIWeb — 公式サイト、GitHub リポジトリ、最新リリースバージョン、レンダリングされた README。',
+      'jixoai の主力ラインナップ — 公式サイト、GitHubリポジトリ、最新リリース、レンダリングされたREADME。',
     heading: 'プロジェクト',
     summary: (date) =>
-      `すべての jixoai フラッグシップを一つのグリッドに — ハブ自体が設定です：プロジェクトの追加・削除・リンク変更は projects.manifest.json の編集とロゴの配置だけで済みます。バージョンピルは最新の GitHub Release を反映（${date} 取得）；README はビルド時にリポジトリ HEAD からレンダリングされます。`,
+      `jixoai の主力プロジェクトを一覧 — 各プロジェクトの公式サイト、GitHubリポジトリ、最新リリース（${date} 時点）、レンダリングされたREADME。`,
   },
 
   projectDetail: {

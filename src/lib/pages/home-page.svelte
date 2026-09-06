@@ -49,12 +49,8 @@
   <meta name="description" content={t.home.metaDescription} />
 </svelte:head>
 
-<!-- Hero: mission headline, clone CTA, live fleet terminal. -->
-<HeroSection
-  eyebrow={t.home.eyebrow}
-  summary={t.home.summary}
-  copyCommand="gh repo clone jixoai/unipty"
->
+<!-- Hero: mission headline, live fleet terminal. -->
+<HeroSection eyebrow={t.home.eyebrow} summary={t.home.summary}>
   {#snippet title()}{t.home.titleLead}<em>{t.home.titleEm}</em>{t.home.titleTail}{/snippet}
   {#snippet badges()}
     {#each t.home.badges as badge (badge)}

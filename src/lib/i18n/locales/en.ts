@@ -24,12 +24,12 @@ export const en: Dictionary = {
   home: {
     title: 'jixoai — reliable infrastructure for the AI era',
     metaDescription:
-      'jixoai builds the load-bearing layer the AI era stands on — UniPty, OpenSpecUI, the jixoai design language, OpenDWeb, OpenIWeb and more. Official sites, live release versions, and the lab blog.',
+      'The jixoai open-source lab — flagship infrastructure projects for the AI era. Official sites, live release versions, rendered READMEs, and the lab blog.',
     eyebrow: 'jixoai · open-source lab',
     titleLead: 'Reliable infrastructure ',
     titleEm: 'for the AI era.',
     titleTail: '',
-    badges: ['open source', 'MIT licensed', 'evidence-gated', 'github.com/jixoai'],
+    badges: ['open source', 'MIT licensed'],
     summary:
       'jixoai builds the boring, load-bearing layer the AI era stands on: terminal runtimes, design languages, and developer tools that ship one honest contract at a time. Open source, evidence-gated, MIT.',
     projectsButton: 'Projects ↓',
@@ -45,16 +45,16 @@ export const en: Dictionary = {
     versionData: (date) => `Version data captured ${date} from GitHub Releases.`,
     latestPosts: 'Latest posts',
     allPosts: 'All posts →',
-    noPosts: 'No posts yet — the blog ships with the relaunch.',
+    noPosts: 'No posts yet.',
   },
 
   projectsIndex: {
     title: 'Projects — jixoai',
     metaDescription:
-      'The jixoai flagship roster: UniPty, OpenSpecUI, jixoai/ui, OpenTray, OpenDWeb and OpenIWeb — official sites, GitHub repositories, live release versions, and rendered READMEs.',
+      'The jixoai flagship roster — official sites, GitHub repositories, live release versions, and rendered READMEs.',
     heading: 'Projects',
     summary: (date) =>
-      `Every jixoai flagship in one grid — the hub itself is configuration: adding, removing or relinking a project is a projects.manifest.json edit plus a logo asset. Version pills mirror the latest GitHub Release (captured ${date}); READMEs render from the repository head at build time.`,
+      `Every jixoai flagship in one grid — the official site, the GitHub repository, the latest release version (captured ${date}), and the rendered README for each project.`,
   },
 
   projectDetail: {

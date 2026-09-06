@@ -23,12 +23,12 @@ export const de: Dictionary = {
   home: {
     title: 'jixoai — Zuverlässige Infrastruktur für das KI-Zeitalter',
     metaDescription:
-      'jixoai baut die tragende Schicht, auf der das KI-Zeitalter ruht — UniPty, OpenSpecUI, die jixoai-Designsprache, OpenDWeb, OpenIWeb und mehr. Offizielle Websites, aktuelle Release-Versionen und das Lab-Blog.',
+      'Das Open-Source-Labor jixoai — Leuchtturm-Infrastrukturprojekte für das KI-Zeitalter. Offizielle Websites, Live-Versionen, READMEs und das Lab-Blog.',
     eyebrow: 'jixoai · Open-Source-Labor',
     titleLead: 'Zuverlässige Infrastruktur ',
     titleEm: 'für das KI-Zeitalter.',
     titleTail: '',
-    badges: ['Open Source', 'MIT-lizenziert', 'evidenzbasiert', 'github.com/jixoai'],
+    badges: ['Open Source', 'MIT-lizenziert'],
     summary:
       'jixoai baut die tragende Schicht, auf der das KI-Zeitalter ruht: Terminal-Runtimes, Designsprachen und Entwicklerwerkzeuge, die jeweils einen ehrlichen Vertrag liefern. Open Source, evidenzbasiert, MIT.',
     projectsButton: 'Projekte ↓',
@@ -44,16 +44,16 @@ export const de: Dictionary = {
     versionData: (date) => `Versionsdaten am ${date} aus GitHub Releases übernommen.`,
     latestPosts: 'Neueste Beiträge',
     allPosts: 'Alle Beiträge →',
-    noPosts: 'Noch keine Beiträge — das Blog startet mit dem Relaunch.',
+    noPosts: 'Noch keine Beiträge.',
   },
 
   projectsIndex: {
     title: 'Projekte — jixoai',
     metaDescription:
-      'Die jixoai-Flaggschiff-Flotte: UniPty, OpenSpecUI, jixoai/ui, OpenTray, OpenDWeb und OpenIWeb — offizielle Websites, GitHub-Repositories, aktuelle Release-Versionen und gerenderte READMEs.',
+      'Das jixoai-Leuchtturm-Roster — offizielle Websites, GitHub-Repositories, Live-Versionen und gerenderte READMEs.',
     heading: 'Projekte',
     summary: (date) =>
-      `Alle jixoai-Flaggschiffe in einem Raster — der Hub selbst ist Konfiguration: Hinzufügen, Entfernen oder Verlinken eines Projekts ist eine projects.manifest.json-Änderung plus ein Logo. Die Versions-Pills spiegeln das neueste GitHub Release (erfasst am ${date}); READMEs werden zur Build-Zeit vom Repository-HEAD gerendert.`,
+      `Alle jixoai-Leuchttürme in einem Raster — offizielle Website, GitHub-Repository, neueste Version (erfasst am ${date}) und das gerenderte README jedes Projekts.`,
   },
 
   projectDetail: {

@@ -23,12 +23,12 @@ export const ko: Dictionary = {
   home: {
     title: 'jixoai — AI 시대를 위한 믿을 수 있는 인프라',
     metaDescription:
-      'jixoai는 AI 시대가 기대는 기반 계층을 만듭니다 — UniPty, OpenSpecUI, jixoai 디자인 언어, OpenDWeb, OpenIWeb 등. 공식 사이트, 실시간 릴리스 버전, 랩 블로그.',
+      'jixoai 오픈소스 랩 — AI 시대를 위한 플래그십 인프라 프로젝트. 공식 사이트, 최신 버전, README, 랩 블로그.',
     eyebrow: 'jixoai · 오픈소스 랩',
     titleLead: 'AI 시대를 위한 ',
     titleEm: '믿을 수 있는 인프라.',
     titleTail: '',
-    badges: ['오픈소스', 'MIT 라이선스', '증거 기반', 'github.com/jixoai'],
+    badges: ['오픈소스', 'MIT 라이선스'],
     summary:
       'jixoai는 AI 시대가 기대는 기반 계층을 만듭니다: 터미널 런타임, 디자인 언어, 개발자 도구 — 매번 하나의 정직한 계약을 전달합니다. 오픈소스, 증거 기반, MIT.',
     projectsButton: '프로젝트 ↓',
@@ -44,16 +44,16 @@ export const ko: Dictionary = {
     versionData: (date) => `버전 데이터는 ${date}에 GitHub Releases에서 수집.`,
     latestPosts: '최신 글',
     allPosts: '모든 글 →',
-    noPosts: '아직 글이 없습니다 — 블로그는 리런치와 함께 시작됩니다.',
+    noPosts: '아직 게시물이 없습니다.',
   },
 
   projectsIndex: {
     title: '프로젝트 — jixoai',
     metaDescription:
-      'jixoai 플래그십 라인업: UniPty, OpenSpecUI, jixoai/ui, OpenTray, OpenDWeb, OpenIWeb — 공식 사이트, GitHub 저장소, 실시간 릴리스 버전, 렌더링된 README.',
+      'jixoai 플래그십 라인업 — 공식 사이트, GitHub 저장소, 최신 버전, 렌더링된 README.',
     heading: '프로젝트',
     summary: (date) =>
-      `모든 jixoai 플래그십을 한 그리드에 — 허브 자체가 설정입니다: 프로젝트 추가·제거·링크 변경은 projects.manifest.json 편집과 로고 하나면 충분합니다. 버전 알약은 최신 GitHub Release를 반영(${date} 수집); README는 빌드 시 저장소 HEAD에서 렌더링됩니다.`,
+      `jixoai의 플래그십 프로젝트를 한눈에 — 각 프로젝트의 공식 사이트, GitHub 저장소, 최신 버전(${date} 캡처), 렌더링된 README.`,
   },
 
   projectDetail: {

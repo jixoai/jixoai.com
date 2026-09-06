@@ -23,12 +23,12 @@ export const es: Dictionary = {
   home: {
     title: 'jixoai — Infraestructura fiable para la era de la IA',
     metaDescription:
-      'jixoai construye la capa de carga sobre la que se apoya la era de la IA — UniPty, OpenSpecUI, el lenguaje de diseño jixoai, OpenDWeb, OpenIWeb y más. Sitios oficiales, versiones de release en vivo y el blog del laboratorio.',
+      'El laboratorio open source de jixoai — proyectos insignia de infraestructura para la era de la IA. Sitios oficiales, versiones en vivo, READMEs y el blog del laboratorio.',
     eyebrow: 'jixoai · laboratorio open source',
     titleLead: 'Infraestructura fiable ',
     titleEm: 'para la era de la IA.',
     titleTail: '',
-    badges: ['código abierto', 'licencia MIT', 'con evidencia verificable', 'github.com/jixoai'],
+    badges: ['código abierto', 'licencia MIT'],
     summary:
       "jixoai construye la capa de carga sobre la que se apoya la era de la IA: runtimes de terminal, lenguajes de diseño y herramientas para desarrolladores que entregan un contrato honesto a la vez. Código abierto, con evidencia verificable, MIT.",
     projectsButton: 'Proyectos ↓',
@@ -44,16 +44,16 @@ export const es: Dictionary = {
     versionData: (date) => `Datos de versión capturados el ${date} desde GitHub Releases.`,
     latestPosts: 'Últimas publicaciones',
     allPosts: 'Todas las publicaciones →',
-    noPosts: 'Aún no hay publicaciones — el blog llega con el relanzamiento.',
+    noPosts: 'Aún no hay publicaciones.',
   },
 
   projectsIndex: {
     title: 'Proyectos — jixoai',
     metaDescription:
-      'El elenco insignia de jixoai: UniPty, OpenSpecUI, jixoai/ui, OpenTray, OpenDWeb y OpenIWeb — sitios oficiales, repositorios de GitHub, versiones de release en vivo y READMEs renderizados.',
+      'El roster insignia de jixoai — sitios oficiales, repositorios de GitHub, versiones en vivo y READMEs renderizados.',
     heading: 'Proyectos',
     summary: (date) =>
-      `Cada insignia de jixoai en una sola cuadrícula — el hub en sí es configuración: añadir, quitar o reenlazar un proyecto es editar projects.manifest.json y añadir un logo. Las píldoras de versión reflejan el último GitHub Release (capturado el ${date}); los README se renderizan desde la cabeza del repositorio en tiempo de construcción.`,
+      `Todos los proyectos insignia de jixoai en una cuadrícula — sitio oficial, repositorio de GitHub, última versión (capturada el ${date}) y el README renderizado de cada proyecto.`,
   },
 
   projectDetail: {

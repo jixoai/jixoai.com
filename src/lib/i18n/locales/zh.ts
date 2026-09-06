@@ -23,12 +23,12 @@ export const zh: Dictionary = {
   home: {
     title: 'jixoai — 面向 AI 时代的可靠基础设施',
     metaDescription:
-      'jixoai 打造 AI 时代所依赖的承重层 —— UniPty、OpenSpecUI、jixoai 设计语言、OpenDWeb、OpenIWeb 等。官方网站、实时 release 版本与实验室博客。',
+      'jixoai 开源实验室——面向 AI 时代的旗舰基础设施项目：官网、实时发布版本、README 与实验室博客。',
     eyebrow: 'jixoai · 开源实验室',
     titleLead: '面向 AI 时代',
     titleEm: '的可靠基础设施。',
     titleTail: '',
-    badges: ['开源', 'MIT 许可', '证据门控', 'github.com/jixoai'],
+    badges: ['开源', 'MIT 许可'],
     summary:
       'jixoai 打造 AI 时代所依赖的承重层：终端运行时、设计语言与开发者工具，每一次交付都只给出一份诚实的契约。开源、证据门控、MIT。',
     projectsButton: '项目 ↓',
@@ -44,16 +44,16 @@ export const zh: Dictionary = {
     versionData: (date) => `版本数据取自 GitHub Releases（捕获于 ${date}）。`,
     latestPosts: '最新文章',
     allPosts: '全部文章 →',
-    noPosts: '暂无文章 —— 博客随站点重构一同上线。',
+    noPosts: '暂无文章。',
   },
 
   projectsIndex: {
     title: '项目 — jixoai',
     metaDescription:
-      'jixoai 旗舰阵容：UniPty、OpenSpecUI、jixoai/ui、OpenTray、OpenDWeb 与 OpenIWeb —— 官方网站、GitHub 仓库、实时 release 版本与渲染的 README。',
+      'jixoai 旗舰项目一览——官网、GitHub 仓库、实时发布版本与渲染后的 README。',
     heading: '项目',
     summary: (date) =>
-      `所有 jixoai 旗舰汇于一格 —— 中心本身即配置：新增、移除或重新链接项目只需编辑 projects.manifest.json 并放置一枚 logo。版本徽章镜像最新 GitHub Release（捕获于 ${date}）；README 在构建时从仓库 HEAD 渲染。`,
+      `所有 jixoai 旗舰项目一览——每个项目的官网、GitHub 仓库、最新发布版本（${date} 捕获）与渲染后的 README。`,
   },
 
   projectDetail: {

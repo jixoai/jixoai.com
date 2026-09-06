@@ -24,12 +24,12 @@ export const ar: Dictionary = {
   home: {
     title: 'jixoai — بنية تحتية موثوقة لعصر الذكاء الاصطناعي',
     metaDescription:
-      'تبني jixoai الطبقة الحاملة التي يقف عليها عصر الذكاء الاصطناعي — UniPty وOpenSpecUI ولغة تصميم jixoai وOpenDWeb وOpenIWeb وغيرها. مواقع رسمية، وإصدارات حية، ومدونة المختبر.',
+      'مختبر jixoai مفتوح المصدر — مشاريع بنية تحتية رئيسية لعصر الذكاء الاصطناعي. مواقع رسمية، وإصدارات حية، وREADME، ومدونة المختبر.',
     eyebrow: 'jixoai · مختبر مفتوح المصدر',
     titleLead: 'بنية تحتية موثوقة ',
     titleEm: 'لعصر الذكاء الاصطناعي.',
     titleTail: '',
-    badges: ['مفتوحة المصدر', 'بترخيص MIT', 'مبنية على الأدلة', 'github.com/jixoai'],
+    badges: ['مفتوحة المصدر', 'بترخيص MIT'],
     summary:
       'تبني jixoai الطبقة الحاملة التي يقف عليها عصر الذكاء الاصطناعي: بيئات تشغيل طرفية، ولغات تصميم، وأدوات للمطورين، تُسلِّم في كل مرة عقدًا واحدًا صادقًا. مفتوحة المصدر، مبنية على الأدلة، MIT.',
     projectsButton: 'المشاريع ↓',
@@ -47,16 +47,16 @@ export const ar: Dictionary = {
     versionData: (date) => `بيانات الإصدارات مأخوذة من GitHub Releases بتاريخ ${date}.`,
     latestPosts: 'أحدث المقالات',
     allPosts: 'كل المقالات ←',
-    noPosts: 'لا مقالات بعد — المدونة تنطلق مع إعادة الإطلاق.',
+    noPosts: 'لا منشورات بعد.',
   },
 
   projectsIndex: {
     title: 'المشاريع — jixoai',
     metaDescription:
-      'أسطول jixoai الرائد: UniPty وOpenSpecUI وjixoai/ui وOpenTray وOpenDWeb وOpenIWeb — مواقع رسمية، ومستودعات GitHub، وإصدارات حية، وملفات README مصيَّرة.',
+      'تشكيلة jixoai الرئيسية — مواقع رسمية، ومستودعات GitHub، وإصدارات حية، وREADME معروض.',
     heading: 'المشاريع',
     summary: (date) =>
-      `كل مشاريع jixoai الرائدة في شبكة واحدة — المركز نفسه مجرد إعداد: إضافة مشروع أو إزالته أو إعادة ربطه هي تعديل في projects.manifest.json مع شعار. تعكس حبّات الإصدار أحدث GitHub Release (التقطت في ${date})؛ وتُصيَّر ملفات README من رأس المستودع وقت البناء.`,
+      `كل مشاريع jixoai الرئيسية في شبكة واحدة — الموقع الرسمي ومستودع GitHub وآخر إصدار (تم التقاطه في ${date}) وREADME المعروض لكل مشروع.`,
   },
 
   projectDetail: {

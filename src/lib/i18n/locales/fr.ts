@@ -23,12 +23,12 @@ export const fr: Dictionary = {
   home: {
     title: "jixoai — Une infrastructure fiable pour l'ère de l'IA",
     metaDescription:
-      "jixoai construit la couche porteuse sur laquelle repose l'ère de l'IA — UniPty, OpenSpecUI, le langage de conception jixoai, OpenDWeb, OpenIWeb et plus. Sites officiels, versions de release en direct et le blog du labo.",
+      "Le laboratoire open source jixoai — des projets d'infrastructure phares pour l'ère de l'IA. Sites officiels, versions en direct, README et le blog du labo.",
     eyebrow: 'jixoai · labo open source',
     titleLead: 'Une infrastructure fiable ',
     titleEm: "pour l'ère de l'IA.",
     titleTail: '',
-    badges: ['open source', 'sous licence MIT', 'à preuve d’usage', 'github.com/jixoai'],
+    badges: ['open source', 'sous licence MIT'],
     summary:
       "jixoai construit la couche porteuse sur laquelle repose l'ère de l'IA : runtimes de terminal, langages de conception et outils pour développeurs qui livrent un contrat honnête à la fois. Open source, à preuve d'usage, MIT.",
     projectsButton: 'Projets ↓',
@@ -44,16 +44,16 @@ export const fr: Dictionary = {
     versionData: (date) => `Données de version capturées le ${date} depuis GitHub Releases.`,
     latestPosts: 'Derniers billets',
     allPosts: 'Tous les billets →',
-    noPosts: 'Pas encore de billet — le blog arrive avec la refonte.',
+    noPosts: 'Pas encore de publication.',
   },
 
   projectsIndex: {
     title: 'Projets — jixoai',
     metaDescription:
-      'La flottille phare de jixoai : UniPty, OpenSpecUI, jixoai/ui, OpenTray, OpenDWeb et OpenIWeb — sites officiels, dépôts GitHub, versions de release en direct et READMEs rendus.',
+      'Le roster des réalisations phares de jixoai — sites officiels, dépôts GitHub, versions en direct et READMEs affichés.',
     heading: 'Projets',
     summary: (date) =>
-      `Chaque projet phare de jixoai sur une seule grille — le hub est lui-même de la configuration : ajouter, retirer ou relier un projet se résume à une modification de projects.manifest.json plus un logo. Les pastilles de version reflètent le dernier GitHub Release (capturé le ${date}) ; les README sont rendus depuis la tête du dépôt à la construction.`,
+      `Toutes les réalisations phares de jixoai en une grille — site officiel, dépôt GitHub, dernière version (capturée le ${date}) et le README affiché de chaque projet.`,
   },
 
   projectDetail: {
