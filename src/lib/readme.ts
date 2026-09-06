@@ -84,7 +84,7 @@ function absolutizeRawHtml(html: string, repo: string): string {
 /** Drop the README's FIRST h1 when it duplicates the project name
  *  (fix E): comparison is case-insensitive containment either way on
  *  an alphanumerics-only normalization — "jixoai-ui" matches
- *  "jixoai/ui", "OpenSpec UI" matches "OpenSpecUI". Vendored READMEs
+ *  "jixoai-ui", "OpenSpec UI" matches "OpenSpecUI". Vendored READMEs
  *  often open with an HTML comment or a wrapper div before the title,
  *  so the h1 need not be the first ELEMENT — but it must be the first
  *  HEADING (nothing h1–h3 before it), which keeps deep section titles

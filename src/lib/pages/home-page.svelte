@@ -41,7 +41,9 @@
     t.home.missionLine,
     '',
     t.home.flagships,
-    ...projects.map((p) => `  ${p.name.toLowerCase().padEnd(15)}${p.version}`),
+    // lowercase + hyphenate: fleet rows use each name's package form
+    // ("jixoai-ui", never "jixoai ui" — Owner naming law 2026-09-07)
+    ...projects.map((p) => `  ${p.name.toLowerCase().replaceAll(' ', '-').padEnd(15)}${p.version}`),
   ];
 
   const latestPosts = $derived(postsForLocale(locale).slice(0, HOME_POSTS_COUNT));

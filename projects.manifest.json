@@ -18,7 +18,7 @@
     },
     {
       "repo": "ui",
-      "name": "jixoai/ui",
+      "name": "Jixoai UI",
       "description": "The jixoai design language as a shadcn registry: terminal aesthetics, the OKLCH one-hue law, and mono-first components you own after copying.",
       "descriptionZh": "以 shadcn registry 形式发布的 jixoai 设计语言：终端美学、OKLCH 单色相法则、拷贝即所有的 mono-first 组件。",
       "site": "https://ui.jixoai.com",

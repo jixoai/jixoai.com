@@ -17,7 +17,7 @@ lang: zh
 
 - **下架**：proxy、skill-creator；
 - **上新**：[OpenDWeb](https://opendweb.jixoai.com)与 [OpenIWeb](https://openiweb.jixoai.com)；
-- **保留**：[UniPty](https://unipty.jixoai.com)、[OpenSpecUI](https://www.openspecui.com)、[jixoai/ui](https://ui.jixoai.com)、[OpenTray](https://jixoai.github.io/opentray)。
+- **保留**：[UniPty](https://unipty.jixoai.com)、[OpenSpecUI](https://www.openspecui.com)、[jixoai-ui](https://ui.jixoai.com)、[OpenTray](https://jixoai.github.io/opentray)。
 
 每个项目的卡片现在提供三个入口：**官网**、**GitHub 仓库**、以及渲染在本站的 **README 详情页**——README 在构建期从仓库 HEAD 拉取，用 `marked` 渲染成静态 HTML，仓库内的相对图片与链接会被自动改写为 GitHub 上的绝对地址。
 
