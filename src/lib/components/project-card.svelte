@@ -23,6 +23,7 @@
   let { project, locale }: { project: GeneratedProject; locale: Locale } = $props();
 
   const t = $derived(dict[locale]);
+  import ProjectLogo from '$lib/components/project-logo.svelte';
 
   // Typographic mark: the first two alphanumerics of the display name,
   // uppercase — the no-logo fallback the project-hub spec demands.
@@ -32,12 +33,10 @@
 <SectionCard class="proj-card" eyebrow={project.repo} title={project.name} summary={localizedDescription(project, locale)}>
   <div class="flex items-center gap-3">
     {#if project.logo}
-      <img
-        src={project.logo}
-        alt="{project.name} logo"
+      <!-- responsive logo (webp srcset + png fallback); key → asset map -->
+      <ProjectLogo
+        logo={project.logo}
         class="h-10 w-10 flex-none rounded-[4px] object-contain"
-        loading="lazy"
-        draggable="false"
       />
     {:else}
       <span

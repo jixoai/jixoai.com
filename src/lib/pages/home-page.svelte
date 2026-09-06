@@ -26,6 +26,7 @@
   import PressButton from '$lib/ui/press-button/press-button.svelte';
   import TerminalCard from '$lib/ui/terminal-card/terminal-card.svelte';
   import { projectsData, projects, projectsUrl, localizedDescription } from '$lib/projects';
+  import ProjectLogo from '$lib/components/project-logo.svelte';
   import { postsForLocale, postDir, displayDate } from '$lib/blog';
   import { GITHUB_ORG_URL, HOME_POSTS_COUNT } from '$lib/site';
   import { dict, localeHref, type Locale } from '$lib/i18n';
@@ -98,12 +99,15 @@
     <ul class="mt-4 divide-y divide-border/60" data-reveal="">
       {#each latestPosts as post (post.slug)}
         <li>
-          <a href={homeHref(`/blog/${post.slug}/`)} class="group flex flex-wrap items-baseline gap-x-4 gap-y-1 py-3">
+          <!-- table alignment (Owner 2026-09-07): grid columns — fixed mono
+               accent / content / right-truncated description — so every row
+               lines up vertically like a table -->
+          <a href={homeHref(`/blog/${post.slug}/`)} class="group grid grid-cols-[10.5ch_minmax(0,max-content)_minmax(0,1fr)] items-baseline gap-x-4 py-3">
             <!-- dir="ltr": the ISO date is a hard-LTR island (fix D.4 —
                  digit-hyphen runs reorder under dir="rtl") -->
             <time datetime={post.date} dir="ltr" class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
-            <span class="group-hover:text-primary transition-colors">{post.title}</span>
-            <span class="text-muted-foreground ms-auto hidden max-w-[46ch] truncate text-xs sm:block" dir={postDir(post)}>{post.description}</span>
+            <span class="group-hover:text-primary transition-colors truncate">{post.title}</span>
+            <span class="text-muted-foreground justify-self-end truncate text-xs" dir={postDir(post)}>{post.description}</span>
           </a>
         </li>
       {/each}
@@ -135,16 +139,18 @@
   <ul class="mt-4 divide-y divide-border/60" data-reveal="">
     {#each projects as project (project.slug)}
       <li>
-        <a href={projectsUrl(project.slug, locale)} class="group flex flex-wrap items-baseline gap-x-4 gap-y-1 py-3">
+        <!-- table alignment (Owner 2026-09-07): fixed version column so the
+             fleet rows line up; description right-truncated like a table -->
+        <a href={projectsUrl(project.slug, locale)} class="group grid grid-cols-[16ch_minmax(0,max-content)_minmax(0,1fr)] items-baseline gap-x-4 py-3">
           <!-- dir="ltr": version tags (opentray@0.21.1) are a hard-LTR island -->
           <span dir="ltr" class="font-nav text-primary text-xs tracking-[0.14em]">{project.version}</span>
-          <span class="group-hover:text-primary transition-colors inline-flex items-center gap-2">
+          <span class="group-hover:text-primary transition-colors inline-flex items-baseline gap-2">
             {#if project.logo}
-              <img src={project.logo} alt="" class="h-4 w-4 self-center" loading="lazy" decoding="async" />
+              <ProjectLogo logo={project.logo} class="h-4 w-4 self-center" />
             {/if}
-            {project.name}
+            <span class="truncate">{project.name}</span>
           </span>
-          <span class="text-muted-foreground ms-auto hidden max-w-[46ch] truncate text-xs sm:block">{localizedDescription(project, locale)}</span>
+          <span class="text-muted-foreground justify-self-end truncate text-xs">{localizedDescription(project, locale)}</span>
         </a>
       </li>
     {/each}

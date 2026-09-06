@@ -39,6 +39,7 @@
   } = $props();
 
   const t = $derived(dict[locale]);
+  import ProjectLogo from '$lib/components/project-logo.svelte';
 
   const wordmark = $derived(
     project.name.replace(/[^a-zA-Z0-9]/g, '').slice(0, 2).toUpperCase() || 'JX',
@@ -61,12 +62,8 @@
   <!-- identity header: logo/wordmark, name, description, version, links -->
   <header class="border-border flex flex-wrap items-start gap-5 border-b pb-8" data-reveal="">
     {#if project.logo}
-      <img
-        src={project.logo}
-        alt="{project.name} logo"
-        class="h-16 w-16 flex-none rounded-[6px] object-contain"
-        draggable="false"
-      />
+      <!-- responsive logo (webp srcset + png fallback); key → asset map -->
+      <ProjectLogo logo={project.logo} class="h-16 w-16 flex-none rounded-[6px] object-contain" />
     {:else}
       <span
         class="font-nav bg-primary/10 text-primary flex h-16 w-16 flex-none items-center justify-center rounded-[6px] border text-xl"

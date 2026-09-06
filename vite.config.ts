@@ -16,10 +16,13 @@ import { defineConfig } from 'vite';
 // svelte-kit — moved back to match the lock path contract).
 // @ts-expect-error — untyped .mjs registry artifact
 import { llmsTxt } from './vite-plugins/llms-txt.mjs';
+import { imagetools } from 'vite-imagetools';
 import { SITE_URL } from './src/lib/site.ts';
 
 export default defineConfig({
   plugins: [
+    // image pipeline (Owner law 2026-09-07): ?w=…&format=webp;png&as=picture imports
+    imagetools(),
     sveltekit(),
     tailwindcss(),
     llmsTxt({

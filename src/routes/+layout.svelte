@@ -52,6 +52,8 @@
   // paths.relative, which corrupts the hreflang/canonical absolutes.)
   const locale = $derived(localeOfPath(page.url.pathname));
   const route = $derived(routeOfPath(page.url.pathname));
+  import brandLogo from '$lib/assets/jixoai-logo.webp?w=64;128&format=webp;png&as=picture';
+  import BrandLogo from '$lib/components/brand-logo.svelte';
   const t = $derived(dict[locale]);
   const href = $derived((target: string) => localeHref(locale, target));
   const home = $derived(localeHref(locale, '/'));
@@ -114,7 +116,7 @@
         </NavigationMenuLink>
       </NavigationMenu>
       {#snippet logo()}
-        <img src="/logo.webp" alt="jixoai logo" class="h-8 w-8 object-contain" draggable="false" />
+        <BrandLogo class="h-8 w-8 object-contain" draggable="false" />
       {/snippet}
       {#snippet switcher()}
         <!-- compact controls carry their own frame padding — the header's

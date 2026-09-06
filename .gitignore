@@ -5,3 +5,4 @@ public/
 src/lib/projects.generated.json
 .DS_Store
 *.log
+.agents/images/
