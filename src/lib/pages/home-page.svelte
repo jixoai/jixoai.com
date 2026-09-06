@@ -107,7 +107,12 @@
                  digit-hyphen runs reorder under dir="rtl") -->
             <time datetime={post.date} dir="ltr" class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
             <span class="group-hover:text-primary transition-colors truncate">{post.title}</span>
-            <span class="text-muted-foreground justify-self-end truncate text-xs" dir={postDir(post)}>{post.description}</span>
+            <!-- max-w-full (vision fix r2): an end-aligned grid item sizes
+                 fit-content, which floors at the nowrap min-content (full
+                 text) — min-w-0 cannot touch that floor, a percentage
+                 max-width against the definite track can. Desc hides below
+                 sm. -->
+            <span class="text-muted-foreground hidden max-w-full justify-self-end truncate text-xs sm:block" dir={postDir(post)}>{post.description}</span>
           </a>
         </li>
       {/each}
@@ -150,7 +155,11 @@
             {/if}
             <span class="truncate">{project.name}</span>
           </span>
-          <span class="text-muted-foreground justify-self-end truncate text-xs">{localizedDescription(project, locale)}</span>
+          <!-- max-w-full (vision fix r2): hard-caps the end-aligned item
+               at its track so truncate ellipsizes (fit-content floors at
+               the nowrap min-content; only a percentage max-width caps
+               it); desc hides below sm like the posts strip -->
+          <span class="text-muted-foreground hidden max-w-full justify-self-end truncate text-xs sm:block">{localizedDescription(project, locale)}</span>
         </a>
       </li>
     {/each}

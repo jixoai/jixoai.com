@@ -148,9 +148,13 @@ export const postLang = (post: BlogPost): Locale => {
  *  governance; 2026-09-07 walkthrough fix B — mirror dedup): posts
  *  group by base slug (trailing `-en` stripped — the zh/en mirror
  *  convention) and each group surfaces exactly ONE variant, picked
- *  exact-UI-locale > zh > en, so a seven-locale home never lists the
- *  same article twice (once per language). Order: the UI locale's
- *  picks first, everything else by date desc (slug tiebreak). */
+ *  exact-UI-locale > en > zh, so a seven-locale home never lists the
+ *  same article twice (once per language). en outranks zh on third
+ *  locales (vision fix 2026-09-07: /ar/ served Chinese titles — for a
+ *  non-CJK reader the English mirror is the useful fallback; zh stays
+ *  last-resort for posts with no English mirror, and /zh/ still hits
+ *  its exact variant first). Order: the UI locale's picks first,
+ *  everything else by date desc (slug tiebreak). */
 export function postsForLocale(locale: Locale): readonly BlogPost[] {
   const groups = new Map<string, BlogPost[]>();
   for (const post of blogPosts) {
@@ -163,8 +167,8 @@ export function postsForLocale(locale: Locale): readonly BlogPost[] {
   for (const variants of groups.values()) {
     picks.push(
       variants.find((post) => postLang(post) === locale) ??
-        variants.find((post) => postLang(post) === 'zh') ??
         variants.find((post) => postLang(post) === 'en') ??
+        variants.find((post) => postLang(post) === 'zh') ??
         variants[0],
     );
   }
