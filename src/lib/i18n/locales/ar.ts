@@ -79,6 +79,7 @@ export const ar: Dictionary = {
     heading: 'المدونة',
     summary:
       'ملاحظات من المختبر — يكتبها المشرفون، وتُصيَّر وقت البناء، وتُقدَّم صفحات ثابتة بسيطة. بلا خادم، وبلا طلبات من العميل، وبلا تتبع.',
+    releasePill: (version) => `إصدار GitHub (${version})`,
   },
 
   blogPost: {

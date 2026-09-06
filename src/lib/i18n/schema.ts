@@ -92,6 +92,10 @@ export interface Dictionary {
     metaDescription: string;
     heading: string;
     summary: string;
+    /** version-pill title for posts carrying repo+version frontmatter;
+     *  shared with the post header pill (same interaction contract as
+     *  the projects grid pill — release-blog spec). */
+    releasePill: (version: string) => string;
   };
 
   blogPost: {

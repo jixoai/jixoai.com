@@ -78,6 +78,7 @@ export const fr: Dictionary = {
     heading: 'Blog',
     summary:
       'Notes du labo — écrites par les mainteneurs, rendues à la construction, servies en pages statiques. Pas de serveur, pas de requêtes client, pas de pistage.',
+    releasePill: (version) => `Publication GitHub (${version})`,
   },
 
   blogPost: {

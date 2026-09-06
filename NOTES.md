@@ -8,6 +8,69 @@ closure), and the dweb bilingual site (the i18n pattern donor). This
 file records the registry-consumption facts and every deviation from
 the jixoai-website skill.
 
+## Release blog + blog↔projects linkage (2026-09-06 release-blog)
+
+- **House style**: `skills/release-blog/SKILL.md` (project-maintained;
+  sourced from `.agents/research/2026-09-06-release-blog-patterns.md`).
+  First three posts are zh main + en mirror pairs, structurally
+  isomorphic section-by-section, cross-linked in their link bars
+  (zh `/blog/<slug>-en/`, en `/zh/blog/<slug>/` — root-absolute so the
+  link is locale-stable from any mirror).
+- **Linkage (`src/lib/blog.ts`)**: frontmatter gains optional
+  `repo`/`version` (must be declared together; `repo` must exist in
+  `projects.manifest.json` — module-scope throw = hard build failure,
+  negative-path verified live). `postRelease()` derives the pill data:
+  v-prefixed display (same grammar as the projects grid `.version-pill`)
+  + a permalink to the GitHub Release for that exact version, with the
+  tag convention derived from the repo's live tag prefix
+  (`v0.2.0` vs `openspecui@12.0.0` → `%40`-encoded URL, owner-aware via
+  the generated record; v-prefix default when no release exists yet).
+- **Pill surfaces**: blog index card + post header (research doc's
+  "same interaction contract"). The index card was restructured from
+  one whole-card anchor into title-link + body-link — an `<a>` cannot
+  nest inside the card's `<a>` (browsers break the DOM), so the pill
+  sits in the title row as a sibling; hover states preserved via
+  `.group` on the `<li>`.
+- **i18n**: `blogIndex.releasePill(version)` added to
+  `schema.ts` + all nine dictionaries (en "GitHub release (vX)" / zh
+  "GitHub 发布（vX）" pattern).
+- **Frontmatter parser**: values now strip matching surrounding quotes
+  (`version: "0.2.0"` → `0.2.0`) in addition to list brackets — the
+  skill's documented frontmatter style uses quotes; the naive
+  line parser previously kept them (would have produced
+  `v"0.2.0"` pills).
+- **L1 body gaps**: unipty v0.2.0 and ui v0.3.0 GitHub Releases carry
+  NO body text (unipty: empty; ui: bare "Full Changelog" link). Facts
+  were sourced instead from the repos' READMEs (pinned at the release
+  tag), git logs (unipty's release.yml publish-order comment + npm
+  publish timestamps prove the parser-first atomicity claim; ui's
+  release commit 125e31f1 is the canonical summary), and the archived
+  openspec changes. openspecui's release body is dense and was used
+  directly. Skill note: "release body" as the primary L1 source does
+  not hold for repos with empty bodies — the skill's gather step should
+  name the fallback ladder explicitly (body → release commit →
+  compare/commits → openspec archive).
+- **Dead-link catch**: `@jixoai/vite-plugin` is NOT on npm (in-repo
+  package only) — the draft linked npmjs.com and was corrected to the
+  `packages/vite-plugin` tree at the v0.3.0 tag after `npm view`
+  404'd. npmjs.com 403s plain curl (bot wall); verify packages via
+  `npm view` / the registry API, not curl status.
+- **Weight classes used**: unipty v0.2.0 milestone (zh ~1570 units),
+  ui v0.3.0 milestone (~1350), openspecui 12.0.0 compact milestone
+  (~885) — an adaptation major tracking an upstream CLI line at this
+  org's cadence (12 majors since June) is routine-weight in substance;
+  flagged to the skill as a gap (its ladder only knows x.0 vs minor).
+- **Follow-up (tracked)**: opentray / opendweb / openiweb have no
+  GitHub Releases yet (version "v—" on the hub); each gets its
+  first-release post once their release automation cuts one.
+- **Verification**: build green ×5; two consecutive full-pipeline runs
+  byte-identical over all 154 export files (144 page mirrors + 10
+  indices; was 100 before the six posts); pills spot-checked on
+  en/zh/ar/ja indexes and article headers; unknown-repo post fails the
+  build with a named error; all external permalinks (release tags,
+  commits, READMEs-at-tag, openspec archive paths, sibling sites)
+  curl-verified 200, npm packages via registry.
+
 ## Nine locales (2026-09-06 site-i18n-nine-locales)
 
 - **Routing**: en at the root (canonical, stable URLs); zh/es/fr/de/

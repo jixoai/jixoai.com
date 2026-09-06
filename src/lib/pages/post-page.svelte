@@ -7,15 +7,18 @@
   build time; mono-styled code blocks via the .markdown-body surface.
   2026-09-06 nine-locales: chrome copy from the locale dictionary; the
   body renders as-authored under every locale (localization tier 3 —
-  linked, not translated).
+  linked, not translated). 2026-09-06 release-blog: posts with
+  repo+version frontmatter carry the version pill in the header (same
+  grammar as the projects grid / blog index card).
 -->
 <script lang="ts">
-  import { displayDate, type BlogPost } from '$lib/blog';
+  import { displayDate, postRelease, type BlogPost } from '$lib/blog';
   import { dict, localeHref, type Locale } from '$lib/i18n';
 
   let { post, html, locale }: { post: BlogPost; html: string; locale: Locale } = $props();
 
   const t = $derived(dict[locale]);
+  const release = $derived(postRelease(post));
 </script>
 
 <svelte:head>
@@ -36,6 +39,17 @@
       <time datetime={post.date}>{displayDate(post.date)}</time>
       <span aria-hidden="true">·</span>
       <span>{post.author}</span>
+      {#if release}
+        <a
+          class="version-pill font-nav"
+          href={release.url}
+          target="_blank"
+          rel="noreferrer"
+          title={t.blogIndex.releasePill(release.version)}
+        >
+          {release.version}
+        </a>
+      {/if}
       {#if post.tags.length > 0}
         <span class="ms-auto flex flex-wrap gap-2">
           {#each post.tags as tag (tag)}

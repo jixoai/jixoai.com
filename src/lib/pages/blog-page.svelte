@@ -7,10 +7,12 @@
   newest first, every post prerendered (blog spec). Zero server runtime,
   zero client fetches. 2026-09-06 nine-locales: chrome copy from the
   locale dictionary; posts render as-authored under every locale and the
-  index lists all of them (localization tier 3).
+  index lists all of them (localization tier 3). 2026-09-06 release-blog:
+  posts with repo+version frontmatter carry a version pill linked to the
+  GitHub Release (same pill grammar as the projects grid).
 -->
 <script lang="ts">
-  import { blogPosts, displayDate } from '$lib/blog';
+  import { blogPosts, displayDate, postRelease } from '$lib/blog';
   import { dict, localeHref, type Locale } from '$lib/i18n';
 
   let { locale }: { locale: Locale } = $props();
@@ -34,13 +36,26 @@
 
   <ul class="mt-6 divide-y divide-border/60" data-reveal="">
     {#each blogPosts as post (post.slug)}
-      <li>
-        <a href={localeHref(locale, `/blog/${post.slug}/`)} class="group block py-5">
-          <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <time datetime={post.date} class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
-            <h2 class="group-hover:text-primary text-lg font-semibold transition-colors">{post.title}</h2>
-            <span class="text-muted-foreground font-nav ms-auto text-xs">{post.author}</span>
-          </div>
+      {@const release = postRelease(post)}
+      {@const href = localeHref(locale, `/blog/${post.slug}/`)}
+      <li class="group py-5">
+        <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <time datetime={post.date} class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
+          <h2 class="group-hover:text-primary text-lg font-semibold transition-colors"><a href={href}>{post.title}</a></h2>
+          {#if release}
+            <a
+              class="version-pill font-nav"
+              href={release.url}
+              target="_blank"
+              rel="noreferrer"
+              title={t.blogIndex.releasePill(release.version)}
+            >
+              {release.version}
+            </a>
+          {/if}
+          <span class="text-muted-foreground font-nav ms-auto text-xs">{post.author}</span>
+        </div>
+        <a href={href} class="block">
           {#if post.description}
             <p class="text-muted-foreground mt-1.5 max-w-[72ch] text-pretty text-[13px] leading-6">{post.description}</p>
           {/if}

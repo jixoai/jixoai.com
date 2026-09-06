@@ -78,6 +78,7 @@ export const ja: Dictionary = {
     heading: 'ブログ',
     summary:
       'ラボからのノート — メンテナーが執筆し、ビルド時にレンダリングされ、プレーンな静的ページとして配信。サーバーなし、クライアント fetch なし、トラッキングなし。',
+    releasePill: (version) => `GitHub リリース（${version}）`,
   },
 
   blogPost: {

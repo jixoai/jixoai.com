@@ -78,6 +78,7 @@ export const ko: Dictionary = {
     heading: '블로그',
     summary:
       '랩에서 온 노트 — 메인테이너가 작성하고 빌드 시 렌더링되어 평범한 정적 페이지로 제공됩니다. 서버 없음, 클라이언트 fetch 없음, 추적 없음.',
+    releasePill: (version) => `GitHub 릴리스(${version})`,
   },
 
   blogPost: {

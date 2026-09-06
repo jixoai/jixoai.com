@@ -78,6 +78,7 @@ export const zh: Dictionary = {
     heading: '博客',
     summary:
       '来自实验室的笔记 —— 由维护者撰写，构建时渲染，以纯静态页面提供服务。无服务器、无客户端请求、无追踪。',
+    releasePill: (version) => `GitHub 发布（${version}）`,
   },
 
   blogPost: {
