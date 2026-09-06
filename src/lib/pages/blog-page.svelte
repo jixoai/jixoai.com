@@ -3,21 +3,24 @@
   root route (en) and every /[lang]/ mirror.
 
   Orthogonal intents (maintained 2026-09-06): the pure-static blog
-  surface — build-time discovered markdown under content/blog/, listed
-  newest first, every post prerendered (blog spec). Zero server runtime,
-  zero client fetches. 2026-09-06 nine-locales: chrome copy from the
-  locale dictionary; posts render as-authored under every locale and the
-  index lists all of them (localization tier 3). 2026-09-06 release-blog:
-  posts with repo+version frontmatter carry a version pill linked to the
-  GitHub Release (same pill grammar as the projects grid).
+  surface — build-time discovered markdown under content/blog/, every
+  post prerendered (blog spec). Zero server runtime, zero client
+  fetches. 2026-09-06 nine-locales: chrome copy from the locale
+  dictionary; posts render as-authored under every locale (tier 3).
+  2026-09-06 release-blog: version pill linked to the GitHub Release
+  (same pill grammar as the projects grid). 2026-09-06 mobile audit:
+  locale-first listing — the UI locale's posts lead, the rest follow by
+  date with a language badge, and each summary carries its authored
+  language's bidi direction (no punctuation drift on RTL surfaces).
 -->
 <script lang="ts">
-  import { blogPosts, displayDate, postRelease } from '$lib/blog';
+  import { postsForLocale, postDir, postLang, displayDate, postRelease } from '$lib/blog';
   import { dict, localeHref, type Locale } from '$lib/i18n';
 
   let { locale }: { locale: Locale } = $props();
 
   const t = $derived(dict[locale]);
+  const listing = $derived(postsForLocale(locale));
 </script>
 
 <svelte:head>
@@ -35,13 +38,22 @@
   </p>
 
   <ul class="mt-6 divide-y divide-border/60" data-reveal="">
-    {#each blogPosts as post (post.slug)}
+    {#each listing as post (post.slug)}
       {@const release = postRelease(post)}
       {@const href = localeHref(locale, `/blog/${post.slug}/`)}
+      {@const foreign = postLang(post) !== locale}
       <li class="group py-5">
         <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
           <time datetime={post.date} class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
           <h2 class="group-hover:text-primary text-lg font-semibold transition-colors"><a href={href}>{post.title}</a></h2>
+          {#if foreign}
+            <span
+              class="border-border text-muted-foreground font-nav border px-1.5 py-0.5 text-[10.5px] tracking-[0.12em]"
+              title={t.blogPost.writtenIn(dict[postLang(post)].label)}
+            >
+              {dict[postLang(post)].label}
+            </span>
+          {/if}
           {#if release}
             <a
               class="version-pill font-nav"
@@ -57,7 +69,7 @@
         </div>
         <a href={href} class="block">
           {#if post.description}
-            <p class="text-muted-foreground mt-1.5 max-w-[72ch] text-pretty text-[13px] leading-6">{post.description}</p>
+            <p class="text-muted-foreground mt-1.5 max-w-[72ch] text-pretty text-[13px] leading-6" dir={postDir(post)} lang={postLang(post)}>{post.description}</p>
           {/if}
           {#if post.tags.length > 0}
             <p class="font-nav text-muted-foreground/80 mt-2 flex flex-wrap gap-2 text-[10.5px] uppercase tracking-[0.12em]">

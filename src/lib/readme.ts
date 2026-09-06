@@ -6,6 +6,10 @@
  * against the repository (images → raw.githubusercontent, links →
  * github.com blob view) so vendored READMEs hyperlink correctly from the
  * hub. First-party content: no sanitization (project-hub spec).
+ * (2026-09-06 readme-i18n) locale-aware body selection: locale L renders
+ * readmeTranslations[L], falling back to the default (English) README
+ * with translated=false so the page can badge the fallback — the
+ * container lang tag follows the CONTENT language (CJK typography).
  *
  * Two-pass URL handling: markdown-level image/link tokens ride marked
  * renderer hooks (adding target=_blank on outbound links); raw HTML
@@ -16,6 +20,30 @@
 
 import { Marked } from 'marked';
 import type { GeneratedProject } from './projects';
+import type { Locale } from './i18n';
+
+/** The rendered-README contract for a project detail page: the HTML,
+ *  the content language (container lang attribute), and whether the
+ *  markdown matched the UI locale (false = English fallback, page
+ *  shows the "original (English)" pill when locale ≠ en). */
+export interface ReadmeView {
+  html: string | null;
+  lang: string;
+  translated: boolean;
+}
+
+/** en renders the default README (lang en, no pill); every other
+ *  locale prefers its fetched translation, else falls back to the
+ *  default README with translated=false. */
+export function readmeView(project: GeneratedProject, locale: Locale): ReadmeView {
+  const translation = locale === 'en' ? null : (project.readmeTranslations?.[locale] ?? null);
+  const markdown = translation ?? project.readme;
+  return {
+    html: markdown ? renderReadme(project, markdown) : null,
+    lang: translation ? locale : 'en',
+    translated: translation !== null || locale === 'en',
+  };
+}
 
 const isAbsolute = (href: string): boolean =>
   href.startsWith('#') ||
@@ -49,8 +77,7 @@ function absolutizeRawHtml(html: string, repo: string): string {
 
 /** A per-call Marked instance keeps the URL overrides scoped (the shared
  *  marked singleton stays pristine for the blog renderer). */
-export function renderReadme(project: GeneratedProject): string | null {
-  if (!project.readme) return null;
+export function renderReadme(project: GeneratedProject, markdown: string): string {
   const repo = project.repo.includes('/') ? project.repo : `jixoai/${project.repo}`;
   const md = new Marked({
     gfm: true,
@@ -71,6 +98,6 @@ export function renderReadme(project: GeneratedProject): string | null {
       },
     },
   });
-  const html = md.parse(project.readme, { async: false }) as string;
+  const html = md.parse(markdown, { async: false }) as string;
   return absolutizeRawHtml(html, repo);
 }

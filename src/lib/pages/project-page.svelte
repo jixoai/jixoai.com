@@ -8,15 +8,29 @@
   version pill, and the outbound link trio (site / GitHub / release).
   The slug is the repo path with `/` → `--`. 2026-09-06 nine-locales:
   chrome copy from the locale dictionary; the curated description is
-  locale-aware (zh → descriptionZh); the README body renders
-  as-authored under every locale (linked, not translated).
+  locale-aware (zh → descriptionZh). 2026-09-06 readme-i18n: the README
+  body prefers the locale's fetched translation and the container lang
+  tag follows the content language (CJK typography); an untranslated
+  locale under L≠en gets the "original (English)" pill above the body.
 -->
 <script lang="ts">
   import PressButton from '$lib/ui/press-button/press-button.svelte';
   import { localizedDescription, type GeneratedProject } from '$lib/projects';
   import { dict, localeHref, type Locale } from '$lib/i18n';
 
-  let { project, readmeHtml, locale }: { project: GeneratedProject; readmeHtml: string | null; locale: Locale } = $props();
+  let {
+    project,
+    readmeHtml,
+    readmeLang,
+    readmeTranslated,
+    locale,
+  }: {
+    project: GeneratedProject;
+    readmeHtml: string | null;
+    readmeLang: string;
+    readmeTranslated: boolean;
+    locale: Locale;
+  } = $props();
 
   const t = $derived(dict[locale]);
 
@@ -90,9 +104,16 @@
     </div>
   </header>
 
-  <!-- README body: rendered from the repository head at build time -->
+  <!-- README body: rendered from the repository head at build time; the
+       lang tag follows the CONTENT language, and an untranslated locale
+       (L≠en on the English fallback) gets the one-time original pill -->
   {#if readmeHtml}
-    <article class="markdown-body mt-8 max-w-[76ch]" data-reveal="">
+    <article class="markdown-body mt-8 max-w-[76ch]" lang={readmeLang} data-reveal="">
+      {#if !readmeTranslated && locale !== 'en'}
+        <p class="mb-6">
+          <span class="version-pill font-nav">{t.projectDetail.originalLanguage}</span>
+        </p>
+      {/if}
       {@html readmeHtml}
     </article>
   {:else}

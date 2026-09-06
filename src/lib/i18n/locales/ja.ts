@@ -64,6 +64,7 @@ export const ja: Dictionary = {
     noRelease: 'リリースは未公開',
     readmeUnavailableLead: 'ビルド時に README を取得できませんでした —',
     readmeUnavailableLink: 'GitHub ↗ で読む。',
+    originalLanguage: '原文（English）',
   },
 
   card: {
@@ -83,5 +84,6 @@ export const ja: Dictionary = {
 
   blogPost: {
     titleSuffix: 'jixoai ブログ',
+    writtenIn: (language) => `この記事は${language}で書かれています。`,
   },
 };

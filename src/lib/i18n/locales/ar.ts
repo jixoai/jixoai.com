@@ -40,11 +40,13 @@ export const ar: Dictionary = {
     projectsHeading: 'المشاريع',
     projectsSummary:
       'المستودعات الرائدة للمؤسسة — لكل منها موقعه الرسمي ومستودعه على GitHub وملف README مُصيَّر كصفحة تفصيلية. تعكس حبّات الإصدار أحدث GitHub Release وتُحدَّث تلقائيًا: يُعاد بناء هذا الموقع مع كل دفعة وفق جدول يومي.',
-    allProjects: 'كل المشاريع →',
+    // RTL arrow law (2026-09-06 mobile audit): inline "continue" arrows
+    // mirror to ← under dir="rtl" — the glyph leads the reading flow.
+    allProjects: 'كل المشاريع ←',
     allRepositories: 'كل المستودعات ↗',
     versionData: (date) => `بيانات الإصدارات مأخوذة من GitHub Releases بتاريخ ${date}.`,
     latestPosts: 'أحدث المقالات',
-    allPosts: 'كل المقالات →',
+    allPosts: 'كل المقالات ←',
     noPosts: 'لا مقالات بعد — المدونة تنطلق مع إعادة الإطلاق.',
   },
 
@@ -65,11 +67,12 @@ export const ar: Dictionary = {
     noRelease: 'لم يُنشر أي إصدار بعد',
     readmeUnavailableLead: 'تعذر الوصول إلى README وقت البناء — اقرأه على',
     readmeUnavailableLink: 'GitHub ↗.',
+    originalLanguage: 'الأصل (English)',
   },
 
   card: {
     site: 'الموقع ↗',
-    readme: 'README →',
+    readme: 'README ←',
   },
 
   blogIndex: {
@@ -84,5 +87,6 @@ export const ar: Dictionary = {
 
   blogPost: {
     titleSuffix: 'مدونة jixoai',
+    writtenIn: (language) => `هذه المقالة مكتوبة بلغة ${language}.`,
   },
 };

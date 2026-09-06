@@ -10,4 +10,10 @@
   let { data }: PageProps = $props();
 </script>
 
-<ProjectPage project={data.project} readmeHtml={data.readmeHtml} locale={data.locale} />
+<ProjectPage
+  project={data.project}
+  readmeHtml={data.readmeHtml}
+  readmeLang={data.readmeLang}
+  readmeTranslated={data.readmeTranslated}
+  locale={data.locale}
+/>

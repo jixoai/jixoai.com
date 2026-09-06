@@ -25,9 +25,9 @@ export const zh: Dictionary = {
     metaDescription:
       'jixoai 打造 AI 时代所依赖的承重层 —— UniPty、OpenSpecUI、jixoai 设计语言、OpenDWeb、OpenIWeb 等。官方网站、实时 release 版本与实验室博客。',
     eyebrow: 'jixoai · 开源实验室',
-    titleLead: '面向 ',
-    titleEm: 'AI 时代',
-    titleTail: '的可靠基础设施。',
+    titleLead: '面向 AI 时代',
+    titleEm: '的可靠基础设施。',
+    titleTail: '',
     badges: ['开源', 'MIT 许可', '证据门控', 'github.com/jixoai'],
     summary:
       'jixoai 打造 AI 时代所依赖的承重层：终端运行时、设计语言与开发者工具，每一次交付都只给出一份诚实的契约。开源、证据门控、MIT。',
@@ -64,6 +64,7 @@ export const zh: Dictionary = {
     noRelease: '尚未发布 release',
     readmeUnavailableLead: '构建时无法获取 README —— 请到',
     readmeUnavailableLink: 'GitHub ↗ 阅读。',
+    originalLanguage: '原文（English）',
   },
 
   card: {
@@ -83,5 +84,6 @@ export const zh: Dictionary = {
 
   blogPost: {
     titleSuffix: 'jixoai 博客',
+    writtenIn: (language) => `本文以${language}撰写。`,
   },
 };

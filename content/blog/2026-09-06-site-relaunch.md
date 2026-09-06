@@ -4,6 +4,7 @@ date: 2026-09-06
 description: jixoai.com 官网重构公告——项目中心改为 manifest 配置驱动，新上线 dweb、iweb、opentray 官网入口，并开通博客版面。
 author: jixoai
 tags: [relaunch, project-hub, blog]
+lang: zh
 ---
 
 今天，jixoai.com 完成了一次整体重构。新站点是一个**配置驱动的项目中心**（project hub），同时开通了博客版面。本文记录这次改版做了什么、为什么这么做。

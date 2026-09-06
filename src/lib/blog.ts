@@ -7,9 +7,13 @@
  * 3) render markdown with marked; 4) release linkage — optional
  * repo+version frontmatter validated against projects.manifest.json and
  * resolved to a GitHub Release permalink for the version pill
- * (release-blog spec: unknown repo = hard build error). Zero server
- * runtime, zero client fetches — everything below runs inside the
- * prerender.
+ * (release-blog spec: unknown repo = hard build error); 5) language
+ * governance (2026-09-06 mobile audit) — postLang/postDir/
+ * postsForLocale: the authored-language views behind the locale-first
+ * index order, the language badge, the summary bidi isolation and the
+ * "written in …" notice (bodies stay as-authored under every locale —
+ * tier law unchanged). Zero server runtime, zero client fetches —
+ * everything below runs inside the prerender.
  *
  * Content is first-party (jixoai authors), so no HTML sanitization is
  * applied on purpose (blog spec, 2026-09-06).
@@ -17,6 +21,7 @@
 
 import { marked } from 'marked';
 import manifest from '../../projects.manifest.json';
+import { dict, type Locale } from './i18n';
 import { projects } from './projects';
 
 export interface BlogPost {
@@ -128,6 +133,31 @@ export const blogPosts: readonly BlogPost[] = [...posts].sort(
 );
 
 export const blogPostBySlug = new Map(blogPosts.map((post) => [post.slug, post]));
+
+/** A post's authored language (frontmatter `lang`; posts predate the
+ *  field, so a missing value reads as en — the release-blog era always
+ *  declares it). */
+export const postLang = (post: BlogPost): Locale => {
+  const lang = post.lang as Locale | undefined;
+  return lang && lang in dict ? lang : 'en';
+};
+
+/** Locale-aware listing order (2026-09-06 mobile-audit, mixed-language
+ *  governance): the UI locale's posts first, every other language after
+ *  (both groups keep the date-desc index order) — the badge on the
+ *  non-matching group carries the language label. */
+export function postsForLocale(locale: Locale): readonly BlogPost[] {
+  return [...blogPosts].sort(
+    (a, b) =>
+      Number(postLang(b) === locale) - Number(postLang(a) === locale) ||
+      Date.parse(b.date) - Date.parse(a.date) ||
+      a.slug.localeCompare(b.slug),
+  );
+}
+
+/** Bidi direction of a post's authored content (summary isolation on
+ *  RTL surfaces); undefined when it matches the default. */
+export const postDir = (post: BlogPost): 'ltr' | 'rtl' => dict[postLang(post)].dir;
 
 /** Render markdown to HTML at build time (marked, gfm tables/code). */
 export const renderMarkdown = (markdown: string): string =>

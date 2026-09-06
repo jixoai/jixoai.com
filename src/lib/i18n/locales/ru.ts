@@ -64,6 +64,7 @@ export const ru: Dictionary = {
     noRelease: 'релизов пока не опубликовано',
     readmeUnavailableLead: 'README недоступен на момент сборки — читайте на',
     readmeUnavailableLink: 'GitHub ↗.',
+    originalLanguage: 'Оригинал (English)',
   },
 
   card: {
@@ -83,5 +84,6 @@ export const ru: Dictionary = {
 
   blogPost: {
     titleSuffix: 'блог jixoai',
+    writtenIn: (language) => `Эта запись написана на ${language}.`,
   },
 };

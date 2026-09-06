@@ -11,6 +11,10 @@
   2026-09-06 nine-locales: every string renders from the locale
   dictionary (Owner translations verbatim; en byte-equal to the
   pre-i18n copy); internal links stay on the locale mirror.
+  2026-09-06 mobile audit: the hero terminal is a hard LTR island
+  (dir="ltr" — commands, prompts and version columns never reorder
+  under the Arabic mirror), and the latest-posts strip lists the UI
+  locale's posts first (postsForLocale).
 -->
 <script lang="ts">
   import CardGrid from '$lib/ui/card-grid/card-grid.svelte';
@@ -19,7 +23,7 @@
   import ProjectCard from '$lib/components/project-card.svelte';
   import TerminalCard from '$lib/ui/terminal-card/terminal-card.svelte';
   import { projectsData, projects } from '$lib/projects';
-  import { blogPosts, displayDate } from '$lib/blog';
+  import { postsForLocale, postDir, displayDate } from '$lib/blog';
   import { GITHUB_ORG_URL, HOME_POSTS_COUNT } from '$lib/site';
   import { dict, localeHref, type Locale } from '$lib/i18n';
 
@@ -37,7 +41,7 @@
     ...projects.map((p) => `  ${p.name.toLowerCase().padEnd(15)}${p.version}`),
   ];
 
-  const latestPosts = blogPosts.slice(0, HOME_POSTS_COUNT);
+  const latestPosts = $derived(postsForLocale(locale).slice(0, HOME_POSTS_COUNT));
 </script>
 
 <svelte:head>
@@ -62,7 +66,12 @@
     <PressButton variant="outline" href={GITHUB_ORG_URL} external>GitHub ↗</PressButton>
   {/snippet}
   {#snippet terminal()}
-    <TerminalCard barTitle={t.home.barTitle} command={t.home.command} outputs={terminalOutputs} />
+    <!-- dir="ltr": the terminal is a hard LTR island — the $ prompt, the
+         typed command, the cursor and the version columns keep their
+         order under dir="rtl" (registry component stays untouched) -->
+    <div dir="ltr">
+      <TerminalCard barTitle={t.home.barTitle} command={t.home.command} outputs={terminalOutputs} />
+    </div>
   {/snippet}
 </HeroSection>
 
@@ -106,7 +115,7 @@
           <a href={homeHref(`/blog/${post.slug}/`)} class="group flex flex-wrap items-baseline gap-x-4 gap-y-1 py-3">
             <time datetime={post.date} class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
             <span class="group-hover:text-primary transition-colors">{post.title}</span>
-            <span class="text-muted-foreground ms-auto hidden max-w-[46ch] truncate text-xs sm:block">{post.description}</span>
+            <span class="text-muted-foreground ms-auto hidden max-w-[46ch] truncate text-xs sm:block" dir={postDir(post)}>{post.description}</span>
           </a>
         </li>
       {/each}

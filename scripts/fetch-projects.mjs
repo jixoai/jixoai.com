@@ -7,7 +7,10 @@
  * latest GitHub Release for each repo; 3) fetch each repo's README from
  * raw GitHub; 4) write src/lib/projects.generated.json (gitignored) for
  * the static build to consume. Roster/config changes are manifest edits,
- * never code edits.
+ * never code edits. (2026-09-06 readme-i18n) 3b) fetch each repo's
+ * translated READMEs (README-<lang>.md for the eight non-en hub locales,
+ * concurrently per repo) into readmeTranslations; a 404 means "no such
+ * translation" → null, never an error.
  *
  * Owner-aware repos (2026-09-06, project-hub spec): a bare name
  * ("opentray") means the jixoai org; "owner/name" entries carry an explicit
@@ -35,6 +38,9 @@ const manifestPath = path.join(repoRoot, 'projects.manifest.json');
 const generatedPath = path.join(repoRoot, 'src', 'lib', 'projects.generated.json');
 const ORG = 'jixoai';
 const NO_RELEASE = 'v—';
+/** The eight non-en hub locales a README translation may exist for
+ * (README-zh.md … README-ar.md at the repo head). */
+const TRANSLATION_LANGS = ['zh', 'es', 'fr', 'de', 'ru', 'ja', 'ko', 'ar'];
 
 const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '';
 
@@ -122,6 +128,45 @@ function fetchReadmeViaGh(ownerName) {
   throw new Error(`gh api exited ${result.status}: ${(result.stderr || '').trim()}`);
 }
 
+/** Translated README (README-<lang>.md) via the contents API with the
+ *  path pinned; same contract as fetchReadmeViaApi but for an exact
+ *  filename — the default README's case-insensitive `…/readme`
+ *  endpoint cannot address translations. */
+async function fetchReadmeTranslationViaApi(ownerName, lang) {
+  const response = await fetch(
+    `https://api.github.com/repos/${ownerName}/contents/README-${lang}.md`,
+    {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'jixoai.com-site-build',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    },
+  );
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const data = await response.json();
+  return Buffer.from(data.content, 'base64').toString('utf8');
+}
+
+function fetchReadmeTranslationViaGh(ownerName, lang) {
+  const result = spawnSync(
+    'gh',
+    ['api', `repos/${ownerName}/contents/README-${lang}.md`, '--jq', '.content'],
+    { encoding: 'utf8' },
+  );
+  if (result.status === 0 && result.stdout.trim()) {
+    try {
+      return Buffer.from(result.stdout.trim(), 'base64').toString('utf8');
+    } catch {
+      /* fall through */
+    }
+  }
+  if (/Not Found|"status":\s*"404"/.test(result.stderr || '')) return null;
+  throw new Error(`gh api exited ${result.status}: ${(result.stderr || '').trim()}`);
+}
+
 /** "v0.2.0" → "v0.2.0"; "openspecui@9.0.2" → "v9.0.2"; null → "v—". */
 function displayVersion(tag) {
   if (!tag) return NO_RELEASE;
@@ -182,12 +227,36 @@ async function resolveProject(project, previous) {
       );
       readme = previous?.readme ?? null;
     }
+    // Translations: all eight candidates fetched concurrently (they are
+    // independent resources); per-language failure semantics mirror the
+    // default README — 404 → null, transport failure → previous value.
+    const translationEntries = await Promise.all(
+      TRANSLATION_LANGS.map(async (lang) => {
+        const translationStrategies = token
+          ? [() => fetchReadmeTranslationViaApi(ownerName, lang)]
+          : [
+              () => fetchReadmeTranslationViaApi(ownerName, lang),
+              () => fetchReadmeTranslationViaGh(ownerName, lang),
+            ];
+        try {
+          return [lang, await withLadder(translationStrategies)];
+        } catch (error) {
+          console.warn(
+            `[fetch-projects] warning: ${project.repo} README-${lang}.md unreachable (${error.message}); ` +
+              'keeping the previous generated value',
+          );
+          return [lang, previous?.readmeTranslations?.[lang] ?? null];
+        }
+      }),
+    );
+    const readmeTranslations = Object.fromEntries(translationEntries);
     return {
       ...base,
       tag: release ? release.tag : null,
       version: displayVersion(release ? release.tag : null),
       releaseUrl: release ? release.url : null,
       readme,
+      readmeTranslations,
     };
   } catch (error) {
     console.warn(
@@ -204,6 +273,7 @@ async function resolveProject(project, previous) {
           version: NO_RELEASE,
           releaseUrl: null,
           readme: previous?.readme ?? null,
+          readmeTranslations: {},
         };
   }
 }
@@ -221,10 +291,14 @@ async function main() {
   for (const project of manifest.projects) {
     const resolved = await resolveProject(project, previous.get(project.repo));
     projects.push(resolved);
+    const translations = Object.entries(resolved.readmeTranslations ?? {})
+      .filter(([, markdown]) => markdown)
+      .map(([lang]) => lang);
     console.log(
       `[fetch-projects] ${project.repo} → ${resolved.version}` +
         (resolved.tag ? ` (tag ${resolved.tag})` : ' (no release yet)') +
-        (resolved.readme ? ` + README (${resolved.readme.length} chars)` : ' (no readme)'),
+        (resolved.readme ? ` + README (${resolved.readme.length} chars)` : ' (no readme)') +
+        (translations.length > 0 ? ` + README translations (${translations.join(', ')})` : ''),
     );
   }
 

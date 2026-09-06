@@ -64,6 +64,7 @@ export const ko: Dictionary = {
     noRelease: '아직 게시된 릴리스 없음',
     readmeUnavailableLead: '빌드 시점에 README를 가져올 수 없습니다 —',
     readmeUnavailableLink: 'GitHub ↗에서 읽기.',
+    originalLanguage: '원문 (English)',
   },
 
   card: {
@@ -83,5 +84,6 @@ export const ko: Dictionary = {
 
   blogPost: {
     titleSuffix: 'jixoai 블로그',
+    writtenIn: (language) => `이 글은 ${language}로 작성되었습니다.`,
   },
 };

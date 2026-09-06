@@ -13,6 +13,11 @@
  * text-align: start) so the Arabic mirror lays out correctly — the
  * registry components' physical-direction utilities are patched in
  * markup (ms-/me-) instead, never here.
+ * [bidi] (2026-09-06 mobile audit) pre/code inside the markdown
+ * surface isolate as LTR under dir="rtl" (commands never reorder);
+ * [mobile] tables wrap instead of nesting a scroll region;
+ * [locale-typography] ko keeps word granularity (keep-all), ja
+ * balances markdown h1 line breaks.
  *
  * Original request (2026-09-06): hub relaunch — config-driven project
  * surface + static blog, chrome from the jixoai-ui 0.3.0 registry.
@@ -209,6 +214,63 @@
   border: none;
   border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
   margin: 2em 0;
+}
+
+/* -------------------------------------------------------------------------
+ * Bidi isolation (2026-09-06 mobile audit): code and command text are
+ * hard-LTR islands inside the RTL mirror — without this the "$" prompt
+ * lands on the right edge and inline `code` fragments reorder around
+ * Arabic runs. The markdown-body surface covers project READMEs and
+ * blog posts alike; the hero terminal isolates in markup
+ * (src/lib/pages/home-page.svelte, registry component untouched).
+ * ---------------------------------------------------------------------- */
+[dir='rtl'] .markdown-body pre,
+[dir='rtl'] .markdown-body code {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+[dir='rtl'] .markdown-body pre {
+  text-align: left;
+}
+
+/* -------------------------------------------------------------------------
+ * Mobile table law (2026-09-06 mobile audit): a vendored README's
+ * definition table must never clip on a phone. Desktop keeps the
+ * max-content block with its own horizontal scroller; below sm the
+ * table becomes a fixed-layout table filling the measure — cells wrap
+ * long tokens (break-word; header cells included, nowrap would
+ * re-widen the columns) and no nested scroll region traps touch.
+ * pre already scrolls horizontally (white-space: pre + overflow-x:
+ * auto above). Fixed-vs-auto measured live: auto re-inflates to
+ * max-content and clips the article; fixed holds the 390px measure.
+ * ---------------------------------------------------------------------- */
+@media (max-width: 639.98px) {
+  .markdown-body table {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+  .markdown-body th,
+  .markdown-body td {
+    overflow-wrap: break-word;
+  }
+  .markdown-body th {
+    white-space: normal;
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Locale typography (2026-09-06 mobile audit): Korean words never break
+ * mid-word (spaces are the only legal break points); Japanese markdown
+ * h1 balances its line breaks so titles don't tear across three lines.
+ * The hero h1 balances globally already (text-balance in the registry
+ * component).
+ * ---------------------------------------------------------------------- */
+:lang(ko) {
+  word-break: keep-all;
+}
+:lang(ja) .markdown-body h1 {
+  text-wrap: balance;
 }
 
 /* -------------------------------------------------------------------------

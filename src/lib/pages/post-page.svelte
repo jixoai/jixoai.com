@@ -9,16 +9,20 @@
   body renders as-authored under every locale (localization tier 3 —
   linked, not translated). 2026-09-06 release-blog: posts with
   repo+version frontmatter carry the version pill in the header (same
-  grammar as the projects grid / blog index card).
+  grammar as the projects grid / blog index card). 2026-09-06 mobile
+  audit: a one-time notice renders when the UI locale differs from the
+  post's authored language (the body itself stays as-authored, and its
+  container lang follows the content language).
 -->
 <script lang="ts">
-  import { displayDate, postRelease, type BlogPost } from '$lib/blog';
+  import { displayDate, postLang, postDir, postRelease, type BlogPost } from '$lib/blog';
   import { dict, localeHref, type Locale } from '$lib/i18n';
 
   let { post, html, locale }: { post: BlogPost; html: string; locale: Locale } = $props();
 
   const t = $derived(dict[locale]);
   const release = $derived(postRelease(post));
+  const lang = $derived(postLang(post));
 </script>
 
 <svelte:head>
@@ -59,11 +63,21 @@
       {/if}
     </div>
     {#if post.description}
-      <p class="text-muted-foreground mt-3 text-pretty text-[13px] leading-6">{post.description}</p>
+      <p class="text-muted-foreground mt-3 text-pretty text-[13px] leading-6" dir={postDir(post)} lang={lang}>{post.description}</p>
     {/if}
   </header>
 
-  <div class="markdown-body mt-8">
+  {#if lang !== locale}
+    <!-- one-time mismatch notice: the chrome speaks the UI locale, the
+         article below stays in its authored language -->
+    <p class="text-muted-foreground mt-6 text-[13px]" data-reveal="">
+      <span class="border-border font-nav border px-1.5 py-0.5 text-[10.5px] tracking-[0.12em]">
+        {t.blogPost.writtenIn(dict[lang].label)}
+      </span>
+    </p>
+  {/if}
+
+  <div class="markdown-body mt-8" lang={lang} dir={postDir(post)}>
     {@html html}
   </div>
 </article>

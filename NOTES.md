@@ -128,6 +128,50 @@ the jixoai-website skill.
   believing a sudden all-FAIL sweep — multi-agent port discipline
   applies to static preview servers too, not just dev servers.
 
+## Locale negotiation (2026-09-06 locale-negotiation)
+
+OpenSpec change `2026-09-06-locale-negotiation` (original request:
+站点没有基于浏览器语言自动选择默认语言——需要补上). A zh browser
+landing on `/` previously got English unless it clicked the switcher.
+
+- **Pre-paint bootstrap** (`src/app.html`, first inline `<head>`
+  script, before the theme bootstrap): an explicit persisted choice
+  wins — localStorage `lang` (the switcher's key) with a prefixed
+  locale redirects ONCE to the same page under its mirror
+  (`location.replace`, path + hash preserved), while a stored `en` is
+  an explicit stay and suppresses detection too (caught live by the
+  matrix's first run: the naive "valid prefixed value only" reading
+  let stored-en fall through to detection and bounced a fr browser to
+  `/fr/`). Otherwise `navigator.languages` is walked in order, primary
+  subtag only (`zh-Hans-CN` → zh; `pt-BR` → no match, next entry);
+  first hit among the eight prefixed locales wins. Loop laws: the
+  script only ever LEAVES the default surface (returns when the first
+  path segment is a prefixed locale — also what makes the unknown
+  `/xx/` 404 matcher untouched), the target always carries its prefix,
+  and mirrors never bounce back. No match → stay on en (x-default;
+  hreflang already advertises the mirrors, SEO untouched). Storage
+  access is try/caught (private mode degrades to detection).
+- **Switcher persistence** (`language-switcher.svelte`, both
+  variants): every locale anchor records its code to localStorage
+  `lang` before the anchored navigation, so an explicit click always
+  beats detection afterwards; storage failures are swallowed (the
+  anchor still navigates). Site-level divergence from the registry
+  bytes — `jixoai-ui.lock` still records the pristine hash for the
+  file (same posture as unipty's recorded lock-vs-disk divergences);
+  re-adding the item would need the persist handlers re-applied.
+- **Verification**: `npm run build` green; headless matrix
+  (playwright-core, machine-cached Chromium for Testing 151) with
+  emulated `navigator.languages` + seeded `lang` via context init
+  scripts — 15 dev-server cases (zh-CN/zh-Hans-CN → `/zh/`, fr-CA →
+  `/fr/`, ar-EG → `/ar/` with `dir="rtl"`, ru-RU, en-US/pt-BR stay,
+  `pt-BR,es-AR` → `/es/`, `pt-BR,zh-CN` → `/zh/` list walk, persisted
+  de beats en-US, persisted en stays, mirror-never-bounces, deep path
+  `/projects/` → `/ja/projects/`, hash preserved) + static-artifact
+  spot checks on `public/` + a real-click switcher test (menu variant:
+  open popover, click zh → `lang=zh`, lands `/zh/`) — 30/30 after the
+  stored-en fix. `/zz/` and `/zh/zz/` still 404. `__SITE_URL__`/
+  hreflang surfaces unchanged.
+
 ## Registry consumption (2026-09-06) — jixoai-ui 0.3.0
 
 - `components.json` hand-written FIRST (init refuses without it): style
@@ -221,3 +265,98 @@ from opentray/docs, iweb.svg from admin-console favicon, dweb.png from
 /Volumes/dweb/assets/opendweb-icon.png — the Owner-designated direct
 variant, unipty.svg + openspecui.svg from their site static dirs; ui
 reuses static/logo.webp).
+
+## README i18n (2026-09-06 readme-i18n, openspec change active)
+
+Original request (Owner): 项目元数据要涵盖多语言 README — 切语言时显示对应
+语言版本，缺失则回退默认.
+
+- **Fetch** (`scripts/fetch-projects.mjs`): per repo, `README-<lang>.md`
+  for the eight non-en hub locales, fetched CONCURRENTLY (Promise.all —
+  the audit-era serial ladder stays for the default README only); the
+  contents API with the path pinned (`repos/{o}/{r}/contents/README-zh.md`)
+  because the case-insensitive `…/readme` endpoint cannot address
+  translations. 404 → null (normal), transport failure → previous
+  generated value per language. Generated record gains
+  `readmeTranslations` (all eight keys, null where absent). Live state:
+  all six repos ship README-zh.md; no other language exists yet.
+- **Selection** (`src/lib/readme.ts` — `readmeView(project, locale)`):
+  translation-first with English fallback; the returned `lang` follows
+  the CONTENT (container attribute — CJK typography inside a foreign
+  page locale), `translated=false` drives the fallback pill. Both
+  project-detail loaders consume it (root en + eight mirrors); the
+  pill copy is `projectDetail.originalLanguage` in all nine
+  dictionaries ("原文（English）" / "Original (English)" / "الأصل
+  (English)" / …) — the source is always English, so every locale
+  names it identically.
+- **A3 note**: the vision P1 "「中文版」标签中文内容英文" was dweb's
+  English README carrying its own `[中文版](README-zh.md)` pointer —
+  no site-level label existed. Fixed structurally: /zh/ now renders
+  the actual Chinese README; the only language claim the chrome makes
+  is the fallback pill, which only ever names English.
+- **Verbatim guard (zh tagline)**: the em moved to the tail phrase
+  (面向 AI 时代`<em>`的可靠基础设施。</em>`); lead+em+tail
+  concatenation is byte-identical to the Owner table.
+
+## Mobile audit fixes (2026-09-06, nine-locale 390px pass)
+
+- **RTL terminal/code isolation (P1)**: the hero terminal is wrapped
+  in `<div dir="ltr">` at the consumer (home-page snippet) — registry
+  component untouched; `.markdown-body pre/code` get
+  `direction: ltr; unicode-bidi: isolate` under `[dir='rtl']` (app.css
+  site-supplement layer, never the registry sheet). Verified: prompt $
+  left of typed text, cursor right, command un-reordered.
+- **Mobile table law (P1)**: `@media (max-width: 639.98px)` switches
+  `.markdown-body table` to `display: table; table-layout: fixed;
+  width: 100%` + cell `overflow-wrap: break-word` + th
+  `white-space: normal`. Measured live: block+width:100% alone does
+  NOT wrap (the anonymous inner table still lays out at max-content →
+  nested scroll); display:table with AUTO layout re-inflates to 582px
+  and clips; FIXED layout holds scrollW==clientW==358 @390px. pre
+  keeps overflow-x:auto (terminal blocks scroll like GitHub).
+- **RTL arrows (P1)**: ar dictionary "continue" arrows mirror → ←
+  (allProjects/allPosts/card.readme); ↗ diagonals kept (audit scope).
+- **Blog language governance (P0)**: `postLang/postDir/postsForLocale`
+  in blog.ts (frontmatter `lang`, missing → en; the relaunch post
+  gained its missing `lang: zh`). Blog index + home strip list the UI
+  locale's posts first, foreign posts carry an autonym badge
+  (dict[lang].label); summaries get per-post `dir`/`lang` (bidi
+  isolation); post pages show a one-time `blogPost.writtenIn(autonym)`
+  notice when UI locale ≠ post language — bodies stay as-authored
+  (tier law unchanged).
+- **Locale typography (P2)**: `:lang(ko) { word-break: keep-all }`,
+  `:lang(ja) .markdown-body h1 { text-wrap: balance }`.
+- **Header subtitle (P2)**: already `hidden lg:block` in the registry
+  terminal-header — verified computed display:none @390px (the audit
+  finding predates the registry markup; no code change needed).
+- **ar typo (P2)**: "البناءء" does NOT exist in ar.ts (byte-level
+  grep) — the vision reading was shaped-glyph misread; rendered page
+  re-checked clean.
+- **es/fr eyebrow OPEN SOURCE**: intentionally untouched (audit
+  accepted).
+
+## Verification record additions (2026-09-06 readme-i18n + audit)
+
+- `npm run build` green ×4 across the two work streams; consecutive
+  run pairs: llms export (10 files) byte-identical every time. Page
+  HTML differs across runs ONLY through vite chunk-hash filenames —
+  `fetchedAt` (millisecond ISO) rides the data chunk and changes its
+  content hash; no timestamp reaches page HTML (pre-existing
+  mechanism, spec only claims llms-export stability).
+- Generated data: six repos × README-zh (5-10k chars each); zh detail
+  pages render Chinese bodies with lang="zh" and no pill;
+  /ar/projects/opendweb/ renders lang="en" + "الأصل (English)" pill.
+- CDP audit (chrome-headless-shell 1228, 390×844, reduced motion):
+  ko word-break keep-all + zero viewport overflow; ar terminal island
+  LTR with $ left of text; zh opendweb table scrollW==clientW==358,
+  pre scrolls internally; zh blog zh-first order with English badges
+  on the -en mirrors; header subtitle display:none; ja post h1
+  text-wrap:balance + mismatch notice. Screenshots:
+  `.agents/images/2026-09-06-mobile-audit/fix-{ar-home,zh-opendweb-detail,ko-home}.png`.
+- Browser-stack friction (recorded for the next agent): "Chromium for
+  Testing" 151 full binary wedges its renderer DevTools after any
+  http navigation under `--headless=new` on this machine (navigate
+  acks lost, Runtime.evaluate dead; data:/about:blank fine) — the
+  playwright-cached chrome-headless-shell build drives cleanly over
+  plain-WebSocket CDP (Node 24 global WebSocket, browser endpoint +
+  Target.attachToTarget flatten).

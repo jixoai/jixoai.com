@@ -9,6 +9,8 @@
  * Curated-copy tier (2026-09-06 nine-locales change): the description is
  * locale-aware — zh renders the manifest's descriptionZh, every other
  * locale renders description (localization spec, no silent mixing).
+ * README tier (2026-09-06 readme-i18n): the body is locale-aware with an
+ * explicit fallback — see src/lib/readme.ts (readmeView).
  */
 
 import generated from './projects.generated.json';
@@ -35,6 +37,10 @@ export interface GeneratedProject {
   releaseUrl: string | null;
   /** README markdown fetched at build time, null when unreachable */
   readme: string | null;
+  /** build-time fetched README translations keyed by the eight non-en
+   *  hub locales (README-zh.md … README-ar.md); null/absent = repo
+   *  carries no such translation (readme-i18n, 2026-09-06) */
+  readmeTranslations: Partial<Record<Locale, string | null>>;
 }
 
 export interface GeneratedData {

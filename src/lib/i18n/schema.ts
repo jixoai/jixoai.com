@@ -80,6 +80,10 @@ export interface Dictionary {
     noRelease: string;
     readmeUnavailableLead: string;
     readmeUnavailableLink: string;
+    /** fallback pill shown when the locale has no README translation
+     *  and the English original renders instead (readme-i18n). The
+     *  source is always English, so every locale names it verbatim. */
+    originalLanguage: string;
   };
 
   card: {
@@ -101,5 +105,10 @@ export interface Dictionary {
   blogPost: {
     /** <title> suffix pattern after the post title. */
     titleSuffix: string;
+    /** one-time notice when the UI locale ≠ the post's authored
+     *  language; fed the language's native label (autonym), e.g.
+     *  en UI over a zh post: "This post is written in 中文." The body
+     *  still renders as-authored (tier law unchanged). */
+    writtenIn: (language: string) => string;
   };
 }
