@@ -2,11 +2,11 @@
   Home surface (src/lib/pages/home-page.svelte) — rendered by the root
   route (en) and every /[lang]/ mirror.
 
-  Orthogonal intents (maintained 2026-09-06): hero — the mission story +
-  live fleet terminal (release versions captured at build time); projects
-  — the config-driven roster grid (manifest → generated data); latest
-  posts — the blog strip. Copy + fleet terminal carried over from the
-  pre-2026-09-06 single-page site.
+  Orthogonal intents (maintained 2026-09-07): hero — the mission story +
+  live fleet terminal (release versions captured at build time); latest
+  posts LEAD the page (Owner 2026-09-07); projects — the config-driven
+  roster as a LIST in the same grammar (Owner 2026-09-07; was a card
+  grid — the cards live on at /projects/).
 
   2026-09-06 nine-locales: every string renders from the locale
   dictionary (Owner translations verbatim; en byte-equal to the
@@ -22,12 +22,10 @@
   and every ISO date renders as an LTR island / bdi under RTL.
 -->
 <script lang="ts">
-  import CardGrid from '$lib/ui/card-grid/card-grid.svelte';
   import HeroSection from '$lib/ui/hero-section/hero-section.svelte';
   import PressButton from '$lib/ui/press-button/press-button.svelte';
-  import ProjectCard from '$lib/components/project-card.svelte';
   import TerminalCard from '$lib/ui/terminal-card/terminal-card.svelte';
-  import { projectsData, projects } from '$lib/projects';
+  import { projectsData, projects, projectsUrl, localizedDescription } from '$lib/projects';
   import { postsForLocale, postDir, displayDate } from '$lib/blog';
   import { GITHUB_ORG_URL, HOME_POSTS_COUNT } from '$lib/site';
   import { dict, localeHref, type Locale } from '$lib/i18n';
@@ -86,40 +84,10 @@
   {/snippet}
 </HeroSection>
 
-<!-- Projects: card-grid + section-card, subgrid-equalized, live versions. -->
-<section id="projects" class="mx-auto w-full max-w-[90rem] px-4 pb-12 sm:px-6 lg:px-8" aria-label={t.home.projectsHeading}>
-  <!-- min-w-0 + flex-wrap (2026-09-07 fix D.3): the tracked uppercase
-       heading wraps to its own lines on narrow locales (es "ÚLTIMAS
-       PUBLICACIONES") instead of overflowing the measure; the trailing
-       rule spans the wrapped last row -->
-  <h2 class="font-nav flex min-w-0 flex-wrap items-baseline gap-4 text-lg uppercase tracking-[0.3em]" data-reveal="">
-    {t.home.projectsHeading}
-    <span class="bg-border h-px flex-1" aria-hidden="true"></span>
-  </h2>
-  <p class="text-muted-foreground mt-3 max-w-[62ch] text-pretty text-[13px] leading-6" data-reveal="">
-    {t.home.projectsSummary}
-  </p>
-
-  <CardGrid min="300px" class="mt-6" foot>
-    {#each projects as project, index (project.slug)}
-      <div data-reveal="">
-        <ProjectCard {project} {locale} />
-      </div>
-    {/each}
-  </CardGrid>
-
-  <div class="mt-8 flex flex-wrap items-center gap-4" data-reveal="">
-    <PressButton variant="outline" href={homeHref('/projects/')}>{t.home.allProjects}</PressButton>
-    <PressButton variant="outline" href={GITHUB_ORG_URL} external>{t.home.allRepositories}</PressButton>
-    <p class="text-muted-foreground text-[12.5px]">
-      <!-- {@html}: carries only the bdi-wrapped ISO date (fix D.4) -->
-      {@html t.home.versionData(capturedDate)}
-    </p>
-  </div>
-</section>
-
-<!-- Latest posts: the blog strip (pure static, newest first). -->
-<section id="blog" class="mx-auto w-full max-w-[90rem] px-4 pb-16 sm:px-6 lg:px-8" aria-label={t.home.latestPosts}>
+<!-- Latest posts first (Owner 2026-09-07): the blog strip (pure static,
+     newest first) leads the page; the projects roster follows in the same
+     list grammar. -->
+<section id="blog" class="mx-auto w-full max-w-[90rem] px-4 pb-12 sm:px-6 lg:px-8" aria-label={t.home.latestPosts}>
   <h2 class="font-nav flex min-w-0 flex-wrap items-baseline gap-4 text-lg uppercase tracking-[0.3em]" data-reveal="">
     {t.home.latestPosts}
     <span class="bg-border h-px flex-1" aria-hidden="true"></span>
@@ -144,4 +112,48 @@
   {:else}
     <p class="text-muted-foreground mt-3 text-[13px]" data-reveal="">{t.home.noPosts}</p>
   {/if}
+</section>
+
+<!-- Projects: the roster as a list (Owner 2026-09-07) — same grammar as
+     the blog strip: mono version accent, name (+logo), localized
+     description; each row links the project detail page. -->
+<section id="projects" class="mx-auto w-full max-w-[90rem] px-4 pb-16 sm:px-6 lg:px-8" aria-label={t.home.projectsHeading}>
+  <!-- min-w-0 + flex-wrap (2026-09-07 fix D.3): the tracked uppercase
+       heading wraps to its own lines on narrow locales (es "ÚLTIMAS
+       PUBLICACIONES") instead of overflowing the measure; the trailing
+       rule spans the wrapped last row -->
+  <h2 class="font-nav flex min-w-0 flex-wrap items-baseline gap-4 text-lg uppercase tracking-[0.3em]" data-reveal="">
+    {t.home.projectsHeading}
+    <span class="bg-border h-px flex-1" aria-hidden="true"></span>
+  </h2>
+  <p class="text-muted-foreground mt-3 max-w-[62ch] text-pretty text-[13px] leading-6" data-reveal="">
+    {t.home.projectsSummary}
+  </p>
+
+  <ul class="mt-4 divide-y divide-border/60" data-reveal="">
+    {#each projects as project (project.slug)}
+      <li>
+        <a href={projectsUrl(project.slug, locale)} class="group flex flex-wrap items-baseline gap-x-4 gap-y-1 py-3">
+          <!-- dir="ltr": version tags (opentray@0.21.1) are a hard-LTR island -->
+          <span dir="ltr" class="font-nav text-primary text-xs tracking-[0.14em]">{project.version}</span>
+          <span class="group-hover:text-primary transition-colors inline-flex items-center gap-2">
+            {#if project.logo}
+              <img src={project.logo} alt="" class="h-4 w-4 self-center" loading="lazy" decoding="async" />
+            {/if}
+            {project.name}
+          </span>
+          <span class="text-muted-foreground ms-auto hidden max-w-[46ch] truncate text-xs sm:block">{localizedDescription(project, locale)}</span>
+        </a>
+      </li>
+    {/each}
+  </ul>
+
+  <div class="mt-8 flex flex-wrap items-center gap-4" data-reveal="">
+    <PressButton variant="outline" href={homeHref('/projects/')}>{t.home.allProjects}</PressButton>
+    <PressButton variant="outline" href={GITHUB_ORG_URL} external>{t.home.allRepositories}</PressButton>
+    <p class="text-muted-foreground text-[12.5px]">
+      <!-- {@html}: carries only the bdi-wrapped ISO date (fix D.4) -->
+      {@html t.home.versionData(capturedDate)}
+    </p>
+  </div>
 </section>
