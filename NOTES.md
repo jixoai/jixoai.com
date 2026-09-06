@@ -60,9 +60,9 @@ the jixoai-website skill.
   (~885) — an adaptation major tracking an upstream CLI line at this
   org's cadence (12 majors since June) is routine-weight in substance;
   flagged to the skill as a gap (its ladder only knows x.0 vs minor).
-- **Follow-up (tracked)**: opentray / opendweb / openiweb have no
-  GitHub Releases yet (version "v—" on the hub); each gets its
-  first-release post once their release automation cuts one.
+- **Follow-up (DONE 2026-09-06, see the launch-trio section below)**:
+  opentray / opendweb / openiweb each cut their first GitHub Release;
+  the three first-release posts shipped the same day.
 - **Verification**: build green ×5; two consecutive full-pipeline runs
   byte-identical over all 154 export files (144 page mirrors + 10
   indices; was 100 before the six posts); pills spot-checked on
@@ -70,6 +70,53 @@ the jixoai-website skill.
   build with a named error; all external permalinks (release tags,
   commits, READMEs-at-tag, openspec archive paths, sibling sites)
   curl-verified 200, npm packages via registry.
+
+## Launch trio + jixoai-ui upgrade (2026-09-06 release-blog trio)
+
+- **Three first-release posts** (zh main + en mirror, launch/milestone
+  band — narrative focus: why the project exists + what the first
+  externally-promised version contains): `opentray-v0-21-1` (repo's
+  first GitHub Release; create-opentray install-404 fix is the
+  "first installable release of command families"; the devDependencies
+  fix is the live case behind the packaging law), `iweb-v0-1-0` (first
+  public cut; single-port Rust kernel, MCP ops surface, two-tier trust,
+  revocable owner keys, ≤240MB envelope), `dweb-v0-4-2` (repo's first
+  GitHub Release documenting the six-package family; logical-networks-
+  not-VPN positioning from the README pair + EXAMPLE). Facts from the
+  three release bodies (all dense this time — no L1-body-gap fallback
+  needed), READMEs pinned at tags, opentray AGENTS.md Vision, npm
+  registry versions (`npm view`), commit 0b0fe632, and the
+  release-automation openspec archive. All 29 unique external links
+  curl-verified 200. Pill URL for the `opentray@` tag form works with
+  ZERO code change — `postRelease()`'s generic lastIndexOf('@') prefix
+  path (the openspecui@ precedent) covers it; the URL renders as
+  `releases/tag/opentray%400.21.1`, verified in built HTML (zh + en).
+- **jixoai-ui upgrade (registry consumer-feedback-fixes)**:
+  `npx jixoai-ui upgrade` refreshed 8 files + lock (language-switcher,
+  theme-toggle, hero-section, press-button, defaults, context-plugin,
+  scrollbar-measure, jixoai-theme). The site-local language-switcher
+  persistence patch is now CANONICAL upstream (P0-2: `persistLocale`
+  writes localStorage `lang`, silent on failure, pure anchor
+  navigation — byte-for-byte the same contract our patch had), so the
+  recorded lock-vs-disk divergence for that file is CLOSED (63/64
+  locked files match; the only remaining intentional divergence is
+  jixoai.css's `--brand-hue: 0` line vs the pristine lock hash — the
+  CLI re-applied hue 0 itself during upgrade). jixoai.css was moved
+  aside before upgrading (the overwrite-prompt EOF trap); the fresh
+  sheet differs from the old one ONLY in line 34's comment text.
+  theme-toggle gains an optional `labels` prop (absent = byte-
+  identical behavior); the TS-5.9 carrier casts in defaults/context-
+  plugin are runtime-identical. Live switcher matrix re-run on the
+  canonical component: 7/7 (click zh → `lang=zh` → `/zh/`, reload
+  stays; zh-CN detection redirects; mirror never bounces; persisted
+  en beats detection).
+- **Verification**: `npm run build` green ×3; all 10 llms indices
+  (root + 8 locale mirrors + llms-full) byte-identical across
+  consecutive builds; 14 page routes 200 on a static server (six new
+  posts × root/zh + ja/ar mirrors + `/projects/`); projects grid shows
+  v0.21.1 / v0.1.0 / v0.4.2 pills for the three repos (opentray's
+  title reads "latest release (opentray@0.21.1)"). Zero dependency
+  changes (package.json / package-lock untouched).
 
 ## Nine locales (2026-09-06 site-i18n-nine-locales)
 
