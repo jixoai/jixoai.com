@@ -6,6 +6,8 @@
   real attributes (SSG truth, no client flash). The placeholders are
   two-character sigils only; never write their literal form in a
   comment (replaceAll would rewrite this comment too — see hooks).
+  Plus the pre-paint locale negotiation bootstrap (2026-09-06
+  locale-negotiation) below — see the script's own comment.
 -->
 <html lang="%lang%" dir="%dir%">
   <head>
@@ -13,6 +15,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <link rel="icon" type="image/webp" href="%sveltekit.assets%/icon.webp" />
+    <script>
+      (() => {
+        // Pre-paint locale negotiation (2026-09-06 locale-negotiation).
+        // An explicit persisted choice wins (localStorage "lang", the
+        // key the language switcher writes — en included: a stored en
+        // is an explicit stay and suppresses detection too);
+        // otherwise the first navigator.languages match among the
+        // eight prefixed locales redirects ONCE to the same page
+        // under its mirror (path + hash preserved; primary subtag
+        // only, so zh-Hans lands on zh and pt-BR finds no match and
+        // falls through). Loop laws: this only ever LEAVES the
+        // default surface (the guard below returns on any prefixed
+        // first path segment), the target always carries its locale
+        // prefix, and a mirror never bounces back. No match → stay on
+        // the default; hreflang already advertises the mirrors to
+        // crawlers, and the default is the x-default target, so SEO
+        // is untouched.
+        const PREFIXED = ['zh', 'es', 'fr', 'de', 'ru', 'ja', 'ko', 'ar'];
+        const first = location.pathname.split('/')[1];
+        if (first && PREFIXED.indexOf(first) >= 0) return;
+        let pick = null;
+        try {
+          const stored = window.localStorage.getItem('lang');
+          if (stored === 'en') return;
+          if (PREFIXED.indexOf(stored) >= 0) pick = stored;
+        } catch {}
+        if (!pick) {
+          const tags = navigator.languages || [];
+          for (let i = 0; i < tags.length; i++) {
+            const base = String(tags[i]).toLowerCase().split('-')[0];
+            if (PREFIXED.indexOf(base) >= 0) {
+              pick = base;
+              break;
+            }
+          }
+        }
+        if (pick) {
+          const path = location.pathname;
+          location.replace('/' + pick + (path === '/' ? '/' : path) + location.hash);
+        }
+      })();
+    </script>
     <script>
       (() => {
         // No-flash theme bootstrap + the html.js liveness flag. Reveal is

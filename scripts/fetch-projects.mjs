@@ -158,6 +158,7 @@ async function resolveProject(project, previous) {
     slug,
     name: project.name,
     description: project.description,
+    descriptionZh: project.descriptionZh ?? null,
     site: project.site ?? null,
     logo: project.logo ?? null,
     repoUrl: `https://github.com/${ownerName}`,
