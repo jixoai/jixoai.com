@@ -6,20 +6,26 @@
   entry carries none), description, live version pill, and the three-link
   contract (official site / GitHub / README detail page). Config-driven:
   all data arrives as props from the generated project record.
+  2026-09-06 nine-locales: labels + description render in the page
+  locale (zh shows the manifest's curated descriptionZh); the README
+  link stays on the locale mirror.
 -->
 <script lang="ts">
   import PressButton from '$lib/ui/press-button/press-button.svelte';
   import SectionCard from '$lib/ui/section-card/section-card.svelte';
-  import { projectsUrl, type GeneratedProject } from '$lib/projects';
+  import { projectsUrl, localizedDescription, type GeneratedProject } from '$lib/projects';
+  import { dict, type Locale } from '$lib/i18n';
 
-  let { project }: { project: GeneratedProject } = $props();
+  let { project, locale }: { project: GeneratedProject; locale: Locale } = $props();
+
+  const t = $derived(dict[locale]);
 
   // Typographic mark: the first two alphanumerics of the display name,
   // uppercase — the no-logo fallback the project-hub spec demands.
   const wordmark = $derived(project.name.replace(/[^a-zA-Z0-9]/g, '').slice(0, 2).toUpperCase() || 'JX');
 </script>
 
-<SectionCard class="proj-card" eyebrow={project.repo} title={project.name} summary={project.description}>
+<SectionCard class="proj-card" eyebrow={project.repo} title={project.name} summary={localizedDescription(project, locale)}>
   <div class="flex items-center gap-3">
     {#if project.logo}
       <img
@@ -43,20 +49,20 @@
         href={project.releaseUrl}
         target="_blank"
         rel="noreferrer"
-        title="latest release ({project.tag})"
+        title={t.projectDetail.latestRelease(project.tag ?? '')}
       >
         {project.version}
       </a>
     {:else}
-      <span class="version-pill font-nav" title="no release published yet">{project.version}</span>
+      <span class="version-pill font-nav" title={t.projectDetail.noRelease}>{project.version}</span>
     {/if}
   </div>
   <div class="mt-auto flex flex-wrap items-center gap-2 pt-4">
     {#if project.site}
-      <PressButton variant="outline" href={project.site} external>Site ↗</PressButton>
+      <PressButton variant="outline" href={project.site} external>{t.card.site}</PressButton>
     {/if}
     <PressButton variant="outline" href={project.repoUrl} external>GitHub ↗</PressButton>
-    <PressButton variant="ghost" href={projectsUrl(project.slug)}>README →</PressButton>
+    <PressButton variant="ghost" href={projectsUrl(project.slug, locale)}>{t.card.readme}</PressButton>
   </div>
 </SectionCard>
 

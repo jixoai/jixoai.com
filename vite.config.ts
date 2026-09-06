@@ -5,7 +5,9 @@
 // into public/ by build-site step 3 — never wire a second generator).
 //
 // Original request (2026-09-06): hub relaunch — registry chrome +
-// projects/blog surfaces, AI export included.
+// projects/blog surfaces, AI export included. Same day, nine locales:
+// the export covers every locale mirror (per-locale llms.txt indices +
+// llms-full.txt following the default en only).
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
@@ -26,10 +28,18 @@ export default defineConfig({
       title: 'jixoai',
       summary:
         'jixoai builds reliable infrastructure for the AI era — terminal runtimes, design languages, and developer tools that ship one honest contract at a time. The hub lists every flagship with its official site, live release version, and rendered README; the blog publishes lab notes as static pages.',
+      // en at the root (default, unsegmented); the eight /[lang]/ mirrors
+      // own one llms.txt index each; llms-full.txt follows en (a
+      // mixed-language dump defeats retrieval). Section globs must also
+      // match the mirrored paths (`*/projects/**` etc.).
+      locale: {
+        segments: ['zh', 'es', 'fr', 'de', 'ru', 'ja', 'ko', 'ar'],
+        default: 'en',
+      },
       sections: [
-        { title: 'Pages', include: ['index.html'] },
-        { title: 'Projects', include: ['projects/**'] },
-        { title: 'Blog', include: ['blog/**'] },
+        { title: 'Pages', include: ['index.html', '*/index.html'] },
+        { title: 'Projects', include: ['projects/**', '*/projects/**'] },
+        { title: 'Blog', include: ['blog/**', '*/blog/**'] },
       ],
     }),
   ],

@@ -4,6 +4,7 @@
       "repo": "unipty",
       "name": "UniPty",
       "description": "Runtime-neutral PTY for Node, Bun, and Deno — one public contract, developer-selectable Backends, evidence-gated support claims.",
+      "descriptionZh": "运行时中立的 PTY 库，面向 Node、Bun 与 Deno —— 一份公共契约、开发者可选择的 Backend、以证据门控的支持声明。",
       "site": "https://unipty.jixoai.com",
       "logo": "/logos/unipty.svg"
     },
@@ -11,6 +12,7 @@
       "repo": "openspecui",
       "name": "OpenSpecUI",
       "description": "The web UI companion for OpenSpec-driven development — serve, preview, and export spec-driven projects with one command.",
+      "descriptionZh": "OpenSpec 驱动开发的 Web UI 伴侣 —— 一条命令即可服务、预览并导出规范驱动的项目。",
       "site": "https://www.openspecui.com",
       "logo": "/logos/openspecui.svg"
     },
@@ -18,6 +20,7 @@
       "repo": "ui",
       "name": "jixoai/ui",
       "description": "The jixoai design language as a shadcn registry: terminal aesthetics, the OKLCH one-hue law, and mono-first components you own after copying.",
+      "descriptionZh": "以 shadcn registry 形式发布的 jixoai 设计语言：终端美学、OKLCH 单色相法则、拷贝即所有的 mono-first 组件。",
       "site": "https://ui.jixoai.com",
       "logo": "/logo.webp"
     },
@@ -25,21 +28,24 @@
       "repo": "opentray",
       "name": "OpenTray",
       "description": "Desktop status runtime for CLI and AI-skill ecosystems — tray-first apps running on Node, Bun, and Deno.",
-      "site": "https://jixoai.github.io/opentray",
+      "descriptionZh": "面向 CLI 与 AI skill 生态的桌面状态运行时 —— 托盘优先的应用，跑在 Node、Bun 与 Deno 上。",
+      "site": "https://opentray.jixoai.com",
       "logo": "/logos/opentray.png"
     },
     {
       "repo": "opendweb",
       "name": "OpenDWeb",
       "description": "Application-level networking platform: multi-device applications form invite-based logical networks over QUIC direct links with self-hostable relay fallback.",
-      "site": "https://jixoai.github.io/opendweb",
+      "descriptionZh": "应用级组网平台：让多设备应用组成逻辑网络 —— 像游戏房间而非系统级 VPN，QUIC 直连优先、可自托管 Relay。",
+      "site": "https://opendweb.jixoai.com",
       "logo": "/logos/dweb.png"
     },
     {
       "repo": "openiweb",
       "name": "OpenIWeb",
       "description": "Open-source personal application node — an AI coding agent deploys and operates apps on your own node through MCP; the owner manages everything with one key.",
-      "site": "https://jixoai.github.io/openiweb",
+      "descriptionZh": "面向普通人的开源个人应用节点：不懂容器与运维也能自托管，把 MCP 端点与一把密钥交给 AI 编程代理即可部署运维。",
+      "site": "https://openiweb.jixoai.com",
       "logo": "/logos/iweb.svg"
     }
   ]

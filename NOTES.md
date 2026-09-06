@@ -1,10 +1,69 @@
 # jixoai.com Implementation Notes
 
 The jixoai organization hub (`jixoai.com`), relaunched 2026-09-06 as a
-config-driven project center + static blog. Sibling precedents: unipty
-`packages/www` (0.2.0-era first consumer) and openiweb `apps/website`
-(0.3.0-era, same closure). This file records the registry-consumption
-facts and every deviation from the jixoai-website skill.
+config-driven project center + static blog, then localized to nine
+locales the same day. Sibling precedents: unipty `packages/www`
+(0.2.0-era first consumer), openiweb `apps/website` (0.3.0-era, same
+closure), and the dweb bilingual site (the i18n pattern donor). This
+file records the registry-consumption facts and every deviation from
+the jixoai-website skill.
+
+## Nine locales (2026-09-06 site-i18n-nine-locales)
+
+- **Routing**: en at the root (canonical, stable URLs); zh/es/fr/de/
+  ru/ja/ko/ar mirror every public route under `/[lang=lang]/` (matcher
+  `src/params/lang.ts` accepts exactly the eight prefixed locales).
+  Page markup lives once in `src/lib/pages/*.svelte`; the ten route
+  files per side are thin wrappers passing the locale.
+- **`<html lang>`/`dir`**: the dweb hooks pattern, extended with a
+  direction placeholder — app.html ships `lang`/`dir` sigils that
+  `src/hooks.server.ts` substitutes per route at render time, so the
+  prerendered artifacts carry the real attrs (ar pages ship
+  `dir="rtl"`; no client flash). Client-side navigation ALSO syncs the
+  attrs via a `$effect` in `+layout.svelte` — SvelteKit's client router
+  swaps only body+head, and without the effect a locale switch kept the
+  previous document lang/dir (a stuck `dir="rtl"` visibly breaks the
+  zh layout after switching from Arabic).
+- **hreflang + canonical**: 9 locale alternates + x-default → root URL,
+  plus a self canonical, absolute against SITE_URL — emitted from
+  `+layout.svelte` for every page. **Do not join `$app/paths` `base`
+  into absolute URLs**: with `paths.base = ''` and relative paths on,
+  `base` is `.`/`../..` at prerender depth, which corrupted the URLs
+  (`https://jixoai.com../..`) until removed.
+- **Dictionaries** (`src/lib/i18n/`): one TS file per locale under a
+  shared `schema.ts` contract (structure drift = type error). The
+  Owner-provided tagline/summary/descriptionZh translations are used
+  VERBATIM — the hero title is split lead/`<em>`/tail so the
+  concatenated text equals the canonical tagline byte-for-byte
+  (verified by script for all nine). en is the byte-equal extraction of
+  the pre-i18n copy (zero regression). Project descriptions: zh renders
+  the manifest's `descriptionZh`, every other locale renders
+  `description`; README bodies and blog posts render as-authored under
+  every locale (blog frontmatter gained an optional `lang` field).
+- **RTL**: site-owned `.markdown-body` rules switched to logical
+  properties (`padding-inline-start`, `border-inline-start`,
+  `text-align: start`); rewritten page markup uses `ms-`/`me-` instead
+  of `ml-`/`mr-`. Registry components keep their physical-direction
+  utilities (cosmetic ltr-isms in terminal-header/jixoai.css left
+  untouched — registry files stay pristine); ar pages measure 0px
+  horizontal overflow at 1280px and 390px.
+- **llms export**: `locale.segments` covers the eight mirrors — each
+  locale gets its own `llms.txt` index at `/<lang>/llms.txt`; the root
+  index (default en) appends an "Other languages" section;
+  `llms-full.txt` follows en only. Section globs extended to
+  `*/projects/**`, `*/blog/**`, `*/index.html` so mirrored pages bucket
+  correctly. 90 pages → 90 .md mirrors + 10 indices; two consecutive
+  full-pipeline builds byte-identical (100 export files).
+- **language-switcher** (registry item #23, menu variant — the pair
+  variant only fits two locales): nine entries, each linking the same
+  page in the target locale; `jixoai.css` was moved aside before the
+  add per the skill and came back byte-identical (hue 0 IS the pristine
+  sheet for this site). Lock↔disk hashes verified.
+- **Dev-port collision during verification**: a sibling agent's static
+  server had claimed port 13501 mid-run (symptom: the unipty site
+  answering our headless checks). Re-serve on a fresh port before
+  believing a sudden all-FAIL sweep — multi-agent port discipline
+  applies to static preview servers too, not just dev servers.
 
 ## Registry consumption (2026-09-06) — jixoai-ui 0.3.0
 
@@ -18,12 +77,13 @@ facts and every deviation from the jixoai-website skill.
   included — `data-reveal=""` static attributes, no IO action, no
   html.js gate on reveal; the `html.js` flag stays for the surface
   family's no-JS branch).
-- Locked items (22): the direct adds `scrollbar-measure`,
-  `website-scaffold`, `terminal-header`, `terminal-footer`,
-  `theme-toggle`, `press-button`, `section-card`, `terminal-card`,
-  `hero-section`, `card-grid`, `llms-txt` + the closure `icons`,
-  `defaults`, `utils`, `jixoai-theme`, `navigation-menu`, `popover`,
-  `density`, `paint`, `separator`, `figure`, `context-plugin`.
+- Locked items (23 since the nine-locale change): the direct adds
+  `scrollbar-measure`, `website-scaffold`, `terminal-header`,
+  `terminal-footer`, `theme-toggle`, `press-button`, `section-card`,
+  `terminal-card`, `hero-section`, `card-grid`, `llms-txt`,
+  `language-switcher` + the closure `icons`, `defaults`, `utils`,
+  `jixoai-theme`, `navigation-menu`, `popover`, `density`, `paint`,
+  `separator`, `figure`, `context-plugin`.
   Excluded on purpose (nothing on disk pulls them): `toc-engine`,
   `toc`, `badge`, `scaffold-float`.
 - **Lock hash semantics**: `jixoai-ui.lock` records the PRISTINE

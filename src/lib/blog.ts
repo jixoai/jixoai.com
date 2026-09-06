@@ -22,6 +22,9 @@ export interface BlogPost {
   description: string;
   author: string;
   tags: string[];
+  /** optional authored language (e.g. "zh") — the body renders
+   *  as-authored under every locale; this field only records intent */
+  lang?: string;
   /** markdown body (frontmatter stripped) */
   markdown: string;
 }
@@ -74,6 +77,7 @@ const posts: BlogPost[] = Object.entries(files).map(([path, raw]) => {
       .split(',')
       .map((tag) => tag.trim())
       .filter(Boolean),
+    lang: data.lang?.trim() || undefined,
     markdown: body.trim(),
   };
 });

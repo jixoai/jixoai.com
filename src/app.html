@@ -1,5 +1,13 @@
 <!doctype html>
-<html lang="en">
+<!--
+  Document skeleton. The root element's language and direction carry
+  RENDER-TIME placeholders that src/hooks.server.ts substitutes per
+  route before the page ships — the prerendered artifact carries the
+  real attributes (SSG truth, no client flash). The placeholders are
+  two-character sigils only; never write their literal form in a
+  comment (replaceAll would rewrite this comment too — see hooks).
+-->
+<html lang="%lang%" dir="%dir%">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

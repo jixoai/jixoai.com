@@ -8,6 +8,11 @@
  * ONLY site-specific additions — the base-layer rules the sheet leaves
  * open and site surfaces (version pill; markdown body for project
  * READMEs and blog posts with mono-styled code blocks).
+ * [rtl] (2026-09-06 nine-locales) the markdown surface uses logical
+ * properties (padding-inline-start / border-inline-start /
+ * text-align: start) so the Arabic mirror lays out correctly — the
+ * registry components' physical-direction utilities are patched in
+ * markup (ms-/me-) instead, never here.
  *
  * Original request (2026-09-06): hub relaunch — config-driven project
  * surface + static blog, chrome from the jixoai-ui 0.3.0 registry.
@@ -125,7 +130,7 @@
 .markdown-body ul,
 .markdown-body ol {
   margin: 0.9em 0;
-  padding-left: 1.6em;
+  padding-inline-start: 1.6em;
 }
 .markdown-body ul {
   list-style: disc;
@@ -140,10 +145,11 @@
   color: var(--muted-foreground);
 }
 .markdown-body blockquote {
-  border-left: 3px solid color-mix(in oklab, var(--primary) 55%, transparent);
+  border-inline-start: 3px solid color-mix(in oklab, var(--primary) 55%, transparent);
   color: var(--muted-foreground);
   margin: 1.2em 0;
-  padding: 0.1em 0 0.1em 1em;
+  padding: 0.1em 0;
+  padding-inline-start: 1em;
 }
 .markdown-body code {
   background: color-mix(in oklab, var(--muted) 55%, transparent);
@@ -185,7 +191,7 @@
 .markdown-body td {
   border: 1px solid color-mix(in oklab, var(--border) 45%, transparent);
   padding: 0.4rem 0.65rem;
-  text-align: left;
+  text-align: start;
   vertical-align: top;
 }
 .markdown-body th {
