@@ -1,7 +1,7 @@
 ---
 title: 站点改版：配置驱动的项目中心上线
 date: 2026-09-06
-description: jixoai.com 官网重构公告——项目中心改为 manifest 配置驱动，新上线 dweb、iweb、opentray 官网入口，并开通博客版面。
+description: jixoai.com 官网重构公告——项目中心改为 manifest 配置驱动，新上线 OpenDWeb、OpenIWeb、opentray 官网入口，并开通博客版面。
 author: jixoai
 tags: [relaunch, project-hub, blog]
 lang: zh
@@ -16,12 +16,12 @@ lang: zh
 本次名单变更：
 
 - **下架**：proxy、skill-creator；
-- **上新**：[OpenDWeb](https://gaubee.github.io/dweb)（dweb）与 [OpenIWeb](https://jixoai.github.io/iweb)；
+- **上新**：[OpenDWeb](https://opendweb.jixoai.com)与 [OpenIWeb](https://openiweb.jixoai.com)；
 - **保留**：[UniPty](https://unipty.jixoai.com)、[OpenSpecUI](https://www.openspecui.com)、[jixoai/ui](https://ui.jixoai.com)、[OpenTray](https://jixoai.github.io/opentray)。
 
 每个项目的卡片现在提供三个入口：**官网**、**GitHub 仓库**、以及渲染在本站的 **README 详情页**——README 在构建期从仓库 HEAD 拉取，用 `marked` 渲染成静态 HTML，仓库内的相对图片与链接会被自动改写为 GitHub 上的绝对地址。
 
-外部仓库（例如 dweb 属于 `Gaubee` 而非 jixoai 组织）与组织内仓库走完全相同的解析路径：owner-aware 的仓库声明让 Release 查询、仓库链接与 README 抓取对两者一视同仁。
+外部仓库（例如 OpenDWeb 属于 `Gaubee` 而非 jixoai 组织）与组织内仓库走完全相同的解析路径：owner-aware 的仓库声明让 Release 查询、仓库链接与 README 抓取对两者一视同仁。
 
 ## 新上线的子站点
 
@@ -29,8 +29,8 @@ lang: zh
 
 | 项目 | 官网 | 说明 |
 | --- | --- | --- |
-| OpenDWeb (dweb) | <https://gaubee.github.io/dweb> | 应用级组网平台：多设备应用组成邀请制的逻辑网络，QUIC 直连优先，可自建中继回退 |
-| OpenIWeb (iweb) | <https://jixoai.github.io/iweb> | 个人应用节点：把 MCP 端点和一个 owner key 交给 AI 编码代理，它替你部署和运维应用 |
+| OpenDWeb | <https://opendweb.jixoai.com> | 应用级组网平台：多设备应用组成邀请制的逻辑网络，QUIC 直连优先，可自建中继回退 |
+| OpenIWeb | <https://openiweb.jixoai.com> | 个人应用节点：把 MCP 端点和一个 owner key 交给 AI 编码代理，它替你部署和运维应用 |
 | OpenTray | <https://jixoai.github.io/opentray> | 面向 CLI 与 AI 技能生态的桌面状态运行时：托盘优先的应用，跑在 Node、Bun、Deno 上 |
 
 ## 整套视觉与组件来自 registry

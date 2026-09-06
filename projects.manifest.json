@@ -38,7 +38,7 @@
       "description": "Application-level networking platform: multi-device applications form invite-based logical networks over QUIC direct links with self-hostable relay fallback.",
       "descriptionZh": "应用级组网平台：让多设备应用组成逻辑网络 —— 像游戏房间而非系统级 VPN，QUIC 直连优先、可自托管 Relay。",
       "site": "https://opendweb.jixoai.com",
-      "logo": "/logos/dweb.png"
+      "logo": "/logos/opendweb.png"
     },
     {
       "repo": "openiweb",
@@ -46,7 +46,7 @@
       "description": "Open-source personal application node — an AI coding agent deploys and operates apps on your own node through MCP; the owner manages everything with one key.",
       "descriptionZh": "面向普通人的开源个人应用节点：不懂容器与运维也能自托管，把 MCP 端点与一把密钥交给 AI 编程代理即可部署运维。",
       "site": "https://openiweb.jixoai.com",
-      "logo": "/logos/iweb.svg"
+      "logo": "/logos/openiweb.svg"
     }
   ]
 }
