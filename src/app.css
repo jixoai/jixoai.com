@@ -19,6 +19,16 @@
  * [locale-typography] ko keeps word granularity (keep-all), ja
  * balances markdown h1 line breaks.
  *
+ * 2026-09-07 walkthrough fixes (D): [rtl-joining] every letter-spaced
+ * utility dies under dir="rtl" — Arabic script needs connected glyph
+ * runs, so an UNLAYERED [dir='rtl'] override (layer law: unlayered
+ * beats utilities AND components) resets letter-spacing globally,
+ * hero title tracking and mono chrome included; [mobile-brand] the
+ * header's domain line hides below sm (the jixoai wordmark stays
+ * intact); [pre-scroll] markdown code blocks unify on white-space:
+ * pre + overflow-x: auto with a scroll-driven reduced-ink fade hint;
+ * [ja-hero] the ja hero title balances its CJK line breaks.
+ *
  * Original request (2026-09-06): hub relaunch — config-driven project
  * surface + static blog, chrome from the jixoai-ui 0.3.0 registry.
  * ---------------------------------------------------------------------- */
@@ -58,6 +68,41 @@
   }
   ::selection {
     background: color-mix(in oklab, var(--primary) 30%, transparent);
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * RTL joining law (2026-09-07 walkthrough fix D.1): letter-spacing
+ * breaks Arabic glyph joining — the isolated-hamza class of bug. The
+ * tracked utilities (hero title's tracking-[-0.02em], eyebrow/badge
+ * tracking up to 0.24em, section rules at 0.3em) declare ON each
+ * element in the utilities layer, so an inherited root value can never
+ * displace them — the override must declare on the elements
+ * themselves. Both selectors are deliberately UNLAYERED: by the
+ * cascade-layer law unlayered normal declarations outrank every
+ * layered one (utilities AND the registry components sheet) without
+ * !important and without touching locked registry markup. Latin runs
+ * inside the RTL mirror lose their tracking too — accepted: connected
+ * Arabic text is the hard requirement, the Latin islands stay
+ * legible.
+ * ---------------------------------------------------------------------- */
+[dir='rtl'],
+[dir='rtl'] * {
+  letter-spacing: normal;
+}
+
+/* -------------------------------------------------------------------------
+ * Mobile brand law (2026-09-07 walkthrough fix D.2): below sm the
+ * header brand block shows logo + "jixoai" only — the domain line
+ * ("jixoai.com") crowds the wordmark at 390px. The hook rides the
+ * registry header's stable own-class seam (.jx-nav root + the domain
+ * span's font-nav/truncate/text-sm composition — the subtitle line is
+ * text-[11px] and already lg-gated, so the compound matches exactly
+ * one element; the registry file stays untouched).
+ * ---------------------------------------------------------------------- */
+@media (max-width: 39.99rem) {
+  .jx-nav span.font-nav.truncate.text-sm {
+    display: none;
   }
 }
 
@@ -172,6 +217,9 @@
   margin: 1.2em 0;
   overflow-x: auto;
   padding: 0.9rem 1rem;
+  /* 2026-09-07 fix D.5: code blocks scroll, never re-shape — the
+   * position anchors the scroll-fade veil below */
+  position: relative;
 }
 .dark .markdown-body pre {
   background: color-mix(in oklab, var(--muted) 78%, var(--background));
@@ -181,7 +229,51 @@
   border: none;
   font-size: 12.5px;
   padding: 0;
+  /* unified no-wrap law (fix D.5): every fenced block behaves the
+   * same — pre + nowrap, horizontal scroll carries the overflow.
+   * overflow-wrap/word-break reset the .markdown-body inheritance
+   * (both inherit) which mixed wrap behavior across blocks. */
   white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+  min-width: max-content;
+}
+/* Scroll fade hint (fix D.5), reduced-ink law: instead of painting a
+ * gradient OVER the code, a masked backdrop-filter veil desaturates
+ * what scrolls beneath it — content stays legible through the ink
+ * that remains. Scroll-driven (Chromium-tier, @supports-gated): the
+ * veil exists only while the block actually overflows (an inactive
+ * scroll timeline holds the base opacity: 0) and fades out as the
+ * reader reaches the end. pre is a hard-LTR island, so the physical
+ * right edge is correct under dir="rtl" too. */
+.markdown-body pre::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 3rem;
+  pointer-events: none;
+  opacity: 0;
+  backdrop-filter: grayscale(1);
+  -webkit-backdrop-filter: grayscale(1);
+  mask-image: linear-gradient(to left, #000 35%, transparent);
+  -webkit-mask-image: linear-gradient(to left, #000 35%, transparent);
+}
+@supports (animation-timeline: scroll()) {
+  .markdown-body pre::after {
+    animation: linear markdown-pre-scroll-hint both;
+    animation-timeline: scroll(nearest inline);
+    animation-range: 0 85%;
+  }
+  @keyframes markdown-pre-scroll-hint {
+    from {
+      opacity: 0.65;
+    }
+    to {
+      opacity: 0;
+    }
+  }
 }
 .markdown-body table {
   border-collapse: collapse;
@@ -264,12 +356,17 @@
  * mid-word (spaces are the only legal break points); Japanese markdown
  * h1 balances its line breaks so titles don't tear across three lines.
  * The hero h1 balances globally already (text-balance in the registry
- * component).
+ * component). 2026-09-07 fix D.6: the ja scope extends to the hero
+ * title's own hook — CJK breaks anywhere, so balance is what keeps the
+ * two-part tagline from ragging into a staircase.
  * ---------------------------------------------------------------------- */
 :lang(ko) {
   word-break: keep-all;
 }
 :lang(ja) .markdown-body h1 {
+  text-wrap: balance;
+}
+:lang(ja) [data-jx-hero-title] {
   text-wrap: balance;
 }
 

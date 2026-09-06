@@ -10,6 +10,35 @@ export const de: Dictionary = {
   dir: 'ltr',
   label: 'Deutsch',
 
+  langNames: {
+    en: 'Englisch',
+    zh: 'Chinesisch',
+  },
+
+  footer: {
+    fleet: 'Flotte',
+    hub: 'Hub',
+    org: 'Organisation',
+  },
+
+  // Curated project copy (2026-09-07 walkthrough fix A, Owner-provided
+  // translations verbatim); repos absent here fall back to the English
+  // description.
+  projectDescriptions: {
+    unipty:
+      'Runtime-neutrales PTY für Node, Bun und Deno — ein öffentlicher Vertrag, vom Entwickler wählbare Backends, evidenzbasierte Support-Aussagen.',
+    openspecui:
+      'Der Web-Begleiter für OpenSpec-getriebene Entwicklung — spec-driven-Projekte mit einem Befehl servieren, vorschauen und exportieren.',
+    ui:
+      'Die jixoai-Designsprache als shadcn-Registry: Terminal-Ästhetik, das OKLCH-Ein-Farbton-Gesetz und Mono-first-Komponenten, die nach dem Kopieren dir gehören.',
+    opentray:
+      'Desktop-Status-Runtime für CLI- und AI-Skill-Ökosysteme — tray-first-Apps auf Node, Bun und Deno.',
+    opendweb:
+      'Vernetzung auf Anwendungsebene: Multi-Device-Apps bilden logische Netzwerke — wie Spielräume, kein System-VPN — QUIC direkt zuerst, selbst gehosteter Relay als Fallback.',
+    openiweb:
+      'Der offene Personal-App-Knoten für alle — self-hosten ohne Ops zu lernen: übergib einen MCP-Endpoint und einen Key an deinen KI-Coding-Agenten.',
+  },
+
   chrome: {
     subtitle: 'das Open-Source-Labor von jixoai',
     navHome: 'Start',
@@ -38,7 +67,7 @@ export const de: Dictionary = {
     flagships: 'Flaggschiffe:',
     projectsHeading: 'Projekte',
     projectsSummary:
-      'Die Flaggschiff-Repositories der Organisation — jedes mit offizieller Website, GitHub-Repo und als Detailseite gerendertem README. Die Versions-Pills spiegeln das neueste GitHub Release und aktualisieren sich automatisch: diese Site wird bei jedem Push und täglich neu gebaut.',
+      'Die Flaggschiff-Repositories der Organisation — jedes mit offizieller Website, GitHub-Repo und als Detailseite gerendertem README. Die Versions-Badges spiegeln das neueste GitHub Release und aktualisieren sich automatisch: diese Site wird bei jedem Push und täglich neu gebaut.',
     allProjects: 'Alle Projekte →',
     allRepositories: 'Alle Repositories ↗',
     versionData: (date) => `Versionsdaten am ${date} aus GitHub Releases übernommen.`,
@@ -85,5 +114,6 @@ export const de: Dictionary = {
   blogPost: {
     titleSuffix: 'jixoai-Blog',
     writtenIn: (language) => `Dieser Beitrag ist auf ${language} verfasst.`,
+    readIn: (language) => `Auf ${language} lesen →`,
   },
 };

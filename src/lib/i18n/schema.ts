@@ -7,6 +7,12 @@
  * drift is a type error. Verbatim fields (tagline title pieces, hero
  * summary) come from the Owner translation table in the
  * 2026-09-06-site-i18n-nine-locales proposal — do not reword them.
+ * (maintained 2026-09-07 walkthrough fixes): projectDescriptions —
+ * per-locale project card copy keyed by manifest repo (en omits the
+ * map and falls back to the manifest English description); langNames +
+ * blogPost.readIn — the writtenIn notice speaks the UI locale's name
+ * for the authored language and links the mirrored post; footer — the
+ * footer column heads localize.
  */
 
 export interface Dictionary {
@@ -16,6 +22,28 @@ export interface Dictionary {
   dir: 'ltr' | 'rtl';
   /** switcher trigger label (native endonym, e.g. "中文" / "Español"). */
   label: string;
+
+  /** language names in THIS locale's voice, keyed by locale code —
+   *  every dictionary must carry at least zh/en (the post authoring
+   *  languages); drives the writtenIn notice so an English reader sees
+   *  "Chinese", not the autonym 中文 (2026-09-07 walkthrough fix). */
+  langNames: Record<string, string>;
+
+  /** footer column heads (2026-09-07 walkthrough fix G1). */
+  footer: {
+    /** the fleet column — every flagship project. */
+    fleet: string;
+    /** the hub column — in-site surfaces. */
+    hub: string;
+    /** the org column — outbound organization links. */
+    org: string;
+  };
+
+  /** locale-translated project descriptions, keyed by the manifest
+   *  repo name (2026-09-07 walkthrough fix A). Optional by design: en
+   *  omits the map entirely and every locale falls back to the
+   *  manifest's English `description` for repos it does not cover. */
+  projectDescriptions?: Partial<Record<string, string>>;
 
   chrome: {
     /** header brand block third line. */
@@ -106,9 +134,14 @@ export interface Dictionary {
     /** <title> suffix pattern after the post title. */
     titleSuffix: string;
     /** one-time notice when the UI locale ≠ the post's authored
-     *  language; fed the language's native label (autonym), e.g.
-     *  en UI over a zh post: "This post is written in 中文." The body
-     *  still renders as-authored (tier law unchanged). */
+     *  language; fed the language's name in the UI locale
+     *  (langNames), e.g. en UI over a zh post: "This post is written
+     *  in Chinese." The body still renders as-authored (tier law
+     *  unchanged; 2026-09-07 the autonym feed became langNames). */
     writtenIn: (language: string) => string;
+    /** mirror-crossing link appended to the notice when the post's
+     *  sibling variant (slug ± "-en") exists; fed the mirror's
+     *  language name in the UI locale (2026-09-07 walkthrough fix F). */
+    readIn: (language: string) => string;
   };
 }

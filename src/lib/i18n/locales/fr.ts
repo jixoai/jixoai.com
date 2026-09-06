@@ -10,6 +10,35 @@ export const fr: Dictionary = {
   dir: 'ltr',
   label: 'Français',
 
+  langNames: {
+    en: 'anglais',
+    zh: 'chinois',
+  },
+
+  footer: {
+    fleet: 'flotte',
+    hub: 'hub',
+    org: 'organisation',
+  },
+
+  // Curated project copy (2026-09-07 walkthrough fix A, Owner-provided
+  // translations verbatim); repos absent here fall back to the English
+  // description.
+  projectDescriptions: {
+    unipty:
+      "PTY indépendante du runtime pour Node, Bun et Deno — un contrat public unique, des Backends au choix du développeur, des affirmations de support prouvées par des preuves.",
+    openspecui:
+      'Le compagnon web du développement piloté par OpenSpec — servir, prévisualiser et exporter des projets spec-driven en une seule commande.',
+    ui:
+      'Le langage de design jixoai en registry shadcn : esthétique terminal, la loi OKLCH à une seule teinte, des composants mono-first qui vous appartiennent après copie.',
+    opentray:
+      "Runtime d'état desktop pour les écosystèmes CLI et AI skills — des apps tray-first sur Node, Bun et Deno.",
+    opendweb:
+      'Le réseau au niveau applicatif : des apps multi-appareils forment des réseaux logiques — comme des salles de jeu, pas un VPN système — QUIC direct d’abord, relais auto-hébergé en repli.',
+    openiweb:
+      "Le nœud d'applications personnel open source pour tout le monde — auto-hébergez sans apprendre l'ops : confiez un endpoint MCP et une clé à votre agent de code IA.",
+  },
+
   chrome: {
     subtitle: 'le laboratoire open source de jixoai',
     navHome: 'Accueil',
@@ -30,7 +59,7 @@ export const fr: Dictionary = {
     titleTail: '',
     badges: ['open source', 'sous licence MIT'],
     summary:
-      "jixoai construit la couche porteuse sur laquelle repose l'ère de l'IA : runtimes de terminal, langages de conception et outils pour développeurs qui livrent un contrat honnête à la fois. Open source, à preuve d'usage, MIT.",
+      "jixoai construit la couche porteuse sur laquelle repose l'ère de l'IA : runtimes de terminal, langages de conception et outils pour développeurs qui livrent un contrat honnête un à la fois. Open source, à preuve d'usage, MIT.",
     projectsButton: 'Projets ↓',
     barTitle: 'jixoai — zsh',
     command: 'cat ~/jixoai/MISSION.txt',
@@ -38,7 +67,7 @@ export const fr: Dictionary = {
     flagships: 'projets phares :',
     projectsHeading: 'Projets',
     projectsSummary:
-      'Les dépôts phares de l’organisation — chacun avec son site officiel, son dépôt GitHub et son README rendu en page de détail. Les pastilles de version reflètent le dernier GitHub Release et se rafraîchissent automatiquement : ce site se reconstruit à chaque push et selon une tâche quotidienne.',
+      'Les dépôts phares de l’organisation — chacun avec son site officiel, son dépôt GitHub et son README rendu en page de détail. Les badges de version reflètent le dernier GitHub Release et se rafraîchissent automatiquement : ce site se reconstruit à chaque push et selon une tâche quotidienne.',
     allProjects: 'Tous les projets →',
     allRepositories: 'Tous les dépôts ↗',
     versionData: (date) => `Données de version capturées le ${date} depuis GitHub Releases.`,
@@ -85,5 +114,6 @@ export const fr: Dictionary = {
   blogPost: {
     titleSuffix: 'blog de jixoai',
     writtenIn: (language) => `Ce billet est rédigé en ${language}.`,
+    readIn: (language) => `Lire en ${language} →`,
   },
 };

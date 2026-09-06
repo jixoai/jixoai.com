@@ -10,6 +10,35 @@ export const ru: Dictionary = {
   dir: 'ltr',
   label: 'Русский',
 
+  langNames: {
+    en: 'английский',
+    zh: 'китайский',
+  },
+
+  footer: {
+    fleet: 'флот',
+    hub: 'хаб',
+    org: 'организация',
+  },
+
+  // Curated project copy (2026-09-07 walkthrough fix A, Owner-provided
+  // translations verbatim); repos absent here fall back to the English
+  // description.
+  projectDescriptions: {
+    unipty:
+      'PTY, независимая от рантайма, для Node, Bun и Deno — один публичный контракт, выбираемые разработчиком бэкенды, заявления о поддержке, подтверждённые доказательствами.',
+    openspecui:
+      'Веб-компаньон для разработки, управляемой OpenSpec, — обслуживание, предпросмотр и экспорт spec-проектов одной командой.',
+    ui:
+      'Язык дизайна jixoai как shadcn-registry: терминальная эстетика, закон одного тона OKLCH и mono-first-компоненты, которые после копирования становятся вашими.',
+    opentray:
+      'Рантайм статуса на рабочем столе для CLI- и AI-skill-экосистем — tray-first-приложения на Node, Bun и Deno.',
+    opendweb:
+      'Сети на уровне приложений: приложения нескольких устройств образуют логические сети — как игровые комнаты, а не системный VPN — сначала прямой QUIC, затем собственный relay.',
+    openiweb:
+      'Узел личных приложений с открытым кодом для обычных людей — self-hosting без изучения ops: передайте MCP-endpoint и ключ своему AI-агенту.',
+  },
+
   chrome: {
     subtitle: 'открытая лаборатория jixoai',
     navHome: 'Главная',
@@ -38,7 +67,7 @@ export const ru: Dictionary = {
     flagships: 'флагманы:',
     projectsHeading: 'Проекты',
     projectsSummary:
-      'Флагманские репозитории организации — у каждого свой официальный сайт, репозиторий на GitHub и README, отрисованный как отдельная страница. Пилюли версий отражают последний GitHub Release и обновляются автоматически: сайт пересобирается при каждом push и по ежедневному расписанию.',
+      'Флагманские репозитории организации — у каждого свой официальный сайт, репозиторий на GitHub и README, отрисованный как отдельная страница. Бейджи версий отражают последний GitHub Release и обновляются автоматически: сайт пересобирается при каждом push и по ежедневному расписанию.',
     allProjects: 'Все проекты →',
     allRepositories: 'Все репозитории ↗',
     versionData: (date) => `Данные версий получены ${date} из GitHub Releases.`,
@@ -85,5 +114,6 @@ export const ru: Dictionary = {
   blogPost: {
     titleSuffix: 'блог jixoai',
     writtenIn: (language) => `Эта запись написана на ${language}.`,
+    readIn: (language) => `Читать на ${language} →`,
   },
 };

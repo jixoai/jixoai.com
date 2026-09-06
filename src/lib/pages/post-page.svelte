@@ -13,9 +13,13 @@
   audit: a one-time notice renders when the UI locale differs from the
   post's authored language (the body itself stays as-authored, and its
   container lang follows the content language).
+  2026-09-07 walkthrough fixes: D.4 — the header ISO date is an LTR
+  island; F — the notice names the authored language in the UI locale
+  (langNames, e.g. en shows "Chinese") and links the mirrored sibling
+  post (slug ± "-en") when it exists.
 -->
 <script lang="ts">
-  import { displayDate, postLang, postDir, postRelease, type BlogPost } from '$lib/blog';
+  import { blogPostBySlug, displayDate, postLang, postDir, postRelease, type BlogPost } from '$lib/blog';
   import { dict, localeHref, type Locale } from '$lib/i18n';
 
   let { post, html, locale }: { post: BlogPost; html: string; locale: Locale } = $props();
@@ -23,6 +27,18 @@
   const t = $derived(dict[locale]);
   const release = $derived(postRelease(post));
   const lang = $derived(postLang(post));
+
+  // Mirror sibling (fix F): the -en convention pairs every zh post with
+  // its English translation; the link renders only when the sibling
+  // actually ships.
+  const mirrorSlug = $derived(
+    post.slug.endsWith('-en') ? post.slug.slice(0, -'-en'.length) : `${post.slug}-en`,
+  );
+  const mirror = $derived(blogPostBySlug.get(mirrorSlug) ?? null);
+  const mirrorLang = $derived(mirror ? postLang(mirror) : null);
+  const mirrorName = $derived(
+    mirrorLang ? (t.langNames[mirrorLang] ?? dict[mirrorLang].label) : '',
+  );
 </script>
 
 <svelte:head>
@@ -40,7 +56,8 @@
   <header class="border-border border-b pb-6" data-reveal="">
     <h1 class="text-[clamp(1.8rem,4.5cqi,2.6rem)] font-bold leading-tight tracking-tight text-balance">{post.title}</h1>
     <div class="font-nav text-muted-foreground mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs tracking-[0.14em]">
-      <time datetime={post.date}>{displayDate(post.date)}</time>
+      <!-- dir="ltr": the ISO date is a hard-LTR island (fix D.4) -->
+      <time datetime={post.date} dir="ltr">{displayDate(post.date)}</time>
       <span aria-hidden="true">·</span>
       <span>{post.author}</span>
       {#if release}
@@ -69,11 +86,21 @@
 
   {#if lang !== locale}
     <!-- one-time mismatch notice: the chrome speaks the UI locale, the
-         article below stays in its authored language -->
-    <p class="text-muted-foreground mt-6 text-[13px]" data-reveal="">
+         article below stays in its authored language. The language name
+         renders in the UI locale (langNames); when the mirrored sibling
+         post exists, the notice links across (fix F). -->
+    <p class="text-muted-foreground mt-6 flex flex-wrap items-center gap-3 text-[13px]" data-reveal="">
       <span class="border-border font-nav border px-1.5 py-0.5 text-[10.5px] tracking-[0.12em]">
-        {t.blogPost.writtenIn(dict[lang].label)}
+        {t.blogPost.writtenIn(t.langNames[lang] ?? dict[lang].label)}
       </span>
+      {#if mirror && mirrorLang}
+        <a
+          href={localeHref(locale, `/blog/${mirrorSlug}/`)}
+          class="hover:text-primary underline-offset-4 transition-colors hover:underline"
+        >
+          {t.blogPost.readIn(mirrorName)}
+        </a>
+      {/if}
     </p>
   {/if}
 

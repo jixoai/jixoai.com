@@ -10,6 +10,35 @@ export const ja: Dictionary = {
   dir: 'ltr',
   label: '日本語',
 
+  langNames: {
+    en: '英語',
+    zh: '中国語',
+  },
+
+  footer: {
+    fleet: 'フリート',
+    hub: 'ハブ',
+    org: '組織',
+  },
+
+  // Curated project copy (2026-09-07 walkthrough fix A, Owner-provided
+  // translations verbatim); repos absent here fall back to the English
+  // description.
+  projectDescriptions: {
+    unipty:
+      'Node・Bun・Denoのためのランタイム中立PTY —— 単一の公開コントラクト、開発者が選べるバックエンド、エビデンスで裏付けられたサポート宣言。',
+    openspecui:
+      'OpenSpec駆動開発のためのWebコンパニオン —— コマンド一つでspec-drivenプロジェクトをserve・プレビュー・エクスポート。',
+    ui:
+      'shadcn registryとしてのjixoaiデザイン言語 —— ターミナル美学、OKLCH単一色相の法則、コピー後にあなたのものになるmono-firstコンポーネント。',
+    opentray:
+      'CLI・AIスキルエコシステムのためのデスクトップステータスランタイム —— Node・Bun・Deno上で動くtray-firstアプリ。',
+    opendweb:
+      'アプリケーションレベルのネットワーキング —— マルチデバイスアプリが論理ネットワークを形成します。ゲームルームのようで、システムVPNではありません。QUIC直結優先・セルフホストrelayフォールバック。',
+    openiweb:
+      '普通人のためのオープンソース個人アプリノード —— 運用を学ばずセルフホスト：MCPエンドポイントと鍵をAIコーディングエージェントに委譲するだけ。',
+  },
+
   chrome: {
     subtitle: 'jixoai オープンソースラボ',
     navHome: 'ホーム',
@@ -38,7 +67,7 @@ export const ja: Dictionary = {
     flagships: 'フラッグシップ:',
     projectsHeading: 'プロジェクト',
     projectsSummary:
-      '組織のフラッグシップリポジトリ — それぞれが公式サイト・GitHub リポジトリ・詳細ページとしてレンダリングされた README を備えます。バージョンピルは最新の GitHub Release を反映して自動更新されます：このサイトはプッシュごとと毎日のスケジュールで再ビルドされます。',
+      '組織のフラッグシップリポジトリ — それぞれが公式サイト・GitHub リポジトリ・詳細ページとしてレンダリングされた README を備えます。バージョンバッジは最新の GitHub Release を反映して自動更新されます：このサイトはプッシュごとと毎日のスケジュールで再ビルドされます。',
     allProjects: 'すべてのプロジェクト →',
     allRepositories: 'すべてのリポジトリ ↗',
     versionData: (date) => `バージョンデータは ${date} に GitHub Releases から取得。`,
@@ -85,5 +114,6 @@ export const ja: Dictionary = {
   blogPost: {
     titleSuffix: 'jixoai ブログ',
     writtenIn: (language) => `この記事は${language}で書かれています。`,
+    readIn: (language) => `${language}版を読む →`,
   },
 };

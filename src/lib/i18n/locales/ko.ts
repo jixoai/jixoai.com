@@ -10,6 +10,35 @@ export const ko: Dictionary = {
   dir: 'ltr',
   label: '한국어',
 
+  langNames: {
+    en: '영어',
+    zh: '중국어',
+  },
+
+  footer: {
+    fleet: '플릿',
+    hub: '허브',
+    org: '조직',
+  },
+
+  // Curated project copy (2026-09-07 walkthrough fix A, Owner-provided
+  // translations verbatim); repos absent here fall back to the English
+  // description.
+  projectDescriptions: {
+    unipty:
+      'Node·Bun·Deno를 위한 런타임 중립 PTY — 하나의 공개 계약, 개발자가 선택하는 백엔드, 증거로 뒷받침되는 지원 선언.',
+    openspecui:
+      'OpenSpec 기반 개발을 위한 웹 컴패니언 — 명령 하나로 spec 기반 프로젝트를 서빙·미리보기·내보내기.',
+    ui:
+      'shadcn registry 형태의 jixoai 디자인 언어 — 터미널 미학, OKLCH 단일 색조 법칙, 복사하면 당신 소유가 되는 mono-first 컴포넌트.',
+    opentray:
+      'CLI·AI 스킬 생태계를 위한 데스크톱 상태 런타임 — Node·Bun·Deno 위에서 동작하는 tray-first 앱.',
+    opendweb:
+      '애플리케이션 수준의 네트워킹 — 멀티 디바이스 앱이 논리 네트워크를 형성합니다(시스템 VPN이 아니라 게임 룸처럼). QUIC 직접 연결 우선, 셀프 호스팅 relay 폴백.',
+    openiweb:
+      '일반인을 위한 오픈소스 개인 앱 노드 — 운영을 배우지 않고 셀프 호스팅: MCP 엔드포인트와 키 하나를 AI 코딩 에이전트에게 맡기면 됩니다.',
+  },
+
   chrome: {
     subtitle: 'jixoai 오픈소스 랩',
     navHome: '홈',
@@ -38,7 +67,7 @@ export const ko: Dictionary = {
     flagships: '플래그십:',
     projectsHeading: '프로젝트',
     projectsSummary:
-      '조직의 플래그십 저장소 — 각각 공식 사이트, GitHub 저장소, 상세 페이지로 렌더링되는 README를 갖춥니다. 버전 알약은 최신 GitHub Release를 반영해 자동 갱신됩니다: 이 사이트는 매 푸시마다, 그리고 매일 재빌드됩니다.',
+      '조직의 플래그십 저장소 — 각각 공식 사이트, GitHub 저장소, 상세 페이지로 렌더링되는 README를 갖춥니다. 버전 배지는 최신 GitHub Release를 반영해 자동 갱신됩니다: 이 사이트는 매 푸시마다, 그리고 매일 재빌드됩니다.',
     allProjects: '모든 프로젝트 →',
     allRepositories: '모든 저장소 ↗',
     versionData: (date) => `버전 데이터는 ${date}에 GitHub Releases에서 수집.`,
@@ -85,5 +114,6 @@ export const ko: Dictionary = {
   blogPost: {
     titleSuffix: 'jixoai 블로그',
     writtenIn: (language) => `이 글은 ${language}로 작성되었습니다.`,
+    readIn: (language) => `${language} 버전 읽기 →`,
   },
 };

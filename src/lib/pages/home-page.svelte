@@ -15,6 +15,11 @@
   (dir="ltr" — commands, prompts and version columns never reorder
   under the Arabic mirror), and the latest-posts strip lists the UI
   locale's posts first (postsForLocale).
+  2026-09-07 walkthrough fixes: C — the hero's PRIMARY CTA is the real
+  Projects action (copy snippet replaces the empty clipboard ghost,
+  secondary keeps GitHub only); B — the strip rides the deduped
+  postsForLocale; D.3/D.4 — section heads wrap instead of overflowing
+  and every ISO date renders as an LTR island / bdi under RTL.
 -->
 <script lang="ts">
   import CardGrid from '$lib/ui/card-grid/card-grid.svelte';
@@ -42,6 +47,11 @@
   ];
 
   const latestPosts = $derived(postsForLocale(locale).slice(0, HOME_POSTS_COUNT));
+
+  // The captured-at date crosses into localized sentences at a
+  // locale-specific position, so the LTR isolation rides the injected
+  // value itself (fix D.4): the dictionary interpolates this bdi island.
+  const capturedDate = `<bdi>${new Date(projectsData.fetchedAt).toISOString().slice(0, 10)}</bdi>`;
 </script>
 
 <svelte:head>
@@ -57,8 +67,13 @@
       <span class="border-border text-muted-foreground border px-2 py-0.5 text-[10.5px] tracking-[0.12em]">{badge}</span>
     {/each}
   {/snippet}
+  <!-- the PRIMARY CTA is the Projects action (2026-09-07 fix C): the
+       copy snippet replaces the default clipboard button — an empty
+       copyCommand rendered a ghost fill button with no label -->
+  {#snippet copy()}
+    <PressButton variant="fill" href={homeHref('/projects/')}>{t.home.projectsButton}</PressButton>
+  {/snippet}
   {#snippet secondary()}
-    <PressButton variant="outline" href={homeHref('/projects/')}>{t.home.projectsButton}</PressButton>
     <PressButton variant="outline" href={GITHUB_ORG_URL} external>GitHub ↗</PressButton>
   {/snippet}
   {#snippet terminal()}
@@ -73,7 +88,11 @@
 
 <!-- Projects: card-grid + section-card, subgrid-equalized, live versions. -->
 <section id="projects" class="mx-auto w-full max-w-[90rem] px-4 pb-12 sm:px-6 lg:px-8" aria-label={t.home.projectsHeading}>
-  <h2 class="font-nav flex items-baseline gap-4 text-lg uppercase tracking-[0.3em]" data-reveal="">
+  <!-- min-w-0 + flex-wrap (2026-09-07 fix D.3): the tracked uppercase
+       heading wraps to its own lines on narrow locales (es "ÚLTIMAS
+       PUBLICACIONES") instead of overflowing the measure; the trailing
+       rule spans the wrapped last row -->
+  <h2 class="font-nav flex min-w-0 flex-wrap items-baseline gap-4 text-lg uppercase tracking-[0.3em]" data-reveal="">
     {t.home.projectsHeading}
     <span class="bg-border h-px flex-1" aria-hidden="true"></span>
   </h2>
@@ -93,14 +112,15 @@
     <PressButton variant="outline" href={homeHref('/projects/')}>{t.home.allProjects}</PressButton>
     <PressButton variant="outline" href={GITHUB_ORG_URL} external>{t.home.allRepositories}</PressButton>
     <p class="text-muted-foreground text-[12.5px]">
-      {t.home.versionData(new Date(projectsData.fetchedAt).toISOString().slice(0, 10))}
+      <!-- {@html}: carries only the bdi-wrapped ISO date (fix D.4) -->
+      {@html t.home.versionData(capturedDate)}
     </p>
   </div>
 </section>
 
 <!-- Latest posts: the blog strip (pure static, newest first). -->
 <section id="blog" class="mx-auto w-full max-w-[90rem] px-4 pb-16 sm:px-6 lg:px-8" aria-label={t.home.latestPosts}>
-  <h2 class="font-nav flex items-baseline gap-4 text-lg uppercase tracking-[0.3em]" data-reveal="">
+  <h2 class="font-nav flex min-w-0 flex-wrap items-baseline gap-4 text-lg uppercase tracking-[0.3em]" data-reveal="">
     {t.home.latestPosts}
     <span class="bg-border h-px flex-1" aria-hidden="true"></span>
   </h2>
@@ -109,7 +129,9 @@
       {#each latestPosts as post (post.slug)}
         <li>
           <a href={homeHref(`/blog/${post.slug}/`)} class="group flex flex-wrap items-baseline gap-x-4 gap-y-1 py-3">
-            <time datetime={post.date} class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
+            <!-- dir="ltr": the ISO date is a hard-LTR island (fix D.4 —
+                 digit-hyphen runs reorder under dir="rtl") -->
+            <time datetime={post.date} dir="ltr" class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
             <span class="group-hover:text-primary transition-colors">{post.title}</span>
             <span class="text-muted-foreground ms-auto hidden max-w-[46ch] truncate text-xs sm:block" dir={postDir(post)}>{post.description}</span>
           </a>

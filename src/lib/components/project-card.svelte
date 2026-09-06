@@ -9,6 +9,10 @@
   2026-09-06 nine-locales: labels + description render in the page
   locale (zh shows the manifest's curated descriptionZh); the README
   link stays on the locale mirror.
+  2026-09-07 walkthrough fix A: the description rides the dictionary
+  tier — localizedDescription prefers dict[locale].projectDescriptions
+  [repo] (seven translations + polished zh), falling back
+  descriptionZh → the manifest English description.
 -->
 <script lang="ts">
   import PressButton from '$lib/ui/press-button/press-button.svelte';

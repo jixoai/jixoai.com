@@ -10,6 +10,35 @@ export const es: Dictionary = {
   dir: 'ltr',
   label: 'Español',
 
+  langNames: {
+    en: 'inglés',
+    zh: 'chino',
+  },
+
+  footer: {
+    fleet: 'flota',
+    hub: 'hub',
+    org: 'organización',
+  },
+
+  // Curated project copy (2026-09-07 walkthrough fix A, Owner-provided
+  // translations verbatim); repos absent here fall back to the English
+  // description.
+  projectDescriptions: {
+    unipty:
+      'PTY neutra al runtime para Node, Bun y Deno — un contrato público único, Backends elegibles por el desarrollador y afirmaciones de apoyo verificadas con evidencia.',
+    openspecui:
+      'La companion web para el desarrollo guiado por OpenSpec — sirve, previsualiza y exporta proyectos spec-driven con un solo comando.',
+    ui:
+      'El lenguaje de diseño de jixoai como registry de shadcn: estética de terminal, la ley de un solo matiz OKLCH y componentes mono-first que pasan a ser tuyos al copiarlos.',
+    opentray:
+      'Runtime de estado de escritorio para ecosistemas CLI y de AI skills — apps tray-first sobre Node, Bun y Deno.',
+    opendweb:
+      'Redes a nivel de aplicación: apps multidispositivo forman redes lógicas — como salas de juego, no VPN de sistema — con QUIC directo primero y relay autoalojado de respaldo.',
+    openiweb:
+      'El nodo de aplicaciones personales open source para gente corriente — autohospeda sin aprender ops: entrega un endpoint MCP y una clave a tu agente de código IA.',
+  },
+
   chrome: {
     subtitle: 'el laboratorio open source de jixoai',
     navHome: 'Inicio',
@@ -30,7 +59,7 @@ export const es: Dictionary = {
     titleTail: '',
     badges: ['código abierto', 'licencia MIT'],
     summary:
-      "jixoai construye la capa de carga sobre la que se apoya la era de la IA: runtimes de terminal, lenguajes de diseño y herramientas para desarrolladores que entregan un contrato honesto a la vez. Código abierto, con evidencia verificable, MIT.",
+      "jixoai construye la capa de carga sobre la que se apoya la era de la IA: runtimes de terminal, lenguajes de diseño y herramientas para desarrolladores que entregan un contrato honesto uno a la vez. Código abierto, con evidencia verificable, MIT.",
     projectsButton: 'Proyectos ↓',
     barTitle: 'jixoai — zsh',
     command: 'cat ~/jixoai/MISSION.txt',
@@ -38,7 +67,7 @@ export const es: Dictionary = {
     flagships: 'proyectos insignia:',
     projectsHeading: 'Proyectos',
     projectsSummary:
-      'Los repositorios insignia de la organización — cada uno con su sitio oficial, su repositorio de GitHub y su README renderizado como página de detalle. Las píldoras de versión reflejan el último GitHub Release y se actualizan solas: este sitio se reconstruye en cada push y con una tarea diaria.',
+      'Los repositorios insignia de la organización — cada uno con su sitio oficial, su repositorio de GitHub y su README renderizado como página de detalle. Las insignias de versión reflejan el último GitHub Release y se actualizan solas: este sitio se reconstruye en cada push y con una tarea diaria.',
     allProjects: 'Todos los proyectos →',
     allRepositories: 'Todos los repositorios ↗',
     versionData: (date) => `Datos de versión capturados el ${date} desde GitHub Releases.`,
@@ -85,5 +114,6 @@ export const es: Dictionary = {
   blogPost: {
     titleSuffix: 'blog de jixoai',
     writtenIn: (language) => `Esta publicación está escrita en ${language}.`,
+    readIn: (language) => `Léela en ${language} →`,
   },
 };

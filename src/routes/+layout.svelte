@@ -13,6 +13,9 @@
   surfaces; the chrome ships as registry items under jixoai-ui.lock
   (hue 0 — the organization red). Same day, nine locales: en at the
   root (stable URLs), eight /[lang]/ mirrors, ar RTL.
+  2026-09-07 walkthrough fix G1: footer column heads localize
+  (dict footer.fleet/hub/org — were hardcoded English on eight
+  mirrors).
 -->
 <script lang="ts">
   import '../app.css';
@@ -161,16 +164,16 @@
 
   {#snippet footer()}
     <TerminalFooter ghost="JIXOAI" copyright="© {new Date().getFullYear()} jixoai">
-      <TerminalFooterColumn title="fleet">
+      <TerminalFooterColumn title={t.footer.fleet}>
         {#each projects as project (project.slug)}
           <a href={project.site ?? project.repoUrl} target="_blank" rel="noreferrer">{project.name}</a>
         {/each}
       </TerminalFooterColumn>
-      <TerminalFooterColumn title="hub">
+      <TerminalFooterColumn title={t.footer.hub}>
         <a href={href('/projects/')}>{t.chrome.navProjects}</a>
         <a href={href('/blog/')}>{t.chrome.navBlog}</a>
       </TerminalFooterColumn>
-      <TerminalFooterColumn title="org">
+      <TerminalFooterColumn title={t.footer.org}>
         <a href={GITHUB_ORG_URL} target="_blank" rel="noreferrer">GitHub</a>
       </TerminalFooterColumn>
     </TerminalFooter>

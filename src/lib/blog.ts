@@ -12,8 +12,10 @@
  * postsForLocale: the authored-language views behind the locale-first
  * index order, the language badge, the summary bidi isolation and the
  * "written in …" notice (bodies stay as-authored under every locale —
- * tier law unchanged). Zero server runtime, zero client fetches —
- * everything below runs inside the prerender.
+ * tier law unchanged; 2026-09-07 fix B: postsForLocale also DEDUPES
+ * the -en mirror convention, one variant per base slug). Zero server
+ * runtime, zero client fetches — everything below runs inside the
+ * prerender.
  *
  * Content is first-party (jixoai authors), so no HTML sanitization is
  * applied on purpose (blog spec, 2026-09-06).
@@ -142,12 +144,31 @@ export const postLang = (post: BlogPost): Locale => {
   return lang && lang in dict ? lang : 'en';
 };
 
-/** Locale-aware listing order (2026-09-06 mobile-audit, mixed-language
- *  governance): the UI locale's posts first, every other language after
- *  (both groups keep the date-desc index order) — the badge on the
- *  non-matching group carries the language label. */
+/** Locale-aware listing (2026-09-06 mobile-audit, mixed-language
+ *  governance; 2026-09-07 walkthrough fix B — mirror dedup): posts
+ *  group by base slug (trailing `-en` stripped — the zh/en mirror
+ *  convention) and each group surfaces exactly ONE variant, picked
+ *  exact-UI-locale > zh > en, so a seven-locale home never lists the
+ *  same article twice (once per language). Order: the UI locale's
+ *  picks first, everything else by date desc (slug tiebreak). */
 export function postsForLocale(locale: Locale): readonly BlogPost[] {
-  return [...blogPosts].sort(
+  const groups = new Map<string, BlogPost[]>();
+  for (const post of blogPosts) {
+    const base = post.slug.endsWith('-en') ? post.slug.slice(0, -'-en'.length) : post.slug;
+    const variants = groups.get(base);
+    if (variants) variants.push(post);
+    else groups.set(base, [post]);
+  }
+  const picks: BlogPost[] = [];
+  for (const variants of groups.values()) {
+    picks.push(
+      variants.find((post) => postLang(post) === locale) ??
+        variants.find((post) => postLang(post) === 'zh') ??
+        variants.find((post) => postLang(post) === 'en') ??
+        variants[0],
+    );
+  }
+  return picks.sort(
     (a, b) =>
       Number(postLang(b) === locale) - Number(postLang(a) === locale) ||
       Date.parse(b.date) - Date.parse(a.date) ||

@@ -12,6 +12,12 @@
   body prefers the locale's fetched translation and the container lang
   tag follows the content language (CJK typography); an untranslated
   locale under L≠en gets the "original (English)" pill above the body.
+  2026-09-07 walkthrough fixes: E — the README body column widens and
+  centers on desktop (mx-auto — no dead right half), the version pill
+  gains a visible "latest release (tag)" link beside it, and the
+  README's leading h1 no longer duplicates the identity header's name
+  (src/lib/readme.ts stripDuplicateTitle); A — the description tier
+  rides the dictionary's projectDescriptions via localizedDescription.
 -->
 <script lang="ts">
   import PressButton from '$lib/ui/press-button/press-button.svelte';
@@ -85,6 +91,18 @@
         {:else}
           <span class="version-pill font-nav" title={t.projectDetail.noRelease}>{project.version}</span>
         {/if}
+        <!-- visible latest-release link (fix E): the pill alone reads as
+             a bare version number — this anchor states what it opens -->
+        {#if project.releaseUrl}
+          <a
+            href={project.releaseUrl}
+            target="_blank"
+            rel="noreferrer"
+            class="text-muted-foreground hover:text-primary text-xs underline-offset-4 transition-colors hover:underline"
+          >
+            {t.projectDetail.latestRelease(project.tag ?? '')}
+          </a>
+        {/if}
       </div>
       <p class="text-muted-foreground mt-2 max-w-[62ch] text-pretty text-[13px] leading-6">{localizedDescription(project, locale)}</p>
       <div class="mt-4 flex flex-wrap items-center gap-2">
@@ -106,9 +124,11 @@
 
   <!-- README body: rendered from the repository head at build time; the
        lang tag follows the CONTENT language, and an untranslated locale
-       (L≠en on the English fallback) gets the one-time original pill -->
+       (L≠en on the English fallback) gets the one-time original pill.
+       The column widens to 88ch and centers (fix E) — the identity
+       header stays full-measure, the reading column breathes alone -->
   {#if readmeHtml}
-    <article class="markdown-body mt-8 max-w-[76ch]" lang={readmeLang} data-reveal="">
+    <article class="markdown-body mx-auto mt-8 w-full max-w-[88ch]" lang={readmeLang} data-reveal="">
       {#if !readmeTranslated && locale !== 'en'}
         <p class="mb-6">
           <span class="version-pill font-nav">{t.projectDetail.originalLanguage}</span>

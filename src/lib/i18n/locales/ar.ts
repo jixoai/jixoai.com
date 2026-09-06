@@ -11,6 +11,36 @@ export const ar: Dictionary = {
   dir: 'rtl',
   label: 'العربية',
 
+  langNames: {
+    en: 'الإنجليزية',
+    zh: 'الصينية',
+  },
+
+  footer: {
+    fleet: 'الأسطول',
+    hub: 'المركز',
+    org: 'المنظمة',
+  },
+
+  // Curated project copy (2026-09-07 walkthrough fix A, Owner-provided
+  // translations verbatim — the unipty entry LEADS with U+200F RLM so
+  // the Latin "PTY" run sits correctly inside the RTL line); repos
+  // absent here fall back to the English description.
+  projectDescriptions: {
+    unipty:
+      '‏PTY محايدة لبيئة التشغيل لكلٍّ من Node وBun وDeno — عقد عام واحد، وواجهات خلفية يختارها المطوّر، وادعاءات دعم مدعومة بالأدلة.',
+    openspecui:
+      'رفيق الويب للتطوير الموجَّه بـ OpenSpec — تشغيل ومعاينة وتصدير المشاريع القائمة على المواصفات بأمر واحد.',
+    ui:
+      'لغة تصميم jixoai على شكل shadcn registry — جماليات الطرفية، وقانون التدرج الواحد OKLCH، ومكوّنات mono-first تملكها بمجرد نسخها.',
+    opentray:
+      'بيئة تشغيل لحالة سطح المكتب لمنظومات CLI ومهارات الذكاء الاصطناعي — تطبيقات tray-first تعمل على Node وBun وDeno.',
+    opendweb:
+      'شبكات على مستوى التطبيق: تطبيقات الأجهزة المتعددة تشكّل شبكات منطقية — كغرف الألعاب لا كـ VPN للنظام — اتصال QUIC مباشر أولاً مع relay ذاتي الاستضافة كاحتياط.',
+    openiweb:
+      'عقدة التطبيقات الشخصية مفتوحة المصدر للناس العاديين — استضافة ذاتية دون تعلّم التشغيل: سلِّم نقطة نهاية MCP ومفتاحاً واحداً لوكيل البرمجة بالذكاء الاصطناعي.',
+  },
+
   chrome: {
     subtitle: 'مختبر jixoai مفتوح المصدر',
     navHome: 'الرئيسية',
@@ -39,7 +69,7 @@ export const ar: Dictionary = {
     flagships: 'الرائدات:',
     projectsHeading: 'المشاريع',
     projectsSummary:
-      'المستودعات الرائدة للمؤسسة — لكل منها موقعه الرسمي ومستودعه على GitHub وملف README مُصيَّر كصفحة تفصيلية. تعكس حبّات الإصدار أحدث GitHub Release وتُحدَّث تلقائيًا: يُعاد بناء هذا الموقع مع كل دفعة وفق جدول يومي.',
+      'المستودعات الرائدة للمؤسسة — لكل منها موقعه الرسمي ومستودعه على GitHub وملف README مُصيَّر كصفحة تفصيلية. تعكس شارات الإصدار أحدث GitHub Release وتُحدَّث تلقائيًا: يُعاد بناء هذا الموقع مع كل دفعة وفق جدول يومي.',
     // RTL arrow law (2026-09-06 mobile audit): inline "continue" arrows
     // mirror to ← under dir="rtl" — the glyph leads the reading flow.
     allProjects: 'كل المشاريع ←',
@@ -88,5 +118,7 @@ export const ar: Dictionary = {
   blogPost: {
     titleSuffix: 'مدونة jixoai',
     writtenIn: (language) => `هذه المقالة مكتوبة بلغة ${language}.`,
+    // RTL arrow law: the "continue" glyph mirrors to ← under dir="rtl".
+    readIn: (language) => `اقرأها بلغة ${language} ←`,
   },
 };

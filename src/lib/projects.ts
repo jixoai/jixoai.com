@@ -9,12 +9,16 @@
  * Curated-copy tier (2026-09-06 nine-locales change): the description is
  * locale-aware — zh renders the manifest's descriptionZh, every other
  * locale renders description (localization spec, no silent mixing).
+ * (maintained 2026-09-07 walkthrough fix A): localizedDescription now
+ * prefers the locale dictionary's projectDescriptions[repo] — seven
+ * translations + the polished zh live in the dictionaries; the chain
+ * falls back descriptionZh (zh only) → the manifest English description.
  * README tier (2026-09-06 readme-i18n): the body is locale-aware with an
  * explicit fallback — see src/lib/readme.ts (readmeView).
  */
 
 import generated from './projects.generated.json';
-import { localeHref, type Locale } from './i18n';
+import { dict, localeHref, type Locale } from './i18n';
 
 export interface GeneratedProject {
   /** owner-aware repo path from the manifest: "opentray" | "jixoai/opendweb" */
@@ -58,7 +62,10 @@ export const projectBySlug = new Map(projects.map((project) => [project.slug, pr
 export const projectsUrl = (slug: string, locale: Locale = 'en'): string =>
   localeHref(locale, `/projects/${slug}/`);
 
-/** Locale-aware curated description: zh → descriptionZh (manifest
- *  tier), every other locale → description. */
+/** Locale-aware curated description (2026-09-07 fix A): the locale
+ *  dictionary's projectDescriptions[repo] wins (seven translated tiers
+ *  + the polished zh), then descriptionZh (zh only, repos the dict
+ *  does not cover yet), then the manifest English description. */
 export const localizedDescription = (project: GeneratedProject, locale: Locale): string =>
-  locale === 'zh' && project.descriptionZh ? project.descriptionZh : project.description;
+  dict[locale].projectDescriptions?.[project.repo] ??
+  (locale === 'zh' && project.descriptionZh ? project.descriptionZh : project.description);

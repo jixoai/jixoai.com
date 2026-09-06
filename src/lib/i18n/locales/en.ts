@@ -11,6 +11,17 @@ export const en: Dictionary = {
   dir: 'ltr',
   label: 'English',
 
+  langNames: {
+    en: 'English',
+    zh: 'Chinese',
+  },
+
+  footer: {
+    fleet: 'fleet',
+    hub: 'hub',
+    org: 'org',
+  },
+
   chrome: {
     subtitle: 'the jixoai open-source lab',
     navHome: 'Home',
@@ -86,5 +97,6 @@ export const en: Dictionary = {
   blogPost: {
     titleSuffix: 'jixoai blog',
     writtenIn: (language) => `This post is written in ${language}.`,
+    readIn: (language) => `Read it in ${language} →`,
   },
 };
