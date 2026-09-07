@@ -99,20 +99,19 @@
     <ul class="mt-4 divide-y divide-border/60" data-reveal="">
       {#each latestPosts as post (post.slug)}
         <li>
-          <!-- table alignment (Owner 2026-09-07): grid columns — fixed mono
-               accent / content / right-truncated description — so every row
-               lines up vertically like a table -->
-          <a href={homeHref(`/blog/${post.slug}/`)} class="group grid grid-cols-[10.5ch_minmax(0,max-content)_minmax(0,1fr)] items-baseline gap-x-4 py-3">
+          <!-- table alignment (Owner 2026-09-07 r3): desktop reads
+               title / description / date — a FIXED title column keeps the
+               vertical rhythm, desc right-truncates against the date rail;
+               mobile stacks title / description / date(right). Desc keeps
+               max-w-full: an end-aligned grid item sizes fit-content which
+               floors at the nowrap min-content (full text) — only a
+               percentage max-width caps it (vision fix r2). -->
+          <a href={homeHref(`/blog/${post.slug}/`)} class="group grid grid-cols-1 gap-y-1 py-3 sm:grid-cols-[min(56ch,60%)_minmax(0,1fr)_10.5ch] sm:items-baseline sm:gap-x-4 sm:gap-y-0">
+            <span class="group-hover:text-primary min-w-0 truncate transition-colors">{post.title}</span>
+            <span class="text-muted-foreground max-w-full truncate text-xs sm:justify-self-end" dir={postDir(post)}>{post.description}</span>
             <!-- dir="ltr": the ISO date is a hard-LTR island (fix D.4 —
                  digit-hyphen runs reorder under dir="rtl") -->
-            <time datetime={post.date} dir="ltr" class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
-            <span class="group-hover:text-primary transition-colors truncate">{post.title}</span>
-            <!-- max-w-full (vision fix r2): an end-aligned grid item sizes
-                 fit-content, which floors at the nowrap min-content (full
-                 text) — min-w-0 cannot touch that floor, a percentage
-                 max-width against the definite track can. Desc hides below
-                 sm. -->
-            <span class="text-muted-foreground hidden max-w-full justify-self-end truncate text-xs sm:block" dir={postDir(post)}>{post.description}</span>
+            <time datetime={post.date} dir="ltr" class="font-nav text-primary justify-self-end text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
           </a>
         </li>
       {/each}
@@ -144,22 +143,23 @@
   <ul class="mt-4 divide-y divide-border/60" data-reveal="">
     {#each projects as project (project.slug)}
       <li>
-        <!-- table alignment (Owner 2026-09-07): fixed version column so the
-             fleet rows line up; description right-truncated like a table -->
-        <a href={projectsUrl(project.slug, locale)} class="group grid grid-cols-[16ch_minmax(0,max-content)_minmax(0,1fr)] items-baseline gap-x-4 py-3">
-          <!-- dir="ltr": version tags (opentray@0.21.1) are a hard-LTR island -->
-          <span dir="ltr" class="font-nav text-primary text-xs tracking-[0.14em]">{project.version}</span>
-          <span class="group-hover:text-primary transition-colors inline-flex items-baseline gap-2">
-            {#if project.logo}
-              <ProjectLogo logo={project.logo} class="h-4 w-4 self-center" />
-            {/if}
-            <span class="truncate">{project.name}</span>
-          </span>
-          <!-- max-w-full (vision fix r2): hard-caps the end-aligned item
-               at its track so truncate ellipsizes (fit-content floors at
-               the nowrap min-content; only a percentage max-width caps
-               it); desc hides below sm like the posts strip -->
-          <span class="text-muted-foreground hidden max-w-full justify-self-end truncate text-xs sm:block">{localizedDescription(project, locale)}</span>
+        <!-- table alignment (Owner 2026-09-07 r3): desktop reads
+             icon / name / version / description — icon+fixed name column
+             keep the fleet rows lined up, version mono accent follows,
+             desc right-truncates. Mobile stacks icon+name / version
+             (under the name) / description (full width) via explicit
+             placement, reset to auto flow at sm. Desc keeps max-w-full
+             (vision fix r2: only a percentage max-width caps the
+             fit-content floor of an end-aligned nowrap item). -->
+        <a href={projectsUrl(project.slug, locale)} class="group grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 py-3 sm:grid-cols-[auto_13ch_minmax(0,max-content)_minmax(0,1fr)] sm:items-baseline sm:gap-x-4 sm:gap-y-0">
+          {#if project.logo}
+            <ProjectLogo logo={project.logo} class="col-start-1 row-start-1 h-4 w-4 self-center sm:col-start-auto sm:row-start-auto" />
+          {/if}
+          <span class="group-hover:text-primary col-start-2 row-start-1 min-w-0 truncate transition-colors sm:col-start-auto sm:row-start-auto">{project.name}</span>
+          <!-- dir="ltr": version tags (opentray@0.21.1) are a hard-LTR island;
+               mobile sits it directly under the name (same track) -->
+          <span dir="ltr" class="font-nav text-primary col-start-2 row-start-2 text-xs tracking-[0.14em] sm:col-start-auto sm:row-start-auto">{project.version}</span>
+          <span class="text-muted-foreground col-start-1 col-span-2 row-start-3 max-w-full truncate text-xs sm:col-span-1 sm:col-start-auto sm:row-start-auto sm:justify-self-end">{localizedDescription(project, locale)}</span>
         </a>
       </li>
     {/each}
