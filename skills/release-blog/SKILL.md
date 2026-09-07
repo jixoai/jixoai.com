@@ -80,13 +80,16 @@ skill's compression is not enough.
 ```yaml
 ---
 title: "UniPty v0.5.0"
-date: 2026-09-20
+date: 2026-09-20T09:12:34Z   # GitHub Release 的 published_at 全量 UTC 时间戳
+                              # （Owner 法令 2026-09-07：文章日期 = release 发布
+                              #  时刻，不是写作日；同日多篇按时刻排序。
+                              #  展示层 displayDate 裁剪为 YYYY-MM-DD）
 description: 一句话定位（索引页摘要直接用它）
 author: jixoai
 tags: [release, unipty]
 repo: unipty        # 必须等于 projects.manifest.json 的 repo 字段
 version: "0.5.0"    # 与 GitHub release tag 对齐（去 v）
-lang: zh            # en 镜像标 en
+lang: zh            # en 镜像标 en；镜像与主文 date 必须一致
 ---
 ```
 

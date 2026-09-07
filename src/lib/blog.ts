@@ -205,6 +205,9 @@ export function postRelease(post: BlogPost): PostRelease | null {
   };
 }
 
-/** "2026-09-06" → "2026-09-06" display form (ISO in, ISO out — the
- *  authored form is already the display form). */
-export const displayDate = (iso: string): string => iso;
+/** Display form of a post's date: frontmatter carries the release's
+ * full UTC publication timestamp (Owner 2026-09-07 — posts date from
+ * the GitHub Release published_at, not the writing day; the timestamp
+ * keeps same-day releases ordered correctly), every surface shows the
+ * UTC calendar date — a plain 10-char slice, no timezone shifting. */
+export const displayDate = (iso: string): string => iso.slice(0, 10);
