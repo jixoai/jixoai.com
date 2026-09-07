@@ -25,6 +25,16 @@ const files = readdirSync(dir).filter((f) => f.endsWith('.md') && !f.endsWith('-
 
 const FEATURES = [
   {
+    id: '比喻(明喻)',
+    regex: /(像|如同|好比|犹如|宛如)[^。，；]{2,24}(一样|一般|那样|一样地)|像(一位|一个|一名|一场|一局)[^，。；]{2,16}/g,
+    budget: 1, absolute: true,
+  },
+  {
+    id: '比喻(行文隐喻)',
+    regex: /主菜|前菜|加餐|赌注|筹码|同船|另一翼|接缝|护城河|拼图|游戏房间|登船|压舱石/g,
+    budget: 1, absolute: true,
+  },
+  {
     id: '翻案腔',
     regex: /(不是|并非|不在于|与其说)[^。，]{1,24}(而是|不如说)|看似[^。，]{1,18}实则|表面[^。，]{1,18}实际|你以为[^。]{1,30}其实/g,
     ai: 0.7, human: 0.21,
@@ -62,6 +72,11 @@ for (const file of files) {
   const kchars = Math.max(text.replace(/\s/g, '').length, 1) / 1000;
   const rows = [];
   for (const f of FEATURES) {
+    if (f.absolute) {
+      const hits = (text.match(f.regex) ?? []).length;
+      if (hits > f.budget) { rows.push(`${f.id} ${hits} (budget ${f.budget}) RED`); failures++; }
+      continue;
+    }
     const hits = (text.match(f.regex) ?? []).length / kchars;
     let verdict = '';
     if (hits > f.ai) verdict = 'RED';

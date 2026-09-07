@@ -209,6 +209,40 @@
   font-size: 0.88em;
   padding: 0.1em 0.35em;
 }
+/* summary-detail folding for example code (Owner law 2026-09-07: code
+ * examples are necessary; when they crowd the narrative, extras fold
+ * behind a mono disclosure row that reads like the rest of the chrome) */
+.markdown-body details {
+  border: 1px solid color-mix(in oklab, var(--border) 55%, transparent);
+  border-radius: 6px;
+  margin: 1.2em 0;
+}
+.markdown-body details[open] summary {
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 45%, transparent);
+}
+.markdown-body summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  list-style: none;
+  padding: 0.55rem 0.9rem;
+  text-transform: uppercase;
+  user-select: none;
+}
+.markdown-body summary::before {
+  content: '+ ';
+}
+.markdown-body details[open] summary::before {
+  content: '− ';
+}
+.markdown-body summary:hover {
+  color: var(--primary);
+}
+.markdown-body details > pre,
+.markdown-body details > .highlight {
+  margin: 0.9rem 1rem;
+}
 .markdown-body pre {
   background: color-mix(in oklab, var(--muted) 42%, var(--background));
   border: 1px solid color-mix(in oklab, var(--border) 45%, transparent);

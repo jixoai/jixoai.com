@@ -74,6 +74,35 @@ information, one self-correction, one admitted unresolved tension — these are
 signals, not flaws. Polish must not flatten them into 新闻稿. [gaubee-writer
 起草6, human-writing-audit 应保留信号]
 
+D13. **Metaphor restraint (Owner law 2026-09-07, reader fatigue).**
+   Technical posts carry AT MOST one metaphor, and only AFTER the
+   mechanism is explained, as a positioning aid. Banished categories:
+   food/course metaphors (主菜/前菜/加餐), gambling (赌注/筹码), naval
+   (同船/另一翼/接缝/落锚), game-room/network storytelling
+   (像游戏房间一样), and any 像X一样/如同/好比 simile that decorates
+   instead of explains. Plain statement beats figure: 「0.2.0 补上了
+   最后一块预留能力」 not 「最后一道接缝」. [Owner review of the
+   2026-09-07 rewrite round: AI over-produces figurative framing;
+   each metaphor taxes the reader once more]
+D14. **Proper-noun budget.** Internal codenames (milestone tags,
+   internal module nicknames, spec phases like "R2", capability
+   shorthand like "findings 面") are capped at a handful per post and
+   EACH first use gets a plain-language gloss, or it is cut for the
+   behavioral description. API names, package names, CLI flags, error
+   codes are OBJECTS, not jargon — they stay. The test: a reader who
+   has never opened the repo still understands every value sentence.
+   [Owner law 2026-09-07: 用大白话解释每一个 release 的价值]
+D15. **Plain-language value sentence first.** Every 亮点 section opens
+   with what the reader can now DO or which everyday problem stops
+   hurting, in plain words, before any mechanism. If the plain-language
+   version cannot be written, the highlight is not a highlight.
+D16. **Code examples are required; fold the surplus.** Each 亮点 ships
+   at least one runnable/typable example (CLI invocation or API call).
+   When examples crowd the narrative, extras fold into
+   `<details><summary>示例：…</summary>` blocks (styled by
+   .markdown-body details). Never invent APIs: examples come from the
+   L1 release body, the linked README/docs, or commands the post
+   already asserts. [Owner law 2026-09-07]
 D12. **The one emotional sentence.** release-blog allows at most one 情绪化
 语句 per post — spend it at the milestone close or the 痛点 peak, as a cold
 declarative ("It's done."-grade), never as exclamation stacking.
