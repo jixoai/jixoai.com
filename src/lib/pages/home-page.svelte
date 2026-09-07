@@ -27,7 +27,7 @@
   import TerminalCard from '$lib/ui/terminal-card/terminal-card.svelte';
   import { projectsData, projects, projectsUrl, localizedDescription } from '$lib/projects';
   import ProjectLogo from '$lib/components/project-logo.svelte';
-  import { postsForLocale, postDir, displayDate } from '$lib/blog';
+  import { postsForLocale, displayDate } from '$lib/blog';
   import { GITHUB_ORG_URL, HOME_POSTS_COUNT } from '$lib/site';
   import { dict, localeHref, type Locale } from '$lib/i18n';
 
@@ -99,19 +99,22 @@
     <ul class="mt-4 divide-y divide-border/60" data-reveal="">
       {#each latestPosts as post (post.slug)}
         <li>
-          <!-- table alignment (Owner 2026-09-07 r3): desktop reads
-               title / description / date — a FIXED title column keeps the
-               vertical rhythm, desc right-truncates against the date rail;
-               mobile stacks title / description / date(right). Desc keeps
-               max-w-full: an end-aligned grid item sizes fit-content which
-               floors at the nowrap min-content (full text) — only a
-               percentage max-width caps it (vision fix r2). -->
-          <a href={homeHref(`/blog/${post.slug}/`)} class="group grid grid-cols-1 gap-y-1 py-3 sm:grid-cols-[min(56ch,60%)_minmax(0,1fr)_10.5ch] sm:items-baseline sm:gap-x-4 sm:gap-y-0">
+          <!-- two-line row (Owner 2026-09-07 r4): title / date share the
+               first line (date right-aligned), description sits below,
+               indented (ps-4) and truncated. One grammar for every width.
+               The date keeps justify-self-end; the desc keeps max-w-full +
+               truncate capping (vision fix r2 family). -->
+          <a href={homeHref(`/blog/${post.slug}/`)} class="group grid grid-cols-[minmax(0,1fr)_max-content] items-baseline gap-x-4 gap-y-0.5 py-3">
             <span class="group-hover:text-primary min-w-0 truncate transition-colors">{post.title}</span>
-            <span class="text-muted-foreground max-w-full truncate text-xs sm:justify-self-end" dir={postDir(post)}>{post.description}</span>
             <!-- dir="ltr": the ISO date is a hard-LTR island (fix D.4 —
                  digit-hyphen runs reorder under dir="rtl") -->
             <time datetime={post.date} dir="ltr" class="font-nav text-primary justify-self-end text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
+            <!-- <bdi> isolates the summary's bidi without pinning the span's
+                 dir: the span inherits the PAGE direction so ps-4 mirrors
+                 correctly on /ar/ (indent at the row's inline start); a
+                 dir="ltr" attr here would resolve the logical padding
+                 against the element itself and break the mirror -->
+            <span class="text-muted-foreground col-span-2 max-w-full truncate ps-4 text-xs"><bdi>{post.description}</bdi></span>
           </a>
         </li>
       {/each}
@@ -159,7 +162,10 @@
           <!-- dir="ltr": version tags (opentray@0.21.1) are a hard-LTR island;
                mobile sits it directly under the name (same track) -->
           <span dir="ltr" class="font-nav text-primary col-start-2 row-start-2 text-xs tracking-[0.14em] sm:col-start-auto sm:row-start-auto">{project.version}</span>
-          <span class="text-muted-foreground col-start-1 col-span-2 row-start-3 max-w-full truncate text-xs sm:col-span-1 sm:col-start-auto sm:row-start-auto sm:justify-self-end">{localizedDescription(project, locale)}</span>
+          <!-- desc left/start-aligned (Owner 2026-09-07 r4): the default
+               stretch fills the 1fr track so the text reads from the
+               column start and truncate still caps the right edge -->
+          <span class="text-muted-foreground col-start-1 col-span-2 row-start-3 max-w-full truncate text-xs sm:col-span-1 sm:col-start-auto sm:row-start-auto">{localizedDescription(project, locale)}</span>
         </a>
       </li>
     {/each}
