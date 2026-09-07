@@ -75,5 +75,24 @@ for (const file of files) {
   }
   console.log(`\n${file}${rows.length ? '\n  ' + rows.join('\n  ') : '\n  clean'}`);
 }
+
+// en mirrors: craft.md M4 + en-tell list (budget rules, not per-1k)
+const EN_TELLS = [
+  { id: 'em/en dash', regex: /\s[—–]\s|——/g, budget: 1 },
+  { id: 'contrastive formula', regex: /not just[^.;]{1,60}(;|,)?\s*it'?s\b|Not only\b[^.;]{1,60}but also/g, budget: 0 },
+  { id: 'excess vocabulary', regex: /\b(delve|leverage|showcase|harness|unleash|democratize|utilize|facilitate|unprecedented|comprehensive)\b/gi, budget: 0 },
+  { id: 'hedge stack', regex: /could potentially|may possibly|might perhaps/gi, budget: 0 },
+  { id: 'opener boilerplate', regex: /It'?s important to note|In today'?s fast-paced/gi, budget: 0 },
+  { id: 'verb tricolon', regex: /\b(build|test|deploy|ship|scale|manage|streamline|simplify|accelerate|empower),\s*\w+,\s*and\s*\w+/gi, budget: 0 },
+];
+for (const file of readdirSync(dir).filter((f) => f.endsWith('-en.md'))) {
+  const text = strip(readFileSync(join(dir, file), 'utf8'));
+  const rows = [];
+  for (const t of EN_TELLS) {
+    const hits = (text.match(t.regex) ?? []).length;
+    if (hits > t.budget) { rows.push(`${t.id} ${hits} (budget ${t.budget}) RED`); failures++; }
+  }
+  console.log(`\n${file}${rows.length ? '\n  ' + rows.join('\n  ') : '\n  clean'}`);
+}
 console.log(`\n${failures ? `✗ ${failures} flagged metric(s)` : '✓ all metrics within thresholds'}`);
 process.exit(failures ? 1 : 0);

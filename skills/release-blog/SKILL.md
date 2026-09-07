@@ -41,6 +41,9 @@ skill's compression is not enough.
    查簇→朗读→镜像），前一关不过不进下一关。R5 查簇必须跑量化工具：
    `node scripts/ai-tone-metrics.mjs`（全绿才放行，见下节）。zh 终稿
    再过一遍 lieflat 白名单（见 引用技能）。然后 `npm run build` green。
+   优先级注记：指标门禁与 lieflat 信息守恒冲突时（如必须保留的枚举
+   材料），以 Owner 当次授权为准并在此处记录先例（2026-09-07 首例：
+   shell 语义枚举按语法分组改写获准，语义零删减）。
 
 ## Quantifiable gate（ai-tone-metrics）
 
