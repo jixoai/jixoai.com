@@ -25,12 +25,60 @@ skill's compression is not enough.
    CHANGELOG/changesets, and the motivating openspec change (archive/)
    for the "why" behind each highlight. Facts only from these sources;
    never invent claims.
-2. **Pick the weight class** — 里程碑（x.0 / 重要 minor）→ 叙事文
+2. **Pick the archetype** — `references/archetypes.md` A1–A14（40 篇
+   实文归纳的模板库）。发布文先选原型再动笔：里程碑 → A1，例行 →
+   A2，性能主题 → A6，首次亮相/动机长文 → A8。骨架、证据纪律、
+   开头与收尾招式按所选原型执行；本文件的 里程碑/例行模板 是 A1/A2
+   的 jixoai 定制版。
+3. **Pick the weight class** — 里程碑（x.0 / 重要 minor）→ 叙事文
    1500-3000 词，允许背景弧；例行 minor → 紧凑文 ≤1000 词；patch →
    不发 blog（只进 L1）。org blog 是多项目混排，补丁噪音淹没叙事。
-3. **Draft** with the templates below; zh 为主文，en 同构镜像成对发布
-   （结构逐节对齐；zh 先 en 后，间隔 ≤48h）。
-4. **Self-check** against the 反模式 list; then `npm run build` green.
+4. **Draft with the craft rules** — `references/craft.md` D1–D12 是
+   起草期句级法则（冷开、一句一职、长句+短钉、事实强度天花板……）。
+   zh 为主文，en 同构镜像成对发布（结构逐节对齐；zh 先 en 后，
+   间隔 ≤48h；镜像按 craft.md M1–M6 独立过一遍）。
+5. **Revise gate-ordered** — craft.md R1→R7（对账→追责→结构→机制→
+   查簇→朗读→镜像），前一关不过不进下一关。R5 查簇必须跑量化工具：
+   `node scripts/ai-tone-metrics.mjs`（全绿才放行，见下节）。zh 终稿
+   再过一遍 lieflat 白名单（见 引用技能）。然后 `npm run build` green。
+
+## Quantifiable gate（ai-tone-metrics）
+
+`node scripts/ai-tone-metrics.mjs` 对全部 zh 主文输出每千字特征频率，
+阈值取自 lieflat-less-ai-tone 的 283 万字语料实测（AI vs 人类）。
+RED = 超 AI 均值（必改），YELLOW = 超 1.5× 人类均值（按簇判断），
+LOW = 数字/时间锚点密度低于人类一半（材料稀薄，补证据）。regex 量不到
+的（相邻句同款等）靠 craft.md R6 朗读人工把关。工具当前基线教训：
+破折号是本站最大犯规点（曾 3.6–6.5/千字 vs 人类 0.8）。
+
+## 引用技能（按路径引用，勿内联——上游会持续更新）
+
+两个外部 skill 安装在全局目录（`git pull` 即更新），本 skill 只做导读：
+
+1. **lieflat-less-ai-tone** —
+   `~/.agents/skills/lieflat-less-ai-tone/SKILL.md`（453 行）。
+   中文去 AI 味的白名单改写器，规则全部来自 283 万字对照语料（300 篇
+   AI vs 329 篇人写），11 条按优先级排序：翻案腔、顿号罗列、相邻句
+   同款、破折号、冒号（提示语/空转引列表）、序数词小标题、拟人化
+   喻体、概括盖具体数据、禁用起手式、翻译腔（仅五种）、段首零主语。
+   **何时调用**：zh 终稿的最后清理（R5 查簇之后），或指标工具报 RED
+   而自己不确定怎么改时。**关键边界**：它是成稿清理器不是重写器——
+   白名单外的文字逐字保留、信息守恒（不增不删）、结构不动；本站的
+   品牌语体（craft.md）是它的「风格参考文档」，冲突时以本站为准。
+   它还会证伪流行说法：句长均匀性、句内排比、独立成段的比喻都
+   **不是** AI 痕迹，别误伤。
+2. **drawio-skill** —
+   `~/.agents/skills/drawio-skill/skills/drawio-skill/SKILL.md`（135 行
+   + references/ + scripts/diagramctl.py）。文字/真实源 → 可维护的
+   .drawio 架构图，统一 CLI `diagramctl.py`（doctor/build/sync/views/
+   test/review/transform），本机依赖已装齐（drawio CLI + Python）。
+   **何时调用**：文章需要架构图/流程图/时序图时——A7 架构深潜的机制
+   图、A1 里程碑的拓扑变化图、A5 迁移路径图、多组件数据流。**不需要**
+   当 gif 用：同类博客实况是近乎零 gif（archetypes.md §4.5），代码块、
+   表格、CLI 输出框优先；一个组件一句话能说清的不画。**产物落位**：
+   PNG 导出到 `static/blog-assets/<slug>/`，文章用绝对路径引用，
+   .drawio 源文件同目录入库（可再编辑）。用法细节读它的 SKILL.md，
+   不要把它的内容抄进本文档。
 
 ## Title & slug laws
 
@@ -117,5 +165,17 @@ lang: zh            # en 镜像标 en；镜像与主文 date 必须一致
 - [ ] 亮点小节都有动机句 + 代码或数字
 - [ ] 链接四类齐全且是永链
 - [ ] zh/en 成对、结构同构、slug 稳定
-- [ ] frontmatter repo/version 与 manifest/tag 对齐
+- [ ] frontmatter repo/version 与 manifest/tag 对齐；date = release published_at
+- [ ] `node scripts/ai-tone-metrics.mjs` 全绿（RED 清零）
+- [ ] zh 终稿过 lieflat 白名单（引用技能 1），en 镜像过 craft.md §en tells
 - [ ] `npm run build` 绿；文章页在 public/ 抽查 200
+
+## References
+
+- `references/craft.md` — D1–D12 起草法则 / R1–R7 修订门 / 中英 AI 腔
+  清单 / M1–M6 镜像规则（源自本机写作 skill 群 + 网上编辑忠告的提炼）
+- `references/archetypes.md` — A1–A14 原型模板 + 7 组横切微模式
+  （40 篇前端工具链官方博文实读归纳，每条带来源 URL）
+- `.agents/research/2026-09-07-writing-craft.md` — craft 的逐源清单
+- `.agents/research/2026-09-07-blog-archetypes.md` — 16 候选池验证 + 方法
+- `.agents/research/2026-09-06-release-blog-patterns.md` — org 级惯例源
