@@ -27,6 +27,7 @@
 import { Marked } from 'marked';
 import type { GeneratedProject } from './projects';
 import type { Locale } from './i18n';
+import { dict, localeHref } from './i18n';
 
 /** The rendered-README contract for a project detail page: the HTML,
  *  the content language (container lang attribute), and whether the
@@ -72,12 +73,58 @@ function absolutize(href: string, repo: string, image: boolean): string {
 const escapeAttr = (value: string): string =>
   value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
+/** Top-level README variant filename: `README.md` (default) or
+ *  `README-<lang>.md` where <lang> is a hub locale. Returns the locale
+ *  (null = default README), undefined = not a mappable README file. */
+function readmeLocaleOf(filename: string): Locale | null | undefined {
+  if (/^readme\.(?:md|markdown)$/i.test(filename)) return null;
+  const suffix = /^readme-([a-z-]+)\.(?:md|markdown)$/i.exec(filename)?.[1];
+  return (suffix && suffix in dict ? (suffix as Locale) : undefined);
+}
+
+/** README self-link interception (Owner 2026-09-07): links pointing at
+ *  the repository's own README files — relative links the absolutizer
+ *  just turned into github.com blob URLs, or absolute ones authored
+ *  straight into the README — resolve to the hub's own locale pages
+ *  instead of bouncing readers to GitHub:
+ *
+ *    github.com/<repo>/blob/<any-ref>/README.md    → /projects/<slug>/
+ *    github.com/<repo>/blob/<any-ref>/README-zh.md → /zh/projects/<slug>/
+ *
+ *  marky-markdown solves the sibling problem on npmjs by rewriting
+ *  repo-relative URLs against the package's repository; here the
+ *  rewrite target is the hub's README-as-page mirrors, so a README's
+ *  "中文版" affordance becomes in-site navigation (and the /zh mirror's
+ *  "English" link lands back on the default page). Only TOP-LEVEL
+ *  README files of the SAME repo qualify; anything else (EXAMPLE.md,
+ *  docs/README.md, other repos, unknown language suffixes) keeps its
+ *  GitHub URL. */
+function internalizeReadmeLink(href: string, repo: string, slug: string): string {
+  const prefix = `https://github.com/${repo}/blob/`;
+  if (!href.startsWith(prefix)) return href;
+  const segments = href.slice(prefix.length).replace(/[?#].*$/, '').split('/'); // <ref>/<path…>
+  if (segments.length !== 2) return href; // subdirectory — not a top-level file
+  const locale = readmeLocaleOf(segments[1]);
+  if (locale === undefined) return href;
+  return localeHref(locale ?? 'en', `/projects/${slug}/`);
+}
+
 /** Post-pass for raw HTML embeds: rewrite relative src/href attributes
- *  the lexer never saw as markdown tokens (img src → raw, else blob). */
-function absolutizeRawHtml(html: string, repo: string): string {
+ *  the lexer never saw as markdown tokens (img src → raw, else blob);
+ *  hrefs additionally pass the README self-link interception — relative
+ *  ones after absolutization, absolute ones as authored. */
+function absolutizeRawHtml(html: string, repo: string, slug: string): string {
   return html.replace(/\b(src|href)="([^"]*)"/g, (match, attr: string, value: string) => {
+    if (attr !== 'src' && attr !== 'href') return match;
+    const internal = attr === 'href' ? internalizeReadmeLink(value, repo, slug) : value;
+    if (internal !== value) return `${attr}="${escapeAttr(internal)}"`;
     if (isAbsolute(value)) return match;
-    return `${attr}="${escapeAttr(absolutize(value, repo, attr === 'src'))}"`;
+    const resolved = absolutize(value, repo, attr === 'src');
+    if (attr === 'href') {
+      const rewritten = internalizeReadmeLink(resolved, repo, slug);
+      if (rewritten !== resolved) return `${attr}="${escapeAttr(rewritten)}"`;
+    }
+    return `${attr}="${escapeAttr(resolved)}"`;
   });
 }
 
@@ -123,7 +170,13 @@ export function renderReadme(project: GeneratedProject, markdown: string): strin
         return `<img src="${escapeAttr(src)}" alt="${escapeAttr(String(token.text ?? ''))}" loading="lazy" />`;
       },
       link(token) {
-        const resolved = absolutize(String(token.href), repo, false);
+        // README self-links internalize to the hub's own locale pages
+        // BEFORE the external test, so they stay in-site (no _blank)
+        const resolved = internalizeReadmeLink(
+          absolutize(String(token.href), repo, false),
+          repo,
+          project.slug,
+        );
         const external = resolved.startsWith('http');
         const title = token.title ? ` title="${escapeAttr(String(token.title))}"` : '';
         const target = external ? ' target="_blank" rel="noreferrer"' : '';
@@ -132,5 +185,5 @@ export function renderReadme(project: GeneratedProject, markdown: string): strin
     },
   });
   const html = md.parse(markdown, { async: false }) as string;
-  return stripDuplicateTitle(absolutizeRawHtml(html, repo), project.name);
+  return stripDuplicateTitle(absolutizeRawHtml(html, repo, project.slug), project.name);
 }
