@@ -146,15 +146,16 @@
   <ul class="mt-4 divide-y divide-border/60" data-reveal="">
     {#each projects as project (project.slug)}
       <li>
-        <!-- table alignment (Owner 2026-09-07 r3): desktop reads
-             icon / name / version / description — icon+fixed name column
-             keep the fleet rows lined up, version mono accent follows,
-             desc right-truncates. Mobile stacks icon+name / version
+        <!-- table alignment (Owner 2026-09-07 r3/r4): desktop reads
+             icon / name / version / description — fixed name column +
+             minmax(8ch,max-content) version track keep every row's desc
+             starting at the same x (max-content alone let 7-char tags
+             push desc 9px right of 6-char ones, vision r4). Desc is
+             start-aligned (default stretch fills the 1fr track, truncate
+             caps the right edge). Mobile stacks icon+name / version
              (under the name) / description (full width) via explicit
-             placement, reset to auto flow at sm. Desc keeps max-w-full
-             (vision fix r2: only a percentage max-width caps the
-             fit-content floor of an end-aligned nowrap item). -->
-        <a href={projectsUrl(project.slug, locale)} class="group grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 py-3 sm:grid-cols-[auto_13ch_minmax(0,max-content)_minmax(0,1fr)] sm:items-baseline sm:gap-x-4 sm:gap-y-0">
+             placement, reset to auto flow at sm. -->
+        <a href={projectsUrl(project.slug, locale)} class="group grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 py-3 sm:grid-cols-[auto_13ch_minmax(8ch,max-content)_minmax(0,1fr)] sm:items-baseline sm:gap-x-4 sm:gap-y-0">
           {#if project.logo}
             <ProjectLogo logo={project.logo} class="col-start-1 row-start-1 h-4 w-4 self-center sm:col-start-auto sm:row-start-auto" />
           {/if}
