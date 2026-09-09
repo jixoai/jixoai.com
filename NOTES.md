@@ -14,8 +14,11 @@ the jixoai-website skill.
   sourced from `.agents/research/2026-09-06-release-blog-patterns.md`).
   First three posts are zh main + en mirror pairs, structurally
   isomorphic section-by-section, cross-linked in their link bars
-  (zh `/blog/<slug>-en/`, en `/zh/blog/<slug>/` — root-absolute so the
-  link is locale-stable from any mirror).
+  (en `/blog/<slug>/`, zh `/zh/blog/<slug>/` — root-absolute so the
+  link is locale-stable from any mirror). Under the 2026-09-09 naming
+  law the two are ONE file stem — `content/blog/<slug>.md` (en) and
+  `content/blog/<slug>.zh.md` (zh) — so a translation is a site-prefix
+  switch, not a second slug; the old `<slug>-en.md` convention is gone.
 - **Linkage (`src/lib/blog.ts`)**: frontmatter gains optional
   `repo`/`version` (must be declared together; `repo` must exist in
   `projects.manifest.json` — module-scope throw = hard build failure,

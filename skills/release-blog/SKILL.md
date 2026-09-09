@@ -33,10 +33,12 @@ skill's compression is not enough.
 3. **Pick the weight class** — 里程碑（x.0 / 重要 minor）→ 叙事文
    1500-3000 词，允许背景弧；例行 minor → 紧凑文 ≤1000 词；patch →
    不发 blog（只进 L1）。org blog 是多项目混排，补丁噪音淹没叙事。
-4. **Draft with the craft rules** — `references/craft.md` D1–D12 是
+4. **Draft with the craft rules** — `references/craft.md` D1–D16 是
    起草期句级法则（冷开、一句一职、长句+短钉、事实强度天花板……）。
    zh 为主文，en 同构镜像成对发布（结构逐节对齐；zh 先 en 后，
-   间隔 ≤48h；镜像按 craft.md M1–M6 独立过一遍）。
+   间隔 ≤48h；镜像按 craft.md M1–M6 独立过一遍）。**「主文」指起草
+   顺序，不是文件/URL 地位**：命名法里无后缀的 `xxx.md` 是国际版
+   （英文），`xxx.zh.md` 是中文版（见 Title & slug laws）。
 5. **Revise gate-ordered** — craft.md R1→R7（对账→追责→结构→机制→
    查簇→朗读→镜像），前一关不过不进下一关。R5 查簇必须跑量化工具：
    `node scripts/ai-tone-metrics.mjs`（全绿才放行，见下节）。zh 终稿
@@ -47,12 +49,27 @@ skill's compression is not enough.
 
 ## Quantifiable gate（ai-tone-metrics）
 
-`node scripts/ai-tone-metrics.mjs` 对全部 zh 主文输出每千字特征频率，
-阈值取自 lieflat-less-ai-tone 的 283 万字语料实测（AI vs 人类）。
+`node scripts/ai-tone-metrics.mjs` 按**文件名**分流两套规则：`*.zh.md`
+走每千字特征频率（阈值取自 lieflat-less-ai-tone 的 283 万字语料实测，
+AI vs 人类），其余 `*.md` 走 en-tell 预算表（em dash / 对比句式 / 浮夸
+词 / 对冲堆叠 / 套话开头 / 动词三连）。**改了命名法就要同步改这里的
+后缀判定**，否则会把中文正则套到英文稿上、英文预算表一篇都跑不到。
 RED = 超 AI 均值（必改），YELLOW = 超 1.5× 人类均值（按簇判断），
 LOW = 数字/时间锚点密度低于人类一半（材料稀薄，补证据）。regex 量不到
 的（相邻句同款等）靠 craft.md R6 朗读人工把关。工具当前基线教训：
 破折号是本站最大犯规点（曾 3.6–6.5/千字 vs 人类 0.8）。
+
+**全绿 ≠ 不 AI（2026-09-09 实测）**：7 篇原文在这个门禁上**全部零
+告警**，但读起来仍偏 AI。原因是它只量正则能抓的表层特征，而实际的
+AI 味在 craft 层，具体是三条 Owner 法令的违反 ——
+
+1. 一篇文只讲一个版本（背景节写版本编年史、中间版本进叙事）；
+2. 版面占比 ≈ 决策价值（发布管道、fixtures、CI 占了用户价值的位子）；
+3. 专有名词预算 + 大白话价值句（亮点先讲机制、后讲或不讲读者所得）。
+
+加上一类非法令但同样致命的：**自我标榜的形容词**（「诚实的限制清单」
+「照实说」「不是营销数字」）—— 读者没有质疑过，辩护句只会显得心虚。
+结论：门禁只用来兜底，判断一篇是否偏 AI 必须回到 craft 层逐条比对。
 
 ## 引用技能（按路径引用，勿内联——上游会持续更新）
 
@@ -89,9 +106,20 @@ LOW = 数字/时间锚点密度低于人类一半（材料稀薄，补证据）�
   的 tag 显示同构）。里程碑可加冒号副题：
   `UniPty v1.0：runtime-neutral PTY 的第一份长期契约`。
 - slug 英文 kebab、含版本、永不改链：
-  `content/blog/2026-09-06-unipty-v0-2-0.md`（+ `-en` 后缀作英文镜像）。
-- tags 受控：`release` + 每项目一个 repo tag（`unipty`/`openspecui`/
-  `ui`/`opentray`/`opendweb`/`openiweb`）。
+  `content/blog/2026-09-06-unipty-v0-2-0.md`。
+- **双语文件命名（2026-09-09 法令）**：语种写在**文件名**里，不写在
+  slug 里——国际版/英文版是无后缀的 `xxx.md`，中文版是 `xxx.zh.md`。
+  两者共用同一个 slug，URL 只差站点前缀：`/blog/<slug>/`（英文）与
+  `/zh/blog/<slug>/`（中文）。旧的 `xxx-en.md` 约定已废：它让一篇
+  文章占两个 slug、两个 URL，列表页要靠后缀猜语种。
+- **en 稿零中文（2026-09-09 法令）**：英文版正文不得出现汉字，包括
+  小节标题里的括注（如 `Figure（浮）`）和镜像栏的标签（`中文主文` →
+  `Chinese version`）。唯一豁免是外链 URL 里的真实文件名/路径
+  （如 GitHub 上的 `架构设计.md`）——那是标识符，不是行文。
+- tags 受控：每项目一个 repo tag（`unipty`/`openspecui`/`ui`/
+  `opentray`/`opendweb`/`openiweb`）。**不要加 `release`**
+  （2026-09-09：它跟 `/blog/` 索引完全重合，标签分组会退化成第二个
+  "全部文章"页）。
 
 ## Structure
 
@@ -177,10 +205,11 @@ date: 2026-09-20T09:12:34Z   # GitHub Release 的 published_at 全量 UTC 时间
                               #  展示层 displayDate 裁剪为 YYYY-MM-DD）
 description: 一句话定位（索引页摘要直接用它）
 author: jixoai
-tags: [release, unipty]
+tags: [unipty]      # 只放项目 tag，不要加 release（见 Title & slug laws）
 repo: unipty        # 必须等于 projects.manifest.json 的 repo 字段
 version: "0.5.0"    # 与 GitHub release tag 对齐（去 v）
-lang: zh            # en 镜像标 en；镜像与主文 date 必须一致
+lang: zh            # 冗余兜底：语种由文件名决定（.zh.md = zh，无后缀 = en），
+                    # 两者不一致时以文件名为准；镜像与主文 date 必须一致
 ---
 ```
 
@@ -202,6 +231,24 @@ lang: zh            # en 镜像标 en；镜像与主文 date 必须一致
 6. 破坏性变更埋在 Other changes 里
 7. 标题公式漂移（Announcing/released/is here 混用）
 
+## 重写既有稿：信息守恒（2026-09-09）
+
+对已发布的稿子做减法改写时，删掉的内容必须逐条对账。起因是一次真丢失：
+保留了「（release commit 原话）」这个归因，却删了原文开头的 commit 链接，
+留下一个悬空引用。
+
+- **引文留着，链接就得留着。** 任何「某某原话」「release commit 说」的
+  归因必须带可点永链。信息守恒优先于精简。
+- **真删除 ≠ diff 的删除行。** 改写过的行会同时出现在 `-` 与 `+` 两侧。
+  判据：删掉的行若在新稿里找不到对位（字符 bigram Jaccard ≥ 0.3）才算丢
+  失；frontmatter 行不计入。
+- **丢失锚点单独扫。** URL / 行内 `` `…` `` / 版本号，出现在旧稿而不在新
+  稿里的，逐个判定「刻意删」还是「误删」。三类常见误报：内容挪进了代码
+  块（行内反引号正则抓不到）、反引号被拆开（`uvx/pipx run` → 两个）、
+  措辞改写（`@latest` → `name@version`）。
+- **站内链接单独验。** 正文的站内链接要在 `dist/` 里逐个确认能解析，且不
+  出现跨语种泄漏（en 稿链到 zh-only 路径；镜像行除外）。
+
 ## Verification
 
 - [ ] facts 可溯源（L1 body / changelog / openspec archive）
@@ -211,11 +258,13 @@ lang: zh            # en 镜像标 en；镜像与主文 date 必须一致
 - [ ] frontmatter repo/version 与 manifest/tag 对齐；date = release published_at
 - [ ] `node scripts/ai-tone-metrics.mjs` 全绿（RED 清零）
 - [ ] zh 终稿过 lieflat 白名单（引用技能 1），en 镜像过 craft.md §en tells
+- [ ] 重写稿跑过删除对账：真删除与丢失锚点逐个确认，无悬空引文（见上一节）
+- [ ] 站内链接逐个能解析，无跨语种泄漏
 - [ ] `npm run build` 绿；文章页在 public/ 抽查 200
 
 ## References
 
-- `references/craft.md` — D1–D12 起草法则 / R1–R7 修订门 / 中英 AI 腔
+- `references/craft.md` — D1–D16 起草法则 / R1–R7 修订门 / 中英 AI 腔
   清单 / M1–M6 镜像规则（源自本机写作 skill 群 + 网上编辑忠告的提炼）
 - `references/archetypes.md` — A1–A14 原型模板 + 7 组横切微模式
   （40 篇前端工具链官方博文实读归纳，每条带来源 URL）

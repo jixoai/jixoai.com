@@ -210,8 +210,11 @@ M1. **Translate the cognitive structure and stance strength, not the words**
 read as if written by the same engineer in English, with equal directness.
 
 M2. **Structure isomorphic** (release-blog law): section-by-section alignment,
-same date, same facts, same links; the craft rules D1–D12 apply independently
-in English.
+same date, same facts, same links; the craft rules D1–D16 apply independently
+in English. The direction people miss is the subtractive one: when the en
+original carries a fact block, section, or `<details>` that the zh rewrite no
+longer has, **delete it** — "same facts" means equal, not maximal. Keeping
+en-only extras because they read well is the most common mirror defect.
 
 M3. **zh→en transforms:** 四字格 → plain clause ("开箱即用" → "works without
 configuration", not "out-of-the-box-ready excellence"); 的-chains → relative
@@ -229,6 +232,15 @@ flags, package names never localized. [voice-model language mixing]
 M6. **Punctuation asymmetry:** zh uses 「」 and full-width marks; en mirror
 obeys the em-dash budget strictly (em dash reads louder in en, and it is the
 single most-cited fingerprint). [human-writing-audit, em-dash discourse]
+
+M7. **Zero CJK in the en file (2026-09-09 Owner law).** The en variant is
+written for readers who do not read Chinese, so no 汉字 may survive in its
+prose, headings, or link labels — that includes parenthetical glosses
+inherited from the zh draft (`Figure (浮)` → `Figure`) and the mirror row
+(`中文主文` → `Chinese version`). The one exemption is a Chinese string that
+is part of an external URL or a real file name (an identifier, not prose —
+e.g. GitHub's `架构设计.md`). Sweep before shipping:
+`grep -n '[\u4e00-\u9fff]' content/blog/*.md` on every non-`.zh` file.
 
 ---
 

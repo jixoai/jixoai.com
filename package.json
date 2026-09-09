@@ -9,7 +9,10 @@
     "dev": "node scripts/fetch-projects.mjs && vite dev --port 13400",
     "build": "node scripts/build-site.mjs",
     "fetch": "node scripts/fetch-projects.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "metrics": "node scripts/ai-tone-metrics.mjs",
+    "audit:deletions": "node scripts/audit-blog-deletions.mjs",
+    "audit:links": "node scripts/audit-blog-links.mjs"
   },
   "devDependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.2.8",

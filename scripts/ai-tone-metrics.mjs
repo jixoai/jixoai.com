@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 /**
- * ai-tone-metrics.mjs — quantifiable zh AI-tell lint for content/blog
+ * ai-tone-metrics.mjs — quantifiable AI-tell lint for content/blog
  * (Owner directive 2026-09-07: measurable gate for the release-blog
- * craft pass R5).
+ * craft pass R5). Two rule sets, picked by FILENAME under the 2026-09-09
+ * naming law: `<slug>.zh.md` gets the zh frequency features below, every
+ * other `<slug>.md` is treated as the international (en) version and gets
+ * the budget-based en-tell list at the bottom. (Before that law the split
+ * was `-en.md`; a stale suffix here silently lints English with Chinese
+ * regexes — which is how one false YELLOW shipped.)
  *
  * Feature thresholds derive from the lieflat-less-ai-tone corpus study
  * (300 AI articles vs 329 human articles, ~2.83M chars — see
@@ -21,7 +26,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const dir = new URL('../content/blog/', import.meta.url).pathname;
-const files = readdirSync(dir).filter((f) => f.endsWith('.md') && !f.endsWith('-en.md'));
+const files = readdirSync(dir).filter((f) => f.endsWith('.zh.md'));
 
 const FEATURES = [
   {
@@ -100,7 +105,7 @@ const EN_TELLS = [
   { id: 'opener boilerplate', regex: /It'?s important to note|In today'?s fast-paced/gi, budget: 0 },
   { id: 'verb tricolon', regex: /\b(build|test|deploy|ship|scale|manage|streamline|simplify|accelerate|empower),\s*\w+,\s*and\s*\w+/gi, budget: 0 },
 ];
-for (const file of readdirSync(dir).filter((f) => f.endsWith('-en.md'))) {
+for (const file of readdirSync(dir).filter((f) => f.endsWith('.md') && !f.endsWith('.zh.md'))) {
   const text = strip(readFileSync(join(dir, file), 'utf8'));
   const rows = [];
   for (const t of EN_TELLS) {
