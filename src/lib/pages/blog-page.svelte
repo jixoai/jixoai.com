@@ -17,15 +17,21 @@
   on narrow locales; D.4 — ISO dates are LTR islands; F — the badge
   tooltip names the language in the UI locale (the badge itself keeps
   the autonym, the marker convention).
+  2026-09-08 tag grouping: the card list moved to
+  src/lib/pages/post-list.svelte (shared with the tag pages) and a tag
+  chip row now sits between the summary and the listing — the entry
+  point to /blog/tags/<tag>/.
 -->
 <script lang="ts">
-  import { postsForLocale, postDir, postLang, displayDate, postRelease } from '$lib/blog';
+  import { postsForLocale, tagsForLocale } from '$lib/blog';
   import { dict, localeHref, type Locale } from '$lib/i18n';
+  import PostList from './post-list.svelte';
 
   let { locale }: { locale: Locale } = $props();
 
   const t = $derived(dict[locale]);
   const listing = $derived(postsForLocale(locale));
+  const groups = $derived(tagsForLocale(locale));
 </script>
 
 <svelte:head>
@@ -44,51 +50,30 @@
     {t.blogIndex.summary}
   </p>
 
-  <ul class="mt-6 divide-y divide-border/60" data-reveal="">
-    {#each listing as post (post.slug)}
-      {@const release = postRelease(post)}
-      {@const href = localeHref(locale, `/blog/${post.slug}/`)}
-      {@const foreign = postLang(post) !== locale}
-      {@const foreignName = t.langNames[postLang(post)] ?? dict[postLang(post)].label}
-      <li class="group py-5">
-        <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <!-- dir="ltr": the ISO date is a hard-LTR island (fix D.4) -->
-          <time datetime={post.date} dir="ltr" class="font-nav text-primary text-xs tracking-[0.14em]">{displayDate(post.date)}</time>
-          <h2 class="group-hover:text-primary text-lg font-semibold transition-colors"><a href={href}>{post.title}</a></h2>
-          {#if foreign}
-            <span
-              class="border-border text-muted-foreground font-nav border px-1.5 py-0.5 text-[10.5px] tracking-[0.12em]"
-              title={t.blogPost.writtenIn(foreignName)}
-            >
-              {dict[postLang(post)].label}
-            </span>
-          {/if}
-          {#if release}
-            <a
-              class="version-pill font-nav"
-              href={release.url}
-              target="_blank"
-              rel="noreferrer"
-              title={t.blogIndex.releasePill(release.version)}
-            >
-              {release.version}
-            </a>
-          {/if}
-          <span class="text-muted-foreground font-nav ms-auto text-xs">{post.author}</span>
-        </div>
-        <a href={href} class="block">
-          {#if post.description}
-            <p class="text-muted-foreground mt-1.5 max-w-[72ch] text-pretty text-[13px] leading-6" dir={postDir(post)} lang={postLang(post)}>{post.description}</p>
-          {/if}
-          {#if post.tags.length > 0}
-            <p class="font-nav text-muted-foreground/80 mt-2 flex flex-wrap gap-2 text-[10.5px] uppercase tracking-[0.12em]">
-              {#each post.tags as tag (tag)}
-                <span class="border-border border px-1.5 py-0.5">{tag}</span>
-              {/each}
-            </p>
-          {/if}
-        </a>
-      </li>
-    {/each}
-  </ul>
+  {#if groups.length > 0}
+    <!-- Tag row (2026-09-08): the entry point to the grouping axis.
+         The eyebrow links the tag index; each chip links one group. -->
+    <div class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2" data-reveal="">
+      <a
+        href={localeHref(locale, '/blog/tags/')}
+        class="font-nav text-muted-foreground hover:text-primary text-[10.5px] uppercase tracking-[0.12em] transition-colors"
+      >
+        {t.blogTags.heading}
+      </a>
+      <nav class="flex flex-wrap gap-2" aria-label={t.blogTags.heading}>
+        {#each groups as group (group.tag)}
+          <a
+            href={localeHref(locale, `/blog/tags/${group.tag}/`)}
+            class="font-nav border-border text-muted-foreground/80 hover:border-primary hover:text-primary border px-1.5 py-0.5 text-[10.5px] uppercase tracking-[0.12em] transition-colors"
+          >
+            <bdi>{group.tag}</bdi>
+          </a>
+        {/each}
+      </nav>
+    </div>
+  {/if}
+
+  <div class="mt-6">
+    <PostList posts={listing} {locale} />
+  </div>
 </section>

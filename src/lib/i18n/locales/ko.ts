@@ -111,6 +111,20 @@ export const ko: Dictionary = {
     releasePill: (version) => `GitHub 릴리스(${version})`,
   },
 
+  blogTags: {
+    title: '태그 — jixoai 블로그',
+    metaDescription:
+      'jixoai 랩 블로그의 모든 태그 — 태그마다 하나의 정적 목록 페이지, 프로젝트와 글 종류별로 묶음.',
+    heading: '태그',
+    summary:
+      '같은 글을 묶어 본 것입니다. 태그를 고르면 한 흐름을 한 번에 읽을 수 있습니다 — 모든 그룹은 인덱스와 같은 빌드에서 만들어지는 평범한 정적 페이지입니다.',
+    titleForTag: (tag) => `${tag} — jixoai 블로그`,
+    metaForTag: (tag, count) =>
+      `jixoai 랩 블로그에서 ${tag} 태그가 붙은 글 — 총 ${count}개, 최신순.`,
+    postCount: (count) => `${count}개`,
+    allTags: '모든 태그',
+  },
+
   blogPost: {
     titleSuffix: 'jixoai 블로그',
     writtenIn: (language) => `이 글은 ${language}로 작성되었습니다.`,

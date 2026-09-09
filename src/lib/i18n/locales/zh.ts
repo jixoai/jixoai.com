@@ -110,6 +110,20 @@ export const zh: Dictionary = {
     releasePill: (version) => `GitHub 发布（${version}）`,
   },
 
+  blogTags: {
+    title: '标签 — jixoai 博客',
+    metaDescription:
+      'jixoai 实验室博客的全部标签 —— 每个标签一个静态列表页，按项目与文章类型分组。',
+    heading: '标签',
+    summary:
+      '同一批文章，按标签分组。选一个标签就能一次读完一条线索 —— 每个分组都是纯静态页面，与索引在同一次构建中产出。',
+    titleForTag: (tag) => `${tag} — jixoai 博客`,
+    metaForTag: (tag, count) =>
+      `jixoai 实验室博客上标签为 ${tag} 的文章 —— 共 ${count} 篇，按时间倒序。`,
+    postCount: (count) => `${count} 篇`,
+    allTags: '全部标签',
+  },
+
   blogPost: {
     titleSuffix: 'jixoai 博客',
     writtenIn: (language) => `本文以${language}撰写。`,

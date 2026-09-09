@@ -5,14 +5,16 @@
 // first-party content, no sanitization by spec); prerender enumeration —
 // the entries export lists every discovered slug.
 import { error } from '@sveltejs/kit';
-import { blogPostBySlug, blogPosts, renderMarkdown } from '$lib/blog';
+import { blogSlugs, postForLocale, renderMarkdown } from '$lib/blog';
 import type { EntryGenerator, PageLoad } from './$types';
 
-export const entries: EntryGenerator = () =>
-  blogPosts.map((post) => ({ slug: post.slug }));
+// One entry per ARTICLE (not per language variant): every variant of an
+// article shares its slug — the language is the site prefix.
+export const entries: EntryGenerator = () => blogSlugs.map((slug) => ({ slug }));
 
 export const load: PageLoad = ({ params }) => {
-  const post = blogPostBySlug.get(params.slug);
+  // the root site is the international one: always the English variant
+  const post = postForLocale('en', params.slug);
   if (!post) error(404, `Unknown post: ${params.slug}`);
   return { post, html: renderMarkdown(post.markdown) };
 };

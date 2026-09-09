@@ -111,6 +111,20 @@ export const ja: Dictionary = {
     releasePill: (version) => `GitHub リリース（${version}）`,
   },
 
+  blogTags: {
+    title: 'タグ — jixoai ブログ',
+    metaDescription:
+      'jixoai ラボブログのすべてのタグ — タグごとに 1 ページ、静的な一覧ページとして、プロジェクトと記事種別でグループ化。',
+    heading: 'タグ',
+    summary:
+      '同じ記事をタグで並べ替えたものです。タグを選ぶと 1 つの流れをまとめて読めます — どのグループもインデックスと同じビルドで生成される静的ページです。',
+    titleForTag: (tag) => `${tag} — jixoai ブログ`,
+    metaForTag: (tag, count) =>
+      `jixoai ラボブログでタグ ${tag} が付いた記事 — 全 ${count} 件、新しい順。`,
+    postCount: (count) => `${count} 件`,
+    allTags: 'すべてのタグ',
+  },
+
   blogPost: {
     titleSuffix: 'jixoai ブログ',
     writtenIn: (language) => `この記事は${language}で書かれています。`,

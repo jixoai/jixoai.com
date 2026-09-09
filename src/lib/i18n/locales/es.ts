@@ -111,6 +111,20 @@ export const es: Dictionary = {
     releasePill: (version) => `Publicación de GitHub (${version})`,
   },
 
+  blogTags: {
+    title: 'Etiquetas — blog de jixoai',
+    metaDescription:
+      'Todas las etiquetas del blog del laboratorio jixoai: una página de listado estática por etiqueta, agrupadas por proyecto y tipo de entrada.',
+    heading: 'Etiquetas',
+    summary:
+      'Las mismas entradas, agrupadas. Elige una etiqueta para leer un hilo de una vez: cada grupo es una página estática construida en la misma pasada que el índice.',
+    titleForTag: (tag) => `${tag} — blog de jixoai`,
+    metaForTag: (tag, count) =>
+      `Entradas con la etiqueta ${tag} en el blog del laboratorio jixoai — ${count} ${count === 1 ? 'entrada' : 'entradas'}, de la más reciente a la más antigua.`,
+    postCount: (count) => `${count} ${count === 1 ? 'entrada' : 'entradas'}`,
+    allTags: 'Todas las etiquetas',
+  },
+
   blogPost: {
     titleSuffix: 'blog de jixoai',
     writtenIn: (language) => `Esta publicación está escrita en ${language}.`,

@@ -16,10 +16,13 @@
   2026-09-07 walkthrough fixes: D.4 — the header ISO date is an LTR
   island; F — the notice names the authored language in the UI locale
   (langNames, e.g. en shows "Chinese") and links the mirrored sibling
-  post (slug ± "-en") when it exists.
+  post (the article's other language) when it exists. 2026-09-09 naming
+  law: the two variants share a slug, so that link switches the site
+  prefix rather than the filename.
+  2026-09-08 tag grouping: header tags link their prerendered group.
 -->
 <script lang="ts">
-  import { blogPostBySlug, displayDate, postLang, postDir, postRelease, type BlogPost } from '$lib/blog';
+  import { mirrorPostFor, displayDate, postLang, postDir, postRelease, type BlogPost } from '$lib/blog';
   import { dict, localeHref, type Locale } from '$lib/i18n';
 
   let { post, html, locale }: { post: BlogPost; html: string; locale: Locale } = $props();
@@ -28,16 +31,17 @@
   const release = $derived(postRelease(post));
   const lang = $derived(postLang(post));
 
-  // Mirror sibling (fix F): the -en convention pairs every zh post with
-  // its English translation; the link renders only when the sibling
-  // actually ships.
-  const mirrorSlug = $derived(
-    post.slug.endsWith('-en') ? post.slug.slice(0, -'-en'.length) : `${post.slug}-en`,
-  );
-  const mirror = $derived(blogPostBySlug.get(mirrorSlug) ?? null);
+  // Mirror sibling (fix F; 2026-09-09 naming law): every language
+  // variant of an article shares ONE slug, so the sibling is reached by
+  // switching the SITE PREFIX to its language — not by editing the
+  // filename. The link renders only when the sibling actually ships.
+  const mirror = $derived(mirrorPostFor(post));
   const mirrorLang = $derived(mirror ? postLang(mirror) : null);
   const mirrorName = $derived(
     mirrorLang ? (t.langNames[mirrorLang] ?? dict[mirrorLang].label) : '',
+  );
+  const mirrorHref = $derived(
+    mirrorLang ? localeHref(mirrorLang, `/blog/${post.slug}/`) : null,
   );
 </script>
 
@@ -72,9 +76,17 @@
         </a>
       {/if}
       {#if post.tags.length > 0}
+        <!-- 2026-09-08: tags are navigation, not decoration — each one
+             opens its prerendered group (bdi: a tag is frontmatter
+             data, never translated, so isolate it under RTL chrome) -->
         <span class="ms-auto flex flex-wrap gap-2">
           {#each post.tags as tag (tag)}
-            <span class="border-border border px-1.5 py-0.5 text-[10.5px]">{tag}</span>
+            <a
+              href={localeHref(locale, `/blog/tags/${tag}/`)}
+              class="border-border hover:border-primary hover:text-primary border px-1.5 py-0.5 text-[10.5px] transition-colors"
+            >
+              <bdi>{tag}</bdi>
+            </a>
           {/each}
         </span>
       {/if}
@@ -95,7 +107,7 @@
       </span>
       {#if mirror && mirrorLang}
         <a
-          href={localeHref(locale, `/blog/${mirrorSlug}/`)}
+          href={mirrorHref}
           class="hover:text-primary underline-offset-4 transition-colors hover:underline"
         >
           {t.blogPost.readIn(mirrorName)}

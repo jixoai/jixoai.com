@@ -5,6 +5,17 @@
  */
 import type { Dictionary } from '../schema';
 
+/** Russian plural for "запись" (post): 1 запись / 2–4 записи / 5+ записей,
+ *  with the 11–14 override. Shared by the tag surfaces (postCount +
+ *  metaForTag). */
+const ruPosts = (count: number): string => {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return `${count} запись`;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return `${count} записи`;
+  return `${count} записей`;
+};
+
 export const ru: Dictionary = {
   htmlLang: 'ru',
   dir: 'ltr',
@@ -109,6 +120,20 @@ export const ru: Dictionary = {
     summary:
       'Заметки из лаборатории — пишут мейнтейнеры, рендерятся при сборке, раздаются как простые статические страницы. Без сервера, без клиентских запросов, без слежки.',
     releasePill: (version) => `Релиз на GitHub (${version})`,
+  },
+
+  blogTags: {
+    title: 'Теги — блог jixoai',
+    metaDescription:
+      'Все теги блога лаборатории jixoai — по одной статической странице-списку на тег, сгруппированные по проектам и по типу записи.',
+    heading: 'Теги',
+    summary:
+      'Те же записи, сгруппированные. Выберите тег, чтобы прочитать одну ветку целиком — каждая группа это статическая страница из той же сборки, что и индекс.',
+    titleForTag: (tag) => `${tag} — блог jixoai`,
+    metaForTag: (tag, count) =>
+      `Записи с тегом ${tag} в блоге лаборатории jixoai — ${ruPosts(count)}, сначала новые.`,
+    postCount: ruPosts,
+    allTags: 'Все теги',
   },
 
   blogPost: {

@@ -6,6 +6,16 @@
  */
 import type { Dictionary } from '../schema';
 
+/** Arabic plural for "مقالة" (post): 1 مقالة واحدة / 2 مقالتان /
+ *  3–10 مقالات / 11+ مقالة. Shared by the tag surfaces (postCount +
+ *  metaForTag). */
+const arPosts = (count: number): string => {
+  if (count === 1) return 'مقالة واحدة';
+  if (count === 2) return 'مقالتان';
+  if (count >= 3 && count <= 10) return `${count} مقالات`;
+  return `${count} مقالة`;
+};
+
 export const ar: Dictionary = {
   htmlLang: 'ar',
   dir: 'rtl',
@@ -113,6 +123,20 @@ export const ar: Dictionary = {
     summary:
       'ملاحظات من المختبر — يكتبها المشرفون، وتُصيَّر وقت البناء، وتُقدَّم صفحات ثابتة بسيطة. بلا خادم، وبلا طلبات من العميل، وبلا تتبع.',
     releasePill: (version) => `إصدار GitHub (${version})`,
+  },
+
+  blogTags: {
+    title: 'الوسوم — مدونة jixoai',
+    metaDescription:
+      'كل وسوم مدونة مختبر jixoai — صفحة قائمة ثابتة لكل وسم، مجمّعة حسب المشروع ونوع المقالة.',
+    heading: 'الوسوم',
+    summary:
+      'المقالات نفسها، مجمّعة. اختر وسمًا لتقرأ سلسلة واحدة دفعة واحدة — كل مجموعة صفحة ثابتة تُبنى في نفس مرحلة بناء الفهرس.',
+    titleForTag: (tag) => `${tag} — مدونة jixoai`,
+    metaForTag: (tag, count) =>
+      `المقالات الموسومة بـ ${tag} في مدونة مختبر jixoai — ${arPosts(count)}، الأحدث أولًا.`,
+    postCount: arPosts,
+    allTags: 'كل الوسوم',
   },
 
   blogPost: {

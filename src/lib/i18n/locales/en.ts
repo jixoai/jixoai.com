@@ -94,6 +94,20 @@ export const en: Dictionary = {
     releasePill: (version) => `GitHub release (${version})`,
   },
 
+  blogTags: {
+    title: 'Tags — jixoai blog',
+    metaDescription:
+      'Every tag on the jixoai lab blog — one static list page per tag, grouped by project and by post kind.',
+    heading: 'Tags',
+    summary:
+      'The same posts, grouped. Pick a tag to read one thread at a time — every group is a plain static page, built in the same pass as the index.',
+    titleForTag: (tag) => `${tag} — jixoai blog`,
+    metaForTag: (tag, count) =>
+      `Posts tagged ${tag} on the jixoai lab blog — ${count} ${count === 1 ? 'post' : 'posts'}, newest first.`,
+    postCount: (count) => `${count} ${count === 1 ? 'post' : 'posts'}`,
+    allTags: 'All tags',
+  },
+
   blogPost: {
     titleSuffix: 'jixoai blog',
     writtenIn: (language) => `This post is written in ${language}.`,

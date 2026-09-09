@@ -12,10 +12,17 @@
  * postsForLocale: the authored-language views behind the locale-first
  * index order, the language badge, the summary bidi isolation and the
  * "written in …" notice (bodies stay as-authored under every locale —
- * tier law unchanged; 2026-09-07 fix B: postsForLocale also DEDUPES
- * the -en mirror convention, one variant per base slug). Zero server
- * runtime, zero client fetches — everything below runs inside the
- * prerender.
+ * tier law unchanged; 2026-09-09 naming law: postsForLocale DEDUPES
+ * by slug — `<slug>.md` is the international (English) version and
+ * `<slug>.<lang>.md` a translation, so both variants share ONE slug
+ * and the URL differs by site prefix, not by filename: /blog/<slug>/
+ * vs /zh/blog/<slug>/; one variant per article); 6) tag
+ * grouping (2026-09-08) — tagsForLocale turns the flat newest-first
+ * index into a second, orthogonal axis: one prerendered list page per
+ * tag
+ * (/blog/tags/<tag>/), derived from the SAME deduped listing so a tag
+ * page can never show a post twice. Zero server runtime, zero client
+ * fetches — everything below runs inside the prerender.
  *
  * Content is first-party (jixoai authors), so no HTML sanitization is
  * applied on purpose (blog spec, 2026-09-06).
@@ -23,7 +30,7 @@
 
 import { marked } from 'marked';
 import manifest from '../../projects.manifest.json';
-import { dict, type Locale } from './i18n';
+import { dict, LOCALES, type Locale } from './i18n';
 import { projects } from './projects';
 
 export interface BlogPost {
@@ -93,8 +100,18 @@ const files = import.meta.glob('/content/blog/*.md', {
   eager: true,
 }) as Record<string, string>;
 
+/** Naming law (2026-09-09): `<slug>.md` is the international version,
+ *  `<slug>.<lang>.md` a translation. The language lives in the
+ *  FILENAME, not in the slug, so every variant of one article resolves
+ *  to the SAME URL segment — the site prefix carries the locale
+ *  (/blog/<slug>/ vs /zh/blog/<slug>/). Only known locale codes read
+ *  as a suffix; anything else stays part of the slug. */
+const LANG_SUFFIX = new RegExp(`\\.(${LOCALES.join('|')})$`);
+
 const posts: BlogPost[] = Object.entries(files).map(([path, raw]) => {
-  const slug = path.slice(path.lastIndexOf('/') + 1, -'.md'.length);
+  const file = path.slice(path.lastIndexOf('/') + 1, -'.md'.length);
+  const suffix = LANG_SUFFIX.exec(file);
+  const slug = suffix ? file.slice(0, suffix.index) : file;
   const { data, body } = parseFrontmatter(raw);
   const title = data.title?.trim();
   const date = data.date?.trim();
@@ -122,19 +139,64 @@ const posts: BlogPost[] = Object.entries(files).map(([path, raw]) => {
       .split(',')
       .map((tag) => tag.trim())
       .filter(Boolean),
-    lang: data.lang?.trim() || undefined,
+    // the filename suffix wins (the naming law is the source of truth);
+    // the frontmatter `lang:` field stays supported for posts predating it
+    lang: suffix?.[1] || data.lang?.trim() || undefined,
     repo,
     version,
     markdown: body.trim(),
   };
 });
 
+/** A tag is a URL segment (/blog/tags/<tag>/): letters or digits of any
+ *  script plus `-`/`_`, starting alphanumeric — no path separators, no
+ *  percent-encoding traps. Violations are a hard build error (same
+ *  discipline as the repo/version validation above): a tag that cannot
+ *  be a path segment would emit an unroutable page. */
+const URL_SAFE_TAG = /^[\p{L}\p{N}][\p{L}\p{N}_-]*$/u;
+
+for (const post of posts) {
+  for (const tag of post.tags) {
+    if (!URL_SAFE_TAG.test(tag)) {
+      throw invalid(post.slug, `frontmatter tag "${tag}" is not a URL-safe path segment`);
+    }
+  }
+}
+
 /** All posts, newest first (the blog index order; ties fall back to slug). */
 export const blogPosts: readonly BlogPost[] = [...posts].sort(
   (a, b) => Date.parse(b.date) - Date.parse(a.date) || a.slug.localeCompare(b.slug),
 );
 
-export const blogPostBySlug = new Map(blogPosts.map((post) => [post.slug, post]));
+/** Every distinct article slug, sorted — one URL per ARTICLE (2026-09-09
+ *  naming law); a slug's language variants are resolved per request by
+ *  postForLocale. This is the prerender entry list for /blog/[slug]/. */
+export const blogSlugs: readonly string[] = [...new Set(blogPosts.map((post) => post.slug))].sort();
+
+/** Every language variant of one article (index order: newest first). */
+export const postVariants = (slug: string): readonly BlogPost[] =>
+  blogPosts.filter((post) => post.slug === slug);
+
+/** The variant a route serves for a slug (2026-09-09): exact UI locale >
+ *  en > zh > first — the SAME preference law as postsForLocale, so a
+ *  card built from the listing and the page its link opens can never
+ *  disagree about which language is shown. */
+export function postForLocale(locale: Locale, slug: string): BlogPost | undefined {
+  const variants = postVariants(slug);
+  return (
+    variants.find((post) => postLang(post) === locale) ??
+    variants.find((post) => postLang(post) === 'en') ??
+    variants.find((post) => postLang(post) === 'zh') ??
+    variants[0]
+  );
+}
+
+/** The other-language sibling of a variant (the "read in …" link); null
+ *  when the article ships in one language only. Under the shared slug
+ *  the mirror is reached by switching SITE PREFIX, not filename — the
+ *  caller builds the href from the sibling's language. */
+export const mirrorPostFor = (post: BlogPost): BlogPost | null =>
+  postVariants(post.slug).find((variant) => postLang(variant) !== postLang(post)) ?? null;
 
 /** A post's authored language (frontmatter `lang`; posts predate the
  *  field, so a missing value reads as en — the release-blog era always
@@ -145,9 +207,10 @@ export const postLang = (post: BlogPost): Locale => {
 };
 
 /** Locale-aware listing (2026-09-06 mobile-audit, mixed-language
- *  governance; 2026-09-07 walkthrough fix B — mirror dedup): posts
- *  group by base slug (trailing `-en` stripped — the zh/en mirror
- *  convention) and each group surfaces exactly ONE variant, picked
+ *  governance; 2026-09-07 walkthrough fix B — mirror dedup; 2026-09-09
+ *  naming law): posts group by slug — which IS the base, because every
+ *  language variant of an article shares it — and each group surfaces
+ *  exactly ONE variant, picked
  *  exact-UI-locale > en > zh, so a seven-locale home never lists the
  *  same article twice (once per language). en outranks zh on third
  *  locales (vision fix 2026-09-07: /ar/ served Chinese titles — for a
@@ -158,10 +221,10 @@ export const postLang = (post: BlogPost): Locale => {
 export function postsForLocale(locale: Locale): readonly BlogPost[] {
   const groups = new Map<string, BlogPost[]>();
   for (const post of blogPosts) {
-    const base = post.slug.endsWith('-en') ? post.slug.slice(0, -'-en'.length) : post.slug;
-    const variants = groups.get(base);
+    // the slug IS the base (naming law 2026-09-09): variants share it
+    const variants = groups.get(post.slug);
     if (variants) variants.push(post);
-    else groups.set(base, [post]);
+    else groups.set(post.slug, [post]);
   }
   const picks: BlogPost[] = [];
   for (const variants of groups.values()) {
@@ -178,6 +241,43 @@ export function postsForLocale(locale: Locale): readonly BlogPost[] {
       Date.parse(b.date) - Date.parse(a.date) ||
       a.slug.localeCompare(b.slug),
   );
+}
+
+/** One tag and the posts that carry it (a prerendered /blog/tags/<tag>/
+ *  group; 2026-09-08 — the blog's tag-grouping axis). */
+export interface TagGroup {
+  /** the frontmatter tag verbatim — display text AND the URL segment
+   *  (URL_SAFE_TAG guarantees the two are the same string). */
+  tag: string;
+  /** the posts carrying it, newest first (index order). */
+  posts: readonly BlogPost[];
+}
+
+/** Tag grouping for one locale (2026-09-08): built from
+ *  postsForLocale — not from blogPosts — so a tag page inherits the
+ *  mirror-dedup and locale-preference law of the index it hangs off
+ *  (never the same article twice, the UI locale's variant first).
+ *  Order: post count desc (a tag's weight is its breadth), then tag
+ *  name — stable across locales and across rebuilds. */
+export function tagsForLocale(locale: Locale): readonly TagGroup[] {
+  const groups = new Map<string, BlogPost[]>();
+  for (const post of postsForLocale(locale)) {
+    for (const tag of post.tags) {
+      const bucket = groups.get(tag);
+      if (bucket) bucket.push(post);
+      else groups.set(tag, [post]);
+    }
+  }
+  return [...groups]
+    .map(([tag, groupPosts]) => ({ tag, posts: groupPosts }))
+    .sort((a, b) => b.posts.length - a.posts.length || a.tag.localeCompare(b.tag));
+}
+
+/** One locale's tag group by name; null when the tag does not exist in
+ *  that locale (the route turns that into a 404 — which is also why
+ *  each locale's route enumerates ONLY its own tags). */
+export function tagGroupFor(locale: Locale, tag: string): TagGroup | null {
+  return tagsForLocale(locale).find((group) => group.tag === tag) ?? null;
 }
 
 /** Bidi direction of a post's authored content (summary isolation on

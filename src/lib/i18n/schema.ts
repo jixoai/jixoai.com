@@ -12,7 +12,9 @@
  * map and falls back to the manifest English description); langNames +
  * blogPost.readIn — the writtenIn notice speaks the UI locale's name
  * for the authored language and links the mirrored post; footer — the
- * footer column heads localize.
+ * footer column heads localize. (maintained 2026-09-08): blogTags —
+ * the tag-grouping surfaces (the /blog/tags/ index and one
+ * /blog/tags/<tag>/ page per tag).
  */
 
 export interface Dictionary {
@@ -128,6 +130,29 @@ export interface Dictionary {
      *  shared with the post header pill (same interaction contract as
      *  the projects grid pill — release-blog spec). */
     releasePill: (version: string) => string;
+  };
+
+  /** Tag-grouping surfaces (2026-09-08): the /blog/tags/ index and one
+   *  /blog/tags/<tag>/ page per tag. Tag names themselves are
+   *  frontmatter data (repo names like `unipty`) and stay untranslated
+   *  in every locale — only the chrome around them localizes. */
+  blogTags: {
+    /** tag index <title>. */
+    title: string;
+    /** tag index meta description. */
+    metaDescription: string;
+    /** index H1 + the eyebrow above the chip row on the blog index. */
+    heading: string;
+    /** index lead paragraph. */
+    summary: string;
+    /** tag detail <title>, fed the tag name. */
+    titleForTag: (tag: string) => string;
+    /** tag detail meta description, fed the tag name and post count. */
+    metaForTag: (tag: string, count: number) => string;
+    /** post-count chip on both surfaces; must pluralize. */
+    postCount: (count: number) => string;
+    /** breadcrumb back-link label (tag page → tag index). */
+    allTags: string;
   };
 
   blogPost: {

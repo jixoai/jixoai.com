@@ -111,6 +111,20 @@ export const de: Dictionary = {
     releasePill: (version) => `GitHub-Release (${version})`,
   },
 
+  blogTags: {
+    title: 'Schlagwörter — jixoai-Blog',
+    metaDescription:
+      'Alle Schlagwörter des jixoai-Lab-Blogs — eine statische Listenseite pro Schlagwort, gruppiert nach Projekt und Beitragsart.',
+    heading: 'Schlagwörter',
+    summary:
+      'Dieselben Beiträge, gruppiert. Wähle ein Schlagwort, um einen Strang am Stück zu lesen — jede Gruppe ist eine statische Seite aus demselben Build wie der Index.',
+    titleForTag: (tag) => `${tag} — jixoai-Blog`,
+    metaForTag: (tag, count) =>
+      `Beiträge mit dem Schlagwort ${tag} im jixoai-Lab-Blog — ${count} ${count === 1 ? 'Beitrag' : 'Beiträge'}, neueste zuerst.`,
+    postCount: (count) => `${count} ${count === 1 ? 'Beitrag' : 'Beiträge'}`,
+    allTags: 'Alle Schlagwörter',
+  },
+
   blogPost: {
     titleSuffix: 'jixoai-Blog',
     writtenIn: (language) => `Dieser Beitrag ist auf ${language} verfasst.`,
