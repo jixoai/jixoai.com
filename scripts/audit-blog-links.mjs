@@ -10,10 +10,12 @@
  * which is the only place the real URL space exists (trailingSlash:
  * 'always' means /a/b/ is dist/a/b/index.html).
  *
- * Cross-locale rule: a locale-prefixed link (/zh/... and friends) is
- * legitimate only on the mirror line at the end of a post, where the
- * article points at its own translation. Anywhere else it means an en
- * post is sending readers to a zh-only URL.
+ * Cross-locale rule: a post must only link within its own locale. Both
+ * directions are leaks -- an en post sending readers to /zh/..., and a zh
+ * post sending them to the unprefixed (en) /blog/.... The single exception
+ * is the mirror line at the end of a post, where an article points at its
+ * own translation; it is recognised by being a list item carrying exactly
+ * one link.
  *
  * Usage: npm run build && node scripts/audit-blog-links.mjs
  */
@@ -58,27 +60,35 @@ for (const file of files) {
       issues.push(`  ✗ ${href}  -> missing in dist/`);
       continue;
     }
-    const linkLang = clean.split('/')[1];
-    if (PREFIXED.includes(linkLang)) {
-      // A link inside your own locale is not a leak: a zh post pointing at
-      // /zh/blog/... is the correct URL for its own readers. Only a hop into
-      // a *different* locale can strand someone on the wrong language, and
-      // that is legitimate solely on the mirror line (the post pointing at
-      // its own translation). (2026-09-10: the old code flagged every
-      // locale-prefixed link, which made zh→zh links unwritable and is why
-      // the zh variants had no "on this blog" row.)
+  }
+
+  // Cross-locale is judged per *occurrence*, on the line that carries it —
+  // not per href. An href that legitimately sits on the mirror line must
+  // not exempt the same href when it reappears in a body row; the previous
+  // per-href test did exactly that (fixed 2026-09-10).
+  //
+  // An unprefixed "/blog/…" is the en URL, so compare locale both ways: a
+  // link is a leak whenever its locale differs from the file's, in either
+  // direction. (a) en post → /zh/… (b) zh post → /blog/…, the case the
+  // first version missed entirely: three zh posts shipped a "本站系列" row
+  // pointing at English articles (fixed 2026-09-10). Same locale is always
+  // fine, and a deliberate hop is allowed only on the mirror line.
+  for (const line of text.split('\n')) {
+    const onLine = [...line.matchAll(/\]\((\/[^)\s]*)\)/g)].map((m) => m[1]);
+    for (const href of onLine) {
+      const clean = href.split('#')[0].split('?')[0];
+      if (!clean.endsWith('/')) continue;
+      const linkLang = PREFIXED.includes(clean.split('/')[1]) ? clean.split('/')[1] : 'en';
       if (linkLang === fileLang) continue;
-      const escaped = clean.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      // A mirror line is one list item holding an optional label and *only*
-      // that one link: `- Chinese version: [/zh/…/](/zh/…/)`. The label may
-      // not swallow a bracket, so a row carrying several links cannot match
-      // it. A looser "line ends with the link" test used to exempt any
-      // multi-link row whose last link happened to be locale-prefixed, which
-      // let real leaks through (fixed 2026-09-10).
-      const onMirrorLine = new RegExp(`^- [^[\\]]*\\[[^\\]]*\\]\\(${escaped}\\)\\s*$`, 'm').test(text);
+      // A mirror line is one list item carrying exactly one link:
+      // `- Chinese version: [/zh/…/](/zh/…/)`. Anything with two or more
+      // links is a body row and gets no exemption. A looser "line ends with
+      // the link" test used to exempt any multi-link row whose last link
+      // happened to be locale-prefixed, which let real leaks through.
+      const onMirrorLine = line.startsWith('- ') && onLine.length === 1;
       if (!onMirrorLine) {
         crossLocale++;
-        issues.push(`  ↔ ${href}  (locale-prefixed, not on the mirror line)`);
+        issues.push(`  ↔ ${href}  (cross-locale, not on the mirror line)`);
       }
     }
   }
