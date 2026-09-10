@@ -42,6 +42,9 @@ for (const file of files) {
   const text = readFileSync(join(BLOG, file), 'utf8');
   const links = [...new Set([...text.matchAll(/\]\((\/[^)\s]*)\)/g)].map((m) => m[1]))];
   const issues = [];
+  /** Language of the file itself, from the filename: `x.zh.md` is zh, the
+   *  unsuffixed `x.md` is the international (en) variant. */
+  const fileLang = PREFIXED.find((lang) => file.endsWith(`.${lang}.md`)) ?? 'en';
 
   for (const href of links) {
     const clean = href.split('#')[0].split('?')[0];
@@ -55,9 +58,24 @@ for (const file of files) {
       issues.push(`  ✗ ${href}  -> missing in dist/`);
       continue;
     }
-    if (PREFIXED.includes(clean.split('/')[1])) {
+    const linkLang = clean.split('/')[1];
+    if (PREFIXED.includes(linkLang)) {
+      // A link inside your own locale is not a leak: a zh post pointing at
+      // /zh/blog/... is the correct URL for its own readers. Only a hop into
+      // a *different* locale can strand someone on the wrong language, and
+      // that is legitimate solely on the mirror line (the post pointing at
+      // its own translation). (2026-09-10: the old code flagged every
+      // locale-prefixed link, which made zh→zh links unwritable and is why
+      // the zh variants had no "on this blog" row.)
+      if (linkLang === fileLang) continue;
       const escaped = clean.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const onMirrorLine = new RegExp(`^- .*\\]\\(${escaped}\\)\\s*$`, 'm').test(text);
+      // A mirror line is one list item holding an optional label and *only*
+      // that one link: `- Chinese version: [/zh/…/](/zh/…/)`. The label may
+      // not swallow a bracket, so a row carrying several links cannot match
+      // it. A looser "line ends with the link" test used to exempt any
+      // multi-link row whose last link happened to be locale-prefixed, which
+      // let real leaks through (fixed 2026-09-10).
+      const onMirrorLine = new RegExp(`^- [^[\\]]*\\[[^\\]]*\\]\\(${escaped}\\)\\s*$`, 'm').test(text);
       if (!onMirrorLine) {
         crossLocale++;
         issues.push(`  ↔ ${href}  (locale-prefixed, not on the mirror line)`);
