@@ -1,6 +1,6 @@
 ---
 name: release-blog
-description: Write release announcement posts for jixoai.com/blog (the L2 narrative layer over GitHub Releases). Use when publishing a blog post about a sub-repo's release — structure, tone, frontmatter linkage, bilingual mirroring, and the anti-patterns that get a draft rejected.
+description: Write release announcement posts for jixoai.com/blog (the L2 narrative layer over GitHub Releases). Use when publishing a blog post about a sub-repo's release — structure, tone, frontmatter linkage, bilingual mirroring, screenshots, and the anti-patterns that get a draft rejected.
 ---
 
 # jixoai.com release-blog
@@ -15,16 +15,14 @@ L2  jixoai.com/blog（本 skill）  精选 2-4 亮点 + 动机叙事。只链接
 L3  Upgrade Guide / MIGRATION   破坏性变更操作手册，随 repo 提供，L2 链接。
 ```
 
-Source research (14 orgs, 35 laws, every claim with a URL):
-`.agents/research/2026-09-06-release-blog-patterns.md` — read it when this
-skill's compression is not enough.
+本文是索引：**法则全文按需读 `references/`**，不要全部内联进上下文。
 
 ## Workflow
 
 1. **Gather facts** — the GitHub Release body (L1), the repo's
    CHANGELOG/changesets, and the motivating openspec change (archive/)
    for the "why" behind each highlight. Facts only from these sources;
-   never invent claims.
+   never invent claims. `releases.atom` 是拿精确 `published_at` 最稳的通道。
 2. **Pick the archetype** — `references/archetypes.md` A1–A14（40 篇
    实文归纳的模板库）。发布文先选原型再动笔：里程碑 → A1，例行 →
    A2，性能主题 → A6，首次亮相/动机长文 → A8。骨架、证据纪律、
@@ -39,10 +37,13 @@ skill's compression is not enough.
    间隔 ≤48h；镜像按 craft.md M1–M6 独立过一遍）。**「主文」指起草
    顺序，不是文件/URL 地位**：命名法里无后缀的 `xxx.md` 是国际版
    （英文），`xxx.zh.md` 是中文版（见 Title & slug laws）。
-5. **Revise gate-ordered** — craft.md R1→R7（对账→追责→结构→机制→
+5. **配图** — 需要截图时读 `references/screenshots.md`（截展示区域不截
+   整页；用完释放 ego-browser 的 TaskSpace）。
+6. **Revise gate-ordered** — craft.md R1→R7（对账→追责→结构→机制→
    查簇→朗读→镜像），前一关不过不进下一关。R5 查簇必须跑量化工具：
    `node scripts/ai-tone-metrics.mjs`（全绿才放行，见下节）。zh 终稿
-   再过一遍 lieflat 白名单（见 引用技能）。然后 `npm run build` green。
+   再过一遍 lieflat 白名单（见 `references/external-skills.md`）。然后
+   `npm run build` green。
    优先级注记：指标门禁与 lieflat 信息守恒冲突时（如必须保留的枚举
    材料），以 Owner 当次授权为准并在此处记录先例（2026-09-07 首例：
    shell 语义枚举按语法分组改写获准，语义零删减）。
@@ -59,76 +60,18 @@ LOW = 数字/时间锚点密度低于人类一半（材料稀薄，补证据）�
 的（相邻句同款等）靠 craft.md R6 朗读人工把关。工具当前基线教训：
 破折号是本站最大犯规点（曾 3.6–6.5/千字 vs 人类 0.8）。
 
-**全绿 ≠ 不 AI（2026-09-09 实测）**：7 篇原文在这个门禁上**全部零
-告警**，但读起来仍偏 AI。原因是它只量正则能抓的表层特征，而实际的
-AI 味在 craft 层，具体是三条 Owner 法令的违反 ——
+**门禁只兜底**：全绿不等于不 AI（2026-09-09 实测 7 篇全绿仍偏 AI），
+两条易踩的正则口径与 craft 层判据见 `references/tone-laws.md`。
 
-1. 一篇文只讲一个版本（背景节写版本编年史、中间版本进叙事）；
-2. 版面占比 ≈ 决策价值（发布管道、fixtures、CI 占了用户价值的位子）；
-3. 专有名词预算 + 大白话价值句（亮点先讲机制、后讲或不讲读者所得）。
+## 引用技能
 
-加上一类非法令但同样致命的：**自我标榜的形容词**（「诚实的限制清单」
-「照实说」「不是营销数字」）—— 读者没有质疑过，辩护句只会显得心虚。
-结论：门禁只用来兜底，判断一篇是否偏 AI 必须回到 craft 层逐条比对。
+两个外部 skill（lieflat-less-ai-tone / drawio-skill）与三份本仓库研究档
+的导读、调用时机、产物落位，见 `references/external-skills.md`。
 
-## 引用技能（按路径引用，勿内联——上游会持续更新）
+## 配图
 
-两个外部 skill 安装在全局目录（`git pull` 即更新），本 skill 只做导读：
-
-1. **lieflat-less-ai-tone** —
-   `~/.agents/skills/lieflat-less-ai-tone/SKILL.md`（453 行）。
-   中文去 AI 味的白名单改写器，规则全部来自 283 万字对照语料（300 篇
-   AI vs 329 篇人写），11 条按优先级排序：翻案腔、顿号罗列、相邻句
-   同款、破折号、冒号（提示语/空转引列表）、序数词小标题、拟人化
-   喻体、概括盖具体数据、禁用起手式、翻译腔（仅五种）、段首零主语。
-   **何时调用**：zh 终稿的最后清理（R5 查簇之后），或指标工具报 RED
-   而自己不确定怎么改时。**关键边界**：它是成稿清理器不是重写器——
-   白名单外的文字逐字保留、信息守恒（不增不删）、结构不动；本站的
-   品牌语体（craft.md）是它的「风格参考文档」，冲突时以本站为准。
-   它还会证伪流行说法：句长均匀性、句内排比、独立成段的比喻都
-   **不是** AI 痕迹，别误伤。
-2. **drawio-skill** —
-   `~/.agents/skills/drawio-skill/skills/drawio-skill/SKILL.md`（135 行
-   + references/ + scripts/diagramctl.py）。文字/真实源 → 可维护的
-   .drawio 架构图，统一 CLI `diagramctl.py`（doctor/build/sync/views/
-   test/review/transform），本机依赖已装齐（drawio CLI + Python）。
-   **何时调用**：文章需要架构图/流程图/时序图时——A7 架构深潜的机制
-   图、A1 里程碑的拓扑变化图、A5 迁移路径图、多组件数据流。**不需要**
-   当 gif 用：同类博客实况是近乎零 gif（archetypes.md §4.5），代码块、
-   表格、CLI 输出框优先；一个组件一句话能说清的不画。**产物落位**：
-   PNG 导出到 `static/blog-assets/<slug>/`，文章用绝对路径引用，
-   .drawio 源文件同目录入库（可再编辑）。用法细节读它的 SKILL.md，
-   不要把它的内容抄进本文档。
-
-## 配图：真实截图流程（2026-09-11 先例，ui v0.4.0）
-
-Owner 明确要过「你最好自己做一些截图，配合展示」。截图比手绘图可信，
-凡是「组件长什么样」这类主张，能截就截。流程（一次跑通，可复用）：
-
-1. **先看线上有没有**。线上站点常常还没部署到新版本
-   （ui v0.4.0 时 `/docs/effects.html` 线上 404）——404 就转本地构建。
-2. **本地出静态产物**。目标站的 `vite dev` 经常在沙箱里起不来（SvelteKit
-   要写 `.svelte-kit`，在工作区之外会触发 `CODEBUDDY_BROKER_DENY`）。
-   改跑它自己的构建脚本（如 `node scripts/build-site.mjs`），必要时加
-   `dangerouslyDisableSandbox: true`，产物在 `public/` 或 `dist/`。
-3. **起本地静态服务**：`python3 -m http.server 13900 --bind 127.0.0.1`。
-   本机 curl 要走 `--noproxy '*'`（环境有代理）。
-4. **用 ego-browser，不用 agent-browser**（Owner 法令 2026-09-11）。
-   二进制在 `~/.local/bin/ego-browser`，**不在默认 PATH**，先
-   `export PATH="$HOME/.local/bin:$PATH"`。API 是 TaskSpace/Page 子集，
-   **不是 Playwright**（没有 `locator()`）。
-   - 视口：`page.cdp("Emulation.setDeviceMetricsOverride", {width:1440,
-     height:900, deviceScaleFactor:2, mobile:false})`。
-   - 落盘：`page.screenshot({ path, fullPage, clip, scale, raw })`。
-   - **heredoc 里 `page.evaluate` 不能用模板字符串**：`${…}` 会被 shell
-     替换（报 `Bad substitution`）→ 一律用字符串拼接。
-5. **找对滚动容器**。文档站的主滚动常在内部元素上（ui 是
-   `.jx-shell-body`，`document` 根本不滚）→ 先探明是谁在滚，再直接设
-   `scroller.scrollTop = n`，并在**下一轮** heredoc 里读回确认（同一轮里
-   读会因为水合重置而误判）。
-6. **落位**：`static/blog-assets/<slug>/`，正文用绝对路径引用
-   `![alt](/blog-assets/<slug>/x.png)`。alt 要写清「这张图证明了什么」，
-   不是文件名。**中英两稿必须引用同一组图**（用 `grep -o` 对比两张清单）。
+截图流程、区块裁剪口径、ego-browser 的坑与**用完释放**，见
+`references/screenshots.md`。第一原则：截展示区域，不截整页。
 
 ## Title & slug laws
 
@@ -185,70 +128,28 @@ Owner 明确要过「你最好自己做一些截图，配合展示」。截图�
 钩子 → 2-3 个特性小节（动机+代码块+链接）→ Other improvements 短清单
 → 升级一行 → 致谢一行。≤1000 词，无故事不写故事。
 
-## 内容权重法则（Owner 法令 2026-09-07）
+### changelog 视角（Owner 先例 2026-09-11，ui v0.4.0）
 
-文章对正面与负面内容必须有别。版面占比 ≈ 对读者的决策价值：
+Owner 可能要求「基于客观的 commits 去写，changelog 的角度去靠，每一个点
+都提一下，关键的点配图」。这与「精选 2-4 亮点」不冲突，是另一种切法：
 
-1. **顺序**：新功能 → 破坏性变更 → 修复与其他。修复是负面内容。
-2. **修复默认一句话**：`修复 <什么坏了>（<commit/PR 永链>）`，归入
-   「其余变更」清单；不设小节、不叙事、不写动机段。反面教材：曾用
-   1/3 篇幅讲一个 404 修复（opentray v0.21.1 文，后已纠正）。
-3. **唯一例外**：hotfix release（该版本存在的唯一理由就是修复）→
-   开头一句直陈 + 升级行即可，全文可以只有三段；但 patch 本就按
-   重量级不发博客——能并入下一个 minor 叙事的就并入。
-4. 流程/工程内容（发布自动化、CI 改造）按「新能力」对待，但同样
-   受版面占比约束：它改变的是维护者的体验，不是用户的。
+- 把该版本全部 commit **按 scope 归组**（`git log A..B --pretty=%s`），
+  每组一个小节，标题统一成「能力名：一句话」。
+- **均衡覆盖**：不要把一个主题写长、其余一句带过（ui v0.4.0 第一版
+  特效占了一半篇幅，被退回重写）。破坏性变更独立成迁移节。
+- 机制细节压缩，代码示例只留可复制的关键块；每组都挂一句动机。
+- 篇末补一行提交类型统计（口径见 tone-laws）。
 
-## Tone laws
+## 内容权重与 Tone laws
 
-### 平实基调（Owner 法令 2026-09-07，此为全站默认）
+完整法则（平实基调、一篇文只讲一个版本、修复默认一句话、聚合数字口径、
+比喻/专有名词预算、示例折叠……）见 `references/tone-laws.md`。
 
-平实风格是默认基调，不是可选风格。参照系是 unipty v0.2.2 的
-zigpty 路由文（2026-09-07-unipty-v0-2-2）：
+三条最常犯的，先记住：
 
-- **宣告句直陈**：发布了什么、一句话定位，完事。不写"走了两步"
-  "从 X 到 Y"这类版本旅程框架，不用标题复述叙事弧。
-- **一篇文只讲一个版本**：合并发布或能力跨 tag 落地时，中间版本
-  不进入叙事（不提它的发布时刻、门禁变迁、changelog 分段）；
-  版本号只允许出现在 substrate 固定版本与 npm 安装命令里。
-  **Owner 先例 2026-09-10（opentray v0.23.0）**：8.5 小时内连发
-  0.22.0 与 0.23.0 时，Owner 选择合并成一篇 v0.23.0，把「图标内核 →
-  图标管线」当作一条跨 tag 落地的能力弧来写。执行方式（可复用）：
-  站在**最新版本**的立场写，所有内容都以「现在」陈述（0.23.0 的依赖
-  里确实含 @opentray/icon@0.23.0，读者装最新版就能全拿到），正文不出现
-  中间版本号，只在链接栏把两个 release 永链都列出来做溯源。这样既守住
-  「不写版本编年史」的实质，又不丢中间版本的信息。
-- **对比用表格 + 数字**：优缺点横向对照，客观陈述，别一惊一乍。
-- **致谢只致谢**：对象是人与社区。复核轮次、阻塞修复数、CI 过程
-  一律不进致谢；要提最多在「其余变更」一句话，通常不提。
-
-
-- 开发者对开发者；兴奋通过能力声明与数字表达，不通过形容词。
-- 数字优先于形容词（体积/耗时/依赖数/issue 数）；性能声明带基线。
-- **聚合数字必须说明口径，且可复现（2026-09-11）**：写进正文的
-  `N 个 feat / N 个 fix` 这类统计，一律用严格口径
-  `git log A..B --pretty=%s | grep -cE '^fix(\(|!|:)'`（按 conventional
-  前缀计类型）。**不要用 `grep -ci fix`**——它统计的是「主题里出现过
-  fix 字样」的提交，会把 `docs: fix the …` 也算进去，把 49 报成 73。
-  本轮 ui v0.4.0 就因此把 49 个 fix 写成了 73。项目自己文档里的数字
-  （如 openspec 提案的「197 处注入」「443 画布对 1580 卡片」）可直接
-  引用，但要在提案原文里核到那一行。
-- 一篇至多一句情绪化语句；jixoai 是 neo-brutalist 不是 carnival —
-  Tailwind 式粗口开场不适配，用 "It's done." 级冷句。
-- 代码块即视觉：CLI/框架类每个亮点至少一个可复制块；mono 品牌下
-  benchmark 输出与 `--help` 片段是天然素材；破坏性变用 diff 块。
-- 坦承不完美（"mainly a maintenance release" 级诚实）比粉饰可信。
-- 比喻克制（Owner 法令 2026-09-07）：比喻=阅读成本。一篇至多一个、
-  且只许出现在机制讲完后的定位句；主菜/赌注/接缝/同船/游戏房间这类
-  行文比喻一律清除（craft.md D13，指标工具有计数）。
-- 专有名词预算 + 大白话价值句（Owner 法令 2026-09-07）：内部代号一篇
-  一把、首次出现必须大白话释义，否则换成行为描述；API/包名/CLI/错误码
-  是对象不是术语，照用。每个亮点先说"你现在能做什么/什么日常痛点消失
-  了"，再讲机制（craft.md D14/D15）。
-- 示例代码必要、过剩折叠（Owner 法令 2026-09-07）：每个亮点至少一个
-  可敲的示例；多了用 `<details><summary>示例：…</summary>` 折叠
-  （.markdown-body details 已有样式）。示例只能来自 L1 release body、
-  文中已链的 README/文档、或文章已断言的命令，不许发明 API（D16）。
+1. **一篇文只讲一个版本** —— 中间版本不进叙事，只在链接栏列永链溯源。
+2. **顺序 = 新功能 → 破坏性变更 → 修复**；修复默认一句话 + commit 永链。
+3. **聚合数字用严格口径** —— `grep -cE '^fix(\(|!|:)'`，不要 `grep -ci fix`。
 
 ## Frontmatter (linkage to projects)
 
@@ -287,23 +188,10 @@ lang: zh            # 冗余兜底：语种由文件名决定（.zh.md = zh，�
 6. 破坏性变更埋在 Other changes 里
 7. 标题公式漂移（Announcing/released/is here 混用）
 
-## 重写既有稿：信息守恒（2026-09-09）
+## 重写既有稿：信息守恒
 
-对已发布的稿子做减法改写时，删掉的内容必须逐条对账。起因是一次真丢失：
-保留了「（release commit 原话）」这个归因，却删了原文开头的 commit 链接，
-留下一个悬空引用。
-
-- **引文留着，链接就得留着。** 任何「某某原话」「release commit 说」的
-  归因必须带可点永链。信息守恒优先于精简。
-- **真删除 ≠ diff 的删除行。** 改写过的行会同时出现在 `-` 与 `+` 两侧。
-  判据：删掉的行若在新稿里找不到对位（字符 bigram Jaccard ≥ 0.3）才算丢
-  失；frontmatter 行不计入。
-- **丢失锚点单独扫。** URL / 行内 `` `…` `` / 版本号，出现在旧稿而不在新
-  稿里的，逐个判定「刻意删」还是「误删」。三类常见误报：内容挪进了代码
-  块（行内反引号正则抓不到）、反引号被拆开（`uvx/pipx run` → 两个）、
-  措辞改写（`@latest` → `name@version`）。
-- **站内链接单独验。** 正文的站内链接要在 `dist/` 里逐个确认能解析，且不
-  出现跨语种泄漏（en 稿链到 zh-only 路径；镜像行除外）。
+引文与链接同生共死、真删除判据、丢失锚点三类误报、链接审计脚本的判定
+细节，见 `references/information-conservation.md`。
 
 ## Verification
 
@@ -314,9 +202,12 @@ lang: zh            # 冗余兜底：语种由文件名决定（.zh.md = zh，�
 - [ ] frontmatter repo/version 与 manifest/tag 对齐；date = release published_at
 - [ ] `node scripts/ai-tone-metrics.mjs` 全绿（RED 清零）
 - [ ] zh 终稿过 lieflat 白名单（引用技能 1），en 镜像过 craft.md §en tells
-- [ ] 重写稿跑过删除对账：真删除与丢失锚点逐个确认，无悬空引文（见上一节）
+- [ ] 重写稿跑过删除对账：真删除与丢失锚点逐个确认，无悬空引文
 - [ ] 站内链接逐个能解析，无跨语种泄漏
 - [ ] `npm run build` 绿；文章页在 public/ 抽查 200
+- [ ] 配图是**展示区域的裁剪图**（不是整页视口），每张单看就能知道它
+  证明了什么；中英两稿引用同一组图；换图后重建过站点
+- [ ] 用过 ego-browser 的话，`listTaskSpaces()` 已清空（`finish({keep:[]})`）
 - [ ] **改过门禁脚本后，必须造反例验证它没失效**（2026-09-10）：全站
   0 告警既可能是干净，也可能是门禁坏了。往 zh 稿塞一行「别的文章的
   英文页 + 德文页」双链接、往 en 稿塞一行 `/zh/` + `/de/` 双链接，
@@ -334,6 +225,7 @@ lang: zh            # 冗余兜底：语种由文件名决定（.zh.md = zh，�
   清单 / M1–M6 镜像规则（源自本机写作 skill 群 + 网上编辑忠告的提炼）
 - `references/archetypes.md` — A1–A14 原型模板 + 7 组横切微模式
   （40 篇前端工具链官方博文实读归纳，每条带来源 URL）
-- `.agents/research/2026-09-07-writing-craft.md` — craft 的逐源清单
-- `.agents/research/2026-09-07-blog-archetypes.md` — 16 候选池验证 + 方法
-- `.agents/research/2026-09-06-release-blog-patterns.md` — org 级惯例源
+- `references/tone-laws.md` — Owner 语体与内容权重法令全文
+- `references/screenshots.md` — 真实截图流程 + ego-browser 释放
+- `references/information-conservation.md` — 重写对账 + 链接审计判定细节
+- `references/external-skills.md` — 引用技能导读 + 本仓库研究档索引
