@@ -17,6 +17,11 @@
  * own translation; it is recognised by being a list item carrying exactly
  * one link.
  *
+ * Assets are not pages (2026-09-11): `![alt](/blog-assets/…/x.png)` is
+ * served straight from static/, so it never has a trailing slash and has
+ * no locale to leak into. Such paths skip both the trailing-slash rule and
+ * the cross-locale rule; existence is checked against dist/ instead.
+ *
  * Usage: npm run build && node scripts/audit-blog-links.mjs
  */
 
@@ -28,6 +33,10 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const BLOG = join(ROOT, 'content/blog');
 const DIST = join(ROOT, 'dist');
 const PREFIXED = ['zh', 'es', 'fr', 'de', 'ru', 'ja', 'ko', 'ar'];
+
+/** Served verbatim from static/, so they carry no trailing slash and no
+ *  locale — they are assets, not pages. */
+const ASSET_RE = /\.(png|jpe?g|webp|svg|gif|avif|ico|pdf|mp4|webm)$/i;
 
 if (!existsSync(DIST)) {
   console.error('dist/ not found — run `npm run build` first');
@@ -50,6 +59,14 @@ for (const file of files) {
 
   for (const href of links) {
     const clean = href.split('#')[0].split('?')[0];
+    if (ASSET_RE.test(clean)) {
+      // Not a page: no trailing slash expected. Still verify it shipped.
+      if (!existsSync(join(DIST, clean))) {
+        broken++;
+        issues.push(`  ✗ ${href}  -> missing in dist/`);
+      }
+      continue;
+    }
     if (!clean.endsWith('/')) {
       noSlash++;
       issues.push(`  ? ${href}  (no trailing slash — the site is trailingSlash: 'always')`);
