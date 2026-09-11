@@ -100,6 +100,36 @@ AI 味在 craft 层，具体是三条 Owner 法令的违反 ——
    .drawio 源文件同目录入库（可再编辑）。用法细节读它的 SKILL.md，
    不要把它的内容抄进本文档。
 
+## 配图：真实截图流程（2026-09-11 先例，ui v0.4.0）
+
+Owner 明确要过「你最好自己做一些截图，配合展示」。截图比手绘图可信，
+凡是「组件长什么样」这类主张，能截就截。流程（一次跑通，可复用）：
+
+1. **先看线上有没有**。线上站点常常还没部署到新版本
+   （ui v0.4.0 时 `/docs/effects.html` 线上 404）——404 就转本地构建。
+2. **本地出静态产物**。目标站的 `vite dev` 经常在沙箱里起不来（SvelteKit
+   要写 `.svelte-kit`，在工作区之外会触发 `CODEBUDDY_BROKER_DENY`）。
+   改跑它自己的构建脚本（如 `node scripts/build-site.mjs`），必要时加
+   `dangerouslyDisableSandbox: true`，产物在 `public/` 或 `dist/`。
+3. **起本地静态服务**：`python3 -m http.server 13900 --bind 127.0.0.1`。
+   本机 curl 要走 `--noproxy '*'`（环境有代理）。
+4. **用 ego-browser，不用 agent-browser**（Owner 法令 2026-09-11）。
+   二进制在 `~/.local/bin/ego-browser`，**不在默认 PATH**，先
+   `export PATH="$HOME/.local/bin:$PATH"`。API 是 TaskSpace/Page 子集，
+   **不是 Playwright**（没有 `locator()`）。
+   - 视口：`page.cdp("Emulation.setDeviceMetricsOverride", {width:1440,
+     height:900, deviceScaleFactor:2, mobile:false})`。
+   - 落盘：`page.screenshot({ path, fullPage, clip, scale, raw })`。
+   - **heredoc 里 `page.evaluate` 不能用模板字符串**：`${…}` 会被 shell
+     替换（报 `Bad substitution`）→ 一律用字符串拼接。
+5. **找对滚动容器**。文档站的主滚动常在内部元素上（ui 是
+   `.jx-shell-body`，`document` 根本不滚）→ 先探明是谁在滚，再直接设
+   `scroller.scrollTop = n`，并在**下一轮** heredoc 里读回确认（同一轮里
+   读会因为水合重置而误判）。
+6. **落位**：`static/blog-assets/<slug>/`，正文用绝对路径引用
+   `![alt](/blog-assets/<slug>/x.png)`。alt 要写清「这张图证明了什么」，
+   不是文件名。**中英两稿必须引用同一组图**（用 `grep -o` 对比两张清单）。
+
 ## Title & slug laws
 
 - 标题公式全站唯一：`<Project> vX.Y.Z`（裸版本号带 v，与 version pill
@@ -122,6 +152,11 @@ AI 味在 craft 层，具体是三条 Owner 法令的违反 ——
   送到英文文章）。唯一例外是末尾的镜像行，即**只含一个链接**的那个
   列表项（`- English version: [...]` / `- Chinese version: [...]`）。
   写多个链接的「本站系列」行**不算**镜像行，不适用豁免。
+- **图片是资源，不是页（2026-09-11）**：配图写
+  `![alt](/blog-assets/<slug>/x.png)`，从 `static/` 原样发出，既没有尾
+  斜杠也没有语种。链接审计对 `.png/.jpg/.jpeg/.webp/.svg/.gif/.avif/
+  .ico/.pdf/.mp4/.webm` 走资源分支——跳过尾斜杠规则与跨语种判定，改判
+  `dist/<path>` 是否存在。没有这条分支时，配图会被误报成「无尾斜杠」。
 - tags 受控：每项目一个 repo tag（`unipty`/`openspecui`/`ui`/
   `opentray`/`opendweb`/`openiweb`）。**不要加 `release`**
   （2026-09-09：它跟 `/blog/` 索引完全重合，标签分组会退化成第二个
@@ -190,6 +225,14 @@ zigpty 路由文（2026-09-07-unipty-v0-2-2）：
 
 - 开发者对开发者；兴奋通过能力声明与数字表达，不通过形容词。
 - 数字优先于形容词（体积/耗时/依赖数/issue 数）；性能声明带基线。
+- **聚合数字必须说明口径，且可复现（2026-09-11）**：写进正文的
+  `N 个 feat / N 个 fix` 这类统计，一律用严格口径
+  `git log A..B --pretty=%s | grep -cE '^fix(\(|!|:)'`（按 conventional
+  前缀计类型）。**不要用 `grep -ci fix`**——它统计的是「主题里出现过
+  fix 字样」的提交，会把 `docs: fix the …` 也算进去，把 49 报成 73。
+  本轮 ui v0.4.0 就因此把 49 个 fix 写成了 73。项目自己文档里的数字
+  （如 openspec 提案的「197 处注入」「443 画布对 1580 卡片」）可直接
+  引用，但要在提案原文里核到那一行。
 - 一篇至多一句情绪化语句；jixoai 是 neo-brutalist 不是 carnival —
   Tailwind 式粗口开场不适配，用 "It's done." 级冷句。
 - 代码块即视觉：CLI/框架类每个亮点至少一个可复制块；mono 品牌下
@@ -279,6 +322,11 @@ lang: zh            # 冗余兜底：语种由文件名决定（.zh.md = zh，�
   英文页 + 德文页」双链接、往 en 稿塞一行 `/zh/` + `/de/` 双链接，
   应分别报 2 与 2；还原后必须回到 0。两个方向都要试——只看一个方向
   会漏掉「zh 稿链英文页」这类反向泄漏。
+- [ ] **加资源分支时，反例要覆盖三类**（2026-09-11）：一次探针文件同时
+  塞进 ① 无尾斜杠的页链接（报 noSlash）② 缺图 `…/nope.png`（报断链）
+  ③ 多链接的跨语种正文行（报跨语种），并放一张**存在**的图作为对照
+  （必须不被报）。预期 1/1/1；删掉探针回到 0/0/0。只测「存在」的图会
+  把「资源分支吞掉了全部检查」误判成通过。
 
 ## References
 
