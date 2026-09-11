@@ -111,14 +111,18 @@ Owner 明确要过「你最好自己做一些截图，配合展示」。截图�
 
 ## 可复用的样板
 
-把每张图共用的部分抽成一个 `lib.mjs`（`prepare` / `rect` / `capture2x`），
-每张图只写一个几十行的 `sNN.js`。这样「一张张打磨」才便宜：改参数重跑即可，
-不用每张重抄一遍视口、CSS 注入与重试逻辑。`capture2x` 的签名：
+`references/shots-lib.mjs` 就是这套样板，直接 import 用（`prepare` / `rect` /
+`rectIn` / `rectSpan` / `addCss` / `capture2x` / `releaseAll`），每张图只写一个
+几十行的 `sNN.js`。这样「一张张打磨」才便宜：改参数重跑即可，不用每张重抄
+一遍视口、CSS 注入与重试逻辑。核心是 `capture2x`：
 
 ```js
 capture2x(page, clip, outPath, opts) // opts: { retries, beyond }
 // 内部：CDP Page.captureScreenshot + clip.scale:1 + 重试 + 读 PNG 头返回 {w,h,kb}
 ```
+
+注意 `rectIn(page, containerSel, innerSel)` 的存在理由：`document.querySelector`
+只拿页面第一个匹配元素，而你要的往往是某个区块内的那一个（如目标表格）。
 
 ## 用完必须释放 ego-browser（Owner 法令 2026-09-11）
 
