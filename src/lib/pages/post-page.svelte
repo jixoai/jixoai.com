@@ -121,7 +121,7 @@
     </p>
   {/if}
 
-  <div class="markdown-body mt-8 flex flex-col gap-8" lang={lang} dir={postDir(post)}>
+  <div class="mt-8 flex flex-col gap-8" lang={lang} dir={postDir(post)}>
     <!-- 2026-09-13 live demos + 2026-09-14 the registry markdown face:
          splitLiveDemos segments the post's markdown SOURCE around
          ```spin fences; markdown segments render through the registry

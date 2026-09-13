@@ -125,7 +125,7 @@
        The column widens to 88ch and centers (fix E) — the identity
        header stays full-measure, the reading column breathes alone -->
   {#if readmeHtml}
-    <article class="markdown-body mx-auto mt-8 w-full max-w-[88ch]" lang={readmeLang} data-reveal="">
+    <article class="readme-body mx-auto mt-8 w-full max-w-[88ch]" lang={readmeLang} data-reveal="">
       {#if !readmeTranslated && locale !== 'en'}
         <p class="mb-6">
           <span class="version-pill font-nav">{t.projectDetail.originalLanguage}</span>

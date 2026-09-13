@@ -15,7 +15,7 @@
 </script>
 
 {#if demos.length > 0}
-  <figure class="not-prose my-8 border border-border bg-muted/30 py-6">
+  <figure class="not-prose border border-border bg-muted/30 py-6">
     <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-7 px-6">
       {#each demos as demo, i (i)}
         <div class="flex flex-col items-center gap-2.5">
