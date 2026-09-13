@@ -155,6 +155,20 @@
         "src/lib/ui/language-switcher/index.ts": "a72251a1cc444ccade54626ded0f285a41f208be2882c9b281fd4a03277e8038",
         "src/lib/ui/language-switcher/language-switcher-defaults.svelte.ts": "3f7604ca149764ca5e0e84376d2d2b884f29b0acc7ff94078131bd40e0260f46"
       }
+    },
+    "spin-set": {
+      "files": {
+        "src/lib/spin-set.gen.ts": "1083d5013fce6e2b887ad33904274e15a57b0b7b126179fb2edb230477aed77f"
+      }
+    },
+    "spin": {
+      "files": {
+        "src/lib/ui/spin/spin.svelte": "11bd21c5bfd88646177a64c1a63ba44d9b4e9031f4350b130c633e2c4f40251c",
+        "src/lib/ui/spin/spin-catalog.ts": "2d389b4e876c87936a196eac2e32fe312bd9e6f268e6ca5361da2de08b881528",
+        "src/lib/ui/spin/index.ts": "806889c91279285256b467ae971519776fb14540f300acf24a323858ccf12a59",
+        "src/lib/ui/spin/spin.css": "a52f2fc258019bf9fdfcc0ff3c78d1c0892d2ccc44a4200d945ff65fece2b32f",
+        "src/lib/ui/spin/spin-defaults.svelte.ts": "1b16fb7ab7423348c1eaf4cfa1ffef16ea223005da2ee7174c9f9563838cf257"
+      }
     }
   }
 }

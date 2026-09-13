@@ -288,6 +288,72 @@ export const postDir = (post: BlogPost): 'ltr' | 'rtl' => dict[postLang(post)].d
 export const renderMarkdown = (markdown: string): string =>
   marked.parse(markdown, { async: false, gfm: true, breaks: false });
 
+/**
+ * LIVE COMPONENT DEMOS (2026-09-13, the v0.5.0 spin-era article): the
+ * site is a registry consumer, so a post can show a component EFFECT by
+ * mounting the real component instead of shipping a screenshot — the
+ * fence authoring form is
+ *
+ *   ```spin
+ *   { "demos": [{ "spinner": "dots" }], "caption": "…" }
+ *   ```
+ *
+ * marked renders that as <pre><code class="language-spin">…</code></pre>
+ * and splitLiveDemos splits the rendered HTML on those blocks, handing
+ * post-page alternating html segments and demo specs. Rendering stays
+ * inside the prerender (the text lane is pure CSS animation, the svg
+ * lane raw SMIL — both alive in a static export, zero client fetches);
+ * screenshots remain for effects a live embed cannot carry (the
+ * restraint law: a screenshot shows an EFFECT, never page text).
+ */
+export interface SpinDemo {
+  spinner: string;
+  /** aria label for the status region; defaults to the spinner name */
+  label?: string;
+  interval?: number | 'auto';
+  linger?: number | 'auto';
+  lingerType?: 'auto' | 'end' | 'start' | 'both';
+  size?: number | string;
+}
+
+export interface LiveSpinBlock {
+  kind: 'spin';
+  demos: SpinDemo[];
+  caption?: string;
+}
+
+export type BodySegment = { kind: 'html'; html: string } | LiveSpinBlock;
+
+/** marked's code-block entity escaping, undone for the JSON payload */
+const unescapeCode = (s: string): string =>
+  s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+
+const SPIN_FENCE = /<pre><code class="language-spin">([\s\S]*?)<\/code><\/pre>/g;
+
+/** Split marked output into html segments and live-demo blocks. */
+export function splitLiveDemos(html: string): BodySegment[] {
+  const segments: BodySegment[] = [];
+  let cursor = 0;
+  for (const match of html.matchAll(SPIN_FENCE)) {
+    const at = match.index!;
+    if (at > cursor) segments.push({ kind: 'html', html: html.slice(cursor, at) });
+    let spec: { demos?: SpinDemo[]; caption?: string };
+    try {
+      spec = JSON.parse(unescapeCode(match[1]!)) as typeof spec;
+    } catch {
+      // a malformed fence is an authoring error, not a page-killer:
+      // render the raw block as code so the mistake stays visible
+      segments.push({ kind: 'html', html: match[0] });
+      cursor = at + match[0].length;
+      continue;
+    }
+    segments.push({ kind: 'spin', demos: spec.demos ?? [], caption: spec.caption });
+    cursor = at + match[0].length;
+  }
+  if (cursor < html.length) segments.push({ kind: 'html', html: html.slice(cursor) });
+  return segments;
+}
+
 /** Version-pill data for a post, null when it carries no release
  *  linkage. The release URL is owner-aware via the generated project
  *  record; the tag convention follows the repo's live tag prefix

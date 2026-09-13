@@ -22,8 +22,9 @@
   2026-09-08 tag grouping: header tags link their prerendered group.
 -->
 <script lang="ts">
-  import { mirrorPostFor, displayDate, postLang, postDir, postRelease, type BlogPost } from '$lib/blog';
+  import { mirrorPostFor, displayDate, postLang, postDir, postRelease, splitLiveDemos, type BlogPost } from '$lib/blog';
   import { dict, localeHref, type Locale } from '$lib/i18n';
+  import LiveSpin from '$lib/components/live-spin.svelte';
 
   let { post, html, locale }: { post: BlogPost; html: string; locale: Locale } = $props();
 
@@ -117,6 +118,16 @@
   {/if}
 
   <div class="markdown-body mt-8" lang={lang} dir={postDir(post)}>
-    {@html html}
+    <!-- 2026-09-13 live demos: the ```spin fence splits the rendered
+         body into html segments and real-component blocks (blog.ts
+         splitLiveDemos); the loop alternates the two so a demo rides
+         exactly where its screenshot predecessor sat -->
+    {#each splitLiveDemos(html) as seg, i}
+      {#if seg.kind === 'spin'}
+        <LiveSpin demos={seg.demos} caption={seg.caption} />
+      {:else}
+        {@html seg.html}
+      {/if}
+    {/each}
   </div>
 </article>
