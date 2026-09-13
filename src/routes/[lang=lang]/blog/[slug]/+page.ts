@@ -5,7 +5,7 @@
 // propagation; prerender enumeration — every locale × every post.
 import { error } from '@sveltejs/kit';
 import { PREFIXED_LOCALES, type Locale } from '$lib/i18n';
-import { blogSlugs, postForLocale, renderMarkdown } from '$lib/blog';
+import { blogSlugs, postForLocale, splitLiveDemos } from '$lib/blog';
 import type { EntryGenerator, PageLoad } from './$types';
 
 // locale × ARTICLE (not locale × variant — see the root route).
@@ -16,5 +16,5 @@ export const load: PageLoad = ({ params }) => {
   const locale = params.lang as Locale;
   const post = postForLocale(locale, params.slug);
   if (!post) error(404, `Unknown post: ${params.slug}`);
-  return { locale, post, html: renderMarkdown(post.markdown) };
+  return { locale, post, segments: splitLiveDemos(post.markdown) };
 };

@@ -22,11 +22,15 @@
   2026-09-08 tag grouping: header tags link their prerendered group.
 -->
 <script lang="ts">
-  import { mirrorPostFor, displayDate, postLang, postDir, postRelease, splitLiveDemos, type BlogPost } from '$lib/blog';
+  import { mirrorPostFor, displayDate, postLang, postDir, postRelease, type BlogPost, type BodySegment } from '$lib/blog';
   import { dict, localeHref, type Locale } from '$lib/i18n';
   import LiveSpin from '$lib/components/live-spin.svelte';
+  // the registry markdown surface (2026-09-14): post bodies render through
+  // the component family — code blocks as CodeCard (Shiki), quotes as
+  // Blockquote with GitHub alerts, the text family for inline marks
+  import Markdown from '$lib/ui/markdown/markdown.svelte';
 
-  let { post, html, locale }: { post: BlogPost; html: string; locale: Locale } = $props();
+  let { post, segments, locale }: { post: BlogPost; segments: BodySegment[]; locale: Locale } = $props();
 
   const t = $derived(dict[locale]);
   const release = $derived(postRelease(post));
@@ -117,16 +121,18 @@
     </p>
   {/if}
 
-  <div class="markdown-body mt-8" lang={lang} dir={postDir(post)}>
-    <!-- 2026-09-13 live demos: the ```spin fence splits the rendered
-         body into html segments and real-component blocks (blog.ts
-         splitLiveDemos); the loop alternates the two so a demo rides
-         exactly where its screenshot predecessor sat -->
-    {#each splitLiveDemos(html) as seg, i}
+  <div class="markdown-body mt-8 flex flex-col gap-8" lang={lang} dir={postDir(post)}>
+    <!-- 2026-09-13 live demos + 2026-09-14 the registry markdown face:
+         splitLiveDemos segments the post's markdown SOURCE around
+         ```spin fences; markdown segments render through the registry
+         <Markdown> component (the jx-pure prose face), demos mount the
+         real <Spin> — a demo rides exactly where its screenshot
+         predecessor sat -->
+    {#each segments as seg, i}
       {#if seg.kind === 'spin'}
         <LiveSpin demos={seg.demos} caption={seg.caption} />
-      {:else}
-        {@html seg.html}
+      {:else if seg.source.trim().length > 0}
+        <Markdown source={seg.source} typography="standard" />
       {/if}
     {/each}
   </div>

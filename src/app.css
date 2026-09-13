@@ -34,6 +34,9 @@
  * ---------------------------------------------------------------------- */
 @import 'tailwindcss';
 @import './lib/jixoai.css';
+/* the jx-pure face (the registry markdown family's Tier-0
+   prerequisite — the <Markdown> root mounts the .jx-pure scope) */
+@import './lib/jx-pure.css';
 
 /* Tailwind mapping supplement: seal the default rounded scale (radius
  * law: 0, bevel upgrades only); jixoai.css 0.3.0 maps every other

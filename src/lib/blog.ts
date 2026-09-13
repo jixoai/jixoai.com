@@ -4,7 +4,9 @@
  * Orthogonal intents (maintained 2026-09-06): 1) discover first-party
  * markdown posts under content/blog/ at BUILD time (vite glob, raw);
  * 2) parse the frontmatter subset (title/date/description/author/tags);
- * 3) render markdown with marked; 4) release linkage — optional
+ * 3) render markdown through the registry <Markdown> component
+ *    (post bodies; project readmes keep their own marked surface); 4)
+ *    release linkage — optional
  * repo+version frontmatter validated against projects.manifest.json and
  * resolved to a GitHub Release permalink for the version pill
  * (release-blog spec: unknown repo = hard build error); 5) language
@@ -28,7 +30,6 @@
  * applied on purpose (blog spec, 2026-09-06).
  */
 
-import { marked } from 'marked';
 import manifest from '../../projects.manifest.json';
 import { dict, LOCALES, type Locale } from './i18n';
 import { projects } from './projects';
@@ -284,27 +285,25 @@ export function tagGroupFor(locale: Locale, tag: string): TagGroup | null {
  *  RTL surfaces); undefined when it matches the default. */
 export const postDir = (post: BlogPost): 'ltr' | 'rtl' => dict[postLang(post)].dir;
 
-/** Render markdown to HTML at build time (marked, gfm tables/code). */
-export const renderMarkdown = (markdown: string): string =>
-  marked.parse(markdown, { async: false, gfm: true, breaks: false });
-
 /**
- * LIVE COMPONENT DEMOS (2026-09-13, the v0.5.0 spin-era article): the
- * site is a registry consumer, so a post can show a component EFFECT by
- * mounting the real component instead of shipping a screenshot — the
- * fence authoring form is
+ * LIVE COMPONENT DEMOS (2026-09-13, the v0.5 spin-era article): the
+ * site is a registry consumer, so a post can show a component EFFECT
+ * by mounting the real component instead of shipping a screenshot —
+ * the fence authoring form is
  *
  *   ```spin
  *   { "demos": [{ "spinner": "dots" }], "caption": "…" }
  *   ```
  *
- * marked renders that as <pre><code class="language-spin">…</code></pre>
- * and splitLiveDemos splits the rendered HTML on those blocks, handing
- * post-page alternating html segments and demo specs. Rendering stays
- * inside the prerender (the text lane is pure CSS animation, the svg
- * lane raw SMIL — both alive in a static export, zero client fetches);
- * screenshots remain for effects a live embed cannot carry (the
- * restraint law: a screenshot shows an EFFECT, never page text).
+ * splitLiveDemos operates on the MARKDOWN SOURCE (not rendered
+ * output — every renderer swap stays transparent to the fence):
+ * segments alternate markdown sources and demo specs, and post-page
+ * renders the markdown through the registry's <Markdown> component.
+ * Rendering stays inside the prerender (the text lane is pure CSS
+ * animation, the svg lane raw SMIL — both alive in a static export,
+ * zero client fetches); screenshots remain for effects a live embed
+ * cannot carry (the restraint law: a screenshot shows an EFFECT,
+ * never page text).
  */
 export interface SpinDemo {
   spinner: string;
@@ -322,35 +321,32 @@ export interface LiveSpinBlock {
   caption?: string;
 }
 
-export type BodySegment = { kind: 'html'; html: string } | LiveSpinBlock;
+export type BodySegment = { kind: 'md'; source: string } | LiveSpinBlock;
 
-/** marked's code-block entity escaping, undone for the JSON payload */
-const unescapeCode = (s: string): string =>
-  s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+const SPIN_FENCE = /```spin\n([\s\S]*?)\n```/g;
 
-const SPIN_FENCE = /<pre><code class="language-spin">([\s\S]*?)<\/code><\/pre>/g;
-
-/** Split marked output into html segments and live-demo blocks. */
-export function splitLiveDemos(html: string): BodySegment[] {
+/** Split a post's markdown source into markdown segments and live-demo
+ *  blocks. A malformed fence is an authoring error, not a
+ *  page-killer: it stays in the markdown flow (rendered as the code
+ *  block it literally is, so the mistake stays visible). */
+export function splitLiveDemos(markdown: string): BodySegment[] {
   const segments: BodySegment[] = [];
   let cursor = 0;
-  for (const match of html.matchAll(SPIN_FENCE)) {
+  for (const match of markdown.matchAll(SPIN_FENCE)) {
     const at = match.index!;
-    if (at > cursor) segments.push({ kind: 'html', html: html.slice(cursor, at) });
+    if (at > cursor) segments.push({ kind: 'md', source: markdown.slice(cursor, at) });
     let spec: { demos?: SpinDemo[]; caption?: string };
     try {
-      spec = JSON.parse(unescapeCode(match[1]!)) as typeof spec;
+      spec = JSON.parse(match[1]!) as typeof spec;
     } catch {
-      // a malformed fence is an authoring error, not a page-killer:
-      // render the raw block as code so the mistake stays visible
-      segments.push({ kind: 'html', html: match[0] });
       cursor = at + match[0].length;
+      segments.push({ kind: 'md', source: markdown.slice(at, cursor) });
       continue;
     }
     segments.push({ kind: 'spin', demos: spec.demos ?? [], caption: spec.caption });
     cursor = at + match[0].length;
   }
-  if (cursor < html.length) segments.push({ kind: 'html', html: html.slice(cursor) });
+  if (cursor < markdown.length) segments.push({ kind: 'md', source: markdown.slice(cursor) });
   return segments;
 }
 

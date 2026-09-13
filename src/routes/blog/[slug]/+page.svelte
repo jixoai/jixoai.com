@@ -11,4 +11,4 @@
   let { data }: PageProps = $props();
 </script>
 
-<PostPage post={data.post} html={data.html} locale="en" />
+<PostPage post={data.post} segments={data.segments} locale="en" />

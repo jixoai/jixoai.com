@@ -30,5 +30,10 @@
     "typescript": "^5.7.2",
     "vite": "^8.0.0",
     "vite-imagetools": "^12.0.1"
+  },
+  "dependencies": {
+    "microlighter": "^2.2.0",
+    "shiki": "^4.4.3",
+    "stream-markdown-parser": "^1.2.16"
   }
 }
