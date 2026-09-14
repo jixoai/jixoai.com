@@ -37,6 +37,8 @@ export const es: Dictionary = {
       'Redes a nivel de aplicación: apps multidispositivo forman redes lógicas — como salas de juego, no VPN de sistema — con QUIC directo primero y relay autoalojado de respaldo.',
     openiweb:
       'El nodo de aplicaciones personales open source para gente corriente — autohospeda sin aprender ops: entrega un endpoint MCP y una clave a tu agente de código IA.',
+    'skill-creator':
+      'Banco de trabajo local-first para skills de agentes — una CLI y una GUI en bandeja gestionan el ciclo de vida de las skills, un servidor MCP expone las mismas capacidades a agentes externos, y un kernel DSH headless impulsa las sesiones de la app.',
   },
 
   chrome: {

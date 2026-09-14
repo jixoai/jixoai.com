@@ -37,6 +37,8 @@ export const fr: Dictionary = {
       'Le réseau au niveau applicatif : des apps multi-appareils forment des réseaux logiques — comme des salles de jeu, pas un VPN système — QUIC direct d’abord, relais auto-hébergé en repli.',
     openiweb:
       "Le nœud d'applications personnel open source pour tout le monde — auto-hébergez sans apprendre l'ops : confiez un endpoint MCP et une clé à votre agent de code IA.",
+    'skill-creator':
+      "L'atelier local-first des skills pour agents — une CLI et une GUI en barre de menus gèrent le cycle de vie des skills, un serveur MCP expose les mêmes capacités aux agents externes, et un noyau DSH headless pilote les sessions de l'app.",
   },
 
   chrome: {

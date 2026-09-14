@@ -36,6 +36,8 @@ export const zh: Dictionary = {
       '应用级组网——多设备应用组成逻辑网络：像游戏房间，而非系统级 VPN；QUIC 直连优先，可自建 Relay 兜底。',
     openiweb:
       '给普通人用的开源个人应用节点——不必学运维也能自托管：交给 AI 编程代理一个 MCP 端点和一把密钥即可。',
+    'skill-creator':
+      '本地优先的 Agent 技能工作台——CLI 与托盘 GUI 管理技能生命周期，MCP server 把同一组能力供给外部 agent，headless DSH 内核驱动应用内会话。',
   },
 
   chrome: {

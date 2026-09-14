@@ -47,6 +47,14 @@
       "descriptionZh": "面向普通人的开源个人应用节点：不懂容器与运维也能自托管，把 MCP 端点与一把密钥交给 AI 编程代理即可部署运维。",
       "site": "https://openiweb.jixoai.com",
       "logo": "openiweb"
+    },
+    {
+      "repo": "skill-creator",
+      "name": "Skill Creator",
+      "description": "Local-first workbench for agent skills — a CLI plus a tray GUI manage the skill lifecycle, an MCP server exposes the same capabilities to external agents, and a headless DSH kernel drives the in-app sessions.",
+      "descriptionZh": "本地优先的 Agent 技能工作台：CLI 与托盘 GUI 管理技能生命周期，MCP server 把同一组能力供给外部 agent，headless DSH 内核驱动应用内会话。",
+      "site": "https://skill-creator.jixoai.com",
+      "logo": "skill-creator"
     }
   ]
 }

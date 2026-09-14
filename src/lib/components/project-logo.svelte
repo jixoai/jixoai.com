@@ -15,6 +15,7 @@
 <script lang="ts">
   import ResponsivePicture, { type PictureSet } from './responsive-picture.svelte';
   import opentrayLogo from '$lib/assets/logos/opentray.png?w=48;96;192&format=webp;png&as=picture';
+  import skillCreatorLogo from '$lib/assets/logos/skill-creator.png?w=48;96;192&format=webp;png&as=picture';
   import uiLogo from '$lib/assets/logos/ui.webp?w=48;96;192&format=webp;png&as=picture';
   import opendwebLogo from '$lib/assets/logos/opendweb.svg';
   import openiwebLogo from '$lib/assets/logos/openiweb.svg';
@@ -24,6 +25,7 @@
   /** raster logos → responsive picture sets; vector logos → plain urls */
   const pictures: Record<string, PictureSet> = {
     opentray: opentrayLogo as PictureSet,
+    'skill-creator': skillCreatorLogo as PictureSet,
     ui: uiLogo as PictureSet,
   };
   const vectors: Record<string, string> = {

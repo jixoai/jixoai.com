@@ -37,6 +37,8 @@ export const de: Dictionary = {
       'Vernetzung auf Anwendungsebene: Multi-Device-Apps bilden logische Netzwerke — wie Spielräume, kein System-VPN — QUIC direkt zuerst, selbst gehosteter Relay als Fallback.',
     openiweb:
       'Der offene Personal-App-Knoten für alle — self-hosten ohne Ops zu lernen: übergib einen MCP-Endpoint und einen Key an deinen KI-Coding-Agenten.',
+    'skill-creator':
+      'Die Local-first-Werkbank für Agent-Skills — CLI und Tray-GUI verwalten den Skill-Lebenszyklus, ein MCP-Server stellt dieselben Fähigkeiten externen Agents bereit, und ein headless DSH-Kernel treibt die App-Sessions.',
   },
 
   chrome: {
