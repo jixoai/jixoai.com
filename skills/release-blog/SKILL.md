@@ -31,15 +31,25 @@ L3  Upgrade Guide / MIGRATION   破坏性变更操作手册，随 repo 提供，
 3. **Pick the weight class** — 里程碑（x.0 / 重要 minor）→ 叙事文
    1500-3000 词，允许背景弧；例行 minor → 紧凑文 ≤1000 词；patch →
    不发 blog（只进 L1）。org blog 是多项目混排，补丁噪音淹没叙事。
-4. **Draft with the craft rules** — `references/craft.md` D1–D16 是
+4. **Pick the voice（Owner 指令 2026-09-16，默认必问）** — 动笔前向
+   Owner 询问文章风格；两个选项，changelog 风格排第一且为默认推荐：
+   - **changelog 风格（首选）**：客观且直观、通俗易懂且准确，无晦涩
+     词汇和比喻。按主题分节，每节陈述「改了什么/为什么/可观察行为」，
+     数字与证据直接给；不写背景弧与动机铺陈。术语一律用项目自己的
+     词汇（tone-laws 第 7 条的词汇源纪律照用）。
+   - **叙事风格（原 L2 默认）**：动机叙事 + 亮点精选，回答「为什么
+     这个版本重要」；archetype 与 craft 法则全量适用。
+   Owner 未明说时先问再写，不要默认套叙事模板；本文的 L1/L2 分层
+   不受风格影响（changelog 风格仍然只链接 L1，不复制全量清单）。
+5. **Draft with the craft rules** — `references/craft.md` D1–D16 是
    起草期句级法则（冷开、一句一职、长句+短钉、事实强度天花板……）。
    zh 为主文，en 同构镜像成对发布（结构逐节对齐；zh 先 en 后，
    间隔 ≤48h；镜像按 craft.md M1–M6 独立过一遍）。**「主文」指起草
    顺序，不是文件/URL 地位**：命名法里无后缀的 `xxx.md` 是国际版
    （英文），`xxx.zh.md` 是中文版（见 Title & slug laws）。
-5. **配图** — 需要截图时读 `references/screenshots.md`（截展示区域不截
+6. **配图** — 需要截图时读 `references/screenshots.md`（截展示区域不截
    整页；用完释放 ego-browser 的 TaskSpace）。
-6. **Revise gate-ordered** — craft.md R1→R7（对账→追责→结构→机制→
+7. **Revise gate-ordered** — craft.md R1→R7（对账→追责→结构→机制→
    查簇→朗读→镜像），前一关不过不进下一关。R5 查簇必须跑量化工具：
    `node scripts/ai-tone-metrics.mjs`（全绿才放行，见下节）。zh 终稿
    再过一遍 lieflat 白名单（见 `references/external-skills.md`）。然后
@@ -214,7 +224,8 @@ lang: zh            # 冗余兜底：语种由文件名决定（.zh.md = zh，�
   再抽查配图 URL 是否 200。只看 HTTP 200 会把「部署没跑完/跑了旧版」当成
   通过；deploy.yml 在 push 到 main 时触发，本地产物（dist/、public/）不入库
 - [ ] 配图是**展示区域的裁剪图**（不是整页视口），每张单看就能知道它
-  证明了什么；中英两稿引用同一组图；换图后重建过站点
+  证明了什么；截图语言与稿件语言配套（含界面文案的图中英分开截，
+  见 references/screenshots.md 第 9 条）；换图后重建过站点
 - [ ] 用过 ego-browser 的话，`listTaskSpaces()` 已清空（`finish({keep:[]})`）
 - [ ] **改过门禁脚本后，必须造反例验证它没失效**（2026-09-10）：全站
   0 告警既可能是干净，也可能是门禁坏了。往 zh 稿塞一行「别的文章的
