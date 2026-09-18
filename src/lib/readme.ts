@@ -155,14 +155,44 @@ function stripDuplicateTitle(html: string, name: string): string {
     : html;
 }
 
+/** GitHub-style heading slug: strip inline markup, decode the entities
+ *  marked emits, lowercase, drop punctuation (letters/numbers kept,
+ *  including CJK), spaces to hyphens. READMEs link their own sections
+ *  with anchors (`[Skill search](#skill-search)`), and SvelteKit's
+ *  prerender fails the build when a rendered page carries an anchor
+ *  link with no matching id — so headings must carry ids. */
+const slugifyHeading = (html: string): string =>
+  html
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .toLowerCase()
+    .trim()
+    .replace(/[^\p{L}\p{N}\s-]/gu, '')
+    .replace(/\s+/g, '-');
+
 /** A per-call Marked instance keeps the URL overrides scoped (the shared
  *  marked singleton stays pristine for the blog renderer). */
 export function renderReadme(project: GeneratedProject, markdown: string): string {
   const repo = project.repo.includes('/') ? project.repo : `jixoai/${project.repo}`;
+  const headingIds = new Map<string, number>();
   const md = new Marked({
     gfm: true,
     breaks: false,
     renderer: {
+      heading(token) {
+        const text = this.parser.parseInline(token.tokens);
+        let slug = slugifyHeading(text);
+        // GitHub dedupes repeated headings with -1/-2 suffixes; anchor
+        // links in the README target the first occurrence either way.
+        const seen = headingIds.get(slug) ?? 0;
+        headingIds.set(slug, seen + 1);
+        if (seen > 0) slug = `${slug}-${seen}`;
+        return `<h${token.depth} id="${escapeAttr(slug)}">${text}</h${token.depth}>`;
+      },
       // token-based renderer hooks (marked's classic class signatures
       // retired; these receive the lexed token)
       image(token) {
