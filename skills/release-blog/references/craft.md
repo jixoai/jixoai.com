@@ -92,10 +92,24 @@ D14. **Proper-noun budget.** Internal codenames (milestone tags,
    codes are OBJECTS, not jargon — they stay. The test: a reader who
    has never opened the repo still understands every value sentence.
    [Owner law 2026-09-07: 用大白话解释每一个 release 的价值]
-D15. **Plain-language value sentence first.** Every 亮点 section opens
-   with what the reader can now DO or which everyday problem stops
-   hurting, in plain words, before any mechanism. If the plain-language
-   version cannot be written, the highlight is not a highlight.
+D15. **Abstraction-ladder placement (plain-language value first).**
+Every 亮点 section opens with what the reader can now DO or which
+everyday problem stops hurting, in plain words, before any mechanism —
+and each writing layer stays on its own rung of the abstraction
+ladder (Hayakawa, *Language in Thought and Action*): headings sit at
+the impression level (what improved — noun phrases, no numbers, no
+mechanism words), the lead sentence at the fact level (what shipped,
+numbers live here), the body at the behavior level, `<details>` at
+the mechanism level. Level mismatch is the tell: a heading that
+enumerates mechanisms ("任务清单带行号") or a body that talks
+impressions without facts is on the wrong rung. Plain language lowers
+the reader's processing cost, never the information density — deleting
+facts to sound simple is dumbing down, not plain language (2026-10-02
+openspecui v13~v14: dense v1 and diluted v2 both rejected by the
+Owner; layered v3 accepted). If the plain-language version cannot be
+written without losing the facts, the highlight is not a highlight.
+[Owner review 2026-10-02 + Hayakawa]
+
 D16. **Code examples are required; fold the surplus.** Each 亮点 ships
    at least one runnable/typable example (CLI invocation or API call).
    When examples crowd the narrative, extras fold into
