@@ -139,6 +139,12 @@ R3. **结构 (structure).** Per paragraph ask writing-shape's four questions
 opening-promise drift). Section order respects the information DAG.
 Paragraph cap 240 chars. [writing-shape, edit-article, gaubee-writer 结构关]
 
+
+R3.5. **段落 240 字的计数口径（2026-10-02 盲测补，可脚本化）**：
+    剔除 fenced 代码块与链接目标（`[text](url)` 只计 text）后的正文
+    字符数；bullet/编号项各算独立段落（清单式段落本就该整齐，lieflat
+    第 3 条豁免）；frontmatter、链接栏、引用块不计。zh 按字符、en
+    按词（en 无硬上限，先例文章段落 300+ 字符常态，不套用 zh 数字）。
 R4. **机制 (mechanism).** Does each 亮点 explain how it happens and when it
 fails? A section that only renames the changelog entry fails here.
 [gaubee-writer 机制关]
