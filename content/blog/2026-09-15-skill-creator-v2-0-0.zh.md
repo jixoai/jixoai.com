@@ -1,7 +1,7 @@
 ---
-title: "Skill Creator v2.0：三应用工作台、模型路由与 Agent 面板"
+title: "Skill Creator v2.0：技能管理、编写与安装并入一个工作台"
 date: 2026-09-13T20:04:46Z
-description: Skill Creator v2.0（2026-09-14 发布，当前 2.0.1）是一次重写。1.x 系列是 CLI 加 Claude Code 子代理；2.0 线改为本地优先的 Agent 技能工作台：Workspaces、Creator、Repository 三个应用负责技能管理、创建与固定 commit 安装；模型配置重建为路由标签页（九种协议一键测连通）；Agent 面板重做（上下文计量、/compact、$ 补全、320-720px 调宽）；附件按钮唤起系统文件对话框，2.0.1 修复 macOS 上对话框打不开的问题。破坏性变更：持久化状态不迁移（先备份 ~/.skill-creator），Node 最低 24.0.0。
+description: 技能的查看、编写与安装共用一个窗口；模型配置拆成路由标签页，改动即时生效；对话面板重做，上下文余量可见；附件走系统文件对话框。破坏性变更：持久化状态不迁移（先备份 ~/.skill-creator），Node 最低 24.0.0。
 author: jixoai
 tags: [skill-creator]
 repo: skill-creator
@@ -14,15 +14,23 @@ $ git log v1.5.2..v2.0.1 --oneline | wc -l
 196
 ```
 
-Skill Creator v2.0（2026-09-14 发布，当前 2.0.1）是一次重写，共 196 个提交：82 feat、56 fix、36 docs，其余 22 个为 test、chore、refactor 与格式化整理。整条 2.0 线经过六轮独立评审（codex 评审代理，最终 PASS 9.6/10）。本文挑与日常使用最相关的部分讲，完整清单在 [GitHub Release v2.0.0](https://github.com/jixoai/skill-creator/releases/tag/v2.0.0) 与 [CHANGELOG](https://github.com/jixoai/skill-creator/blob/v2.0.1/CHANGELOG.md)。
+Skill Creator v2.0 发布了（2026-09-14），当前 2.0.1。这一版把 1.x 的形态换掉了：1.5.2 是 CLI 加 Claude Code 子代理，技能按 `package@version` 写进 `.claude/skills`；v2.0 是本地优先的 Agent 技能工作台，技能的查看、编写与安装共用一个窗口，右侧是可对话的 Agent 面板。
 
-1.x 系列的最后一条 release 是 2026-05-21 的 1.5.2，形态是 CLI 加 Claude Code 子代理，技能按 `package@version` 命名写入 `.claude/skills`，文档靠 Context7 下载切片。2.0 线换了形态：CLI 只管生命周期（`start`、`status`、`stop`），常驻 daemon 以自己的界面承载全部功能；技能的发现、校验和安装仍由 ccski SDK 完成，Provider 投影、权限边界与跨路由体验属于应用本身。对话能力来自 DSH（DeepSeek Harness）headless 内核，只驱动会话，不出界面；Manager 的领域能力同时以 MCP server（daemon 内 `/mcp` 与 `skill-creator mcp` stdio 两种形态）供给内核与外部 client，写入类调用一律先产 proposal，等人批准后才执行。
+v1.5.2 到 2.0.1 共 196 个提交：82 feat、56 fix、36 docs，其余 22 个为 test/chore/refactor/格式化整理。完整清单在 [GitHub Release v2.0.0](https://github.com/jixoai/skill-creator/releases/tag/v2.0.0) 与 [CHANGELOG](https://github.com/jixoai/skill-creator/blob/v2.0.1/CHANGELOG.md)。
 
-## 三个应用
+底座跟着变了：CLI 只管生命周期（`start`/`status`/`stop`），界面全部由常驻 daemon 承载；技能的发现、校验和安装仍由 ccski SDK 完成。
 
-一个窗口里完成技能的日常管理、编写与安装，这是 2.0 最直观的变化。
+<details><summary>底座细节：对话内核与 MCP 面</summary>
 
-Workspaces 是首页。它聚合各 Agent 的全局技能目录（Global Workspace，`~`）与手动导入的 Workspace，每个 Provider 卡片列出技能数、可用性与写入状态；技能可以查看、校验、启用或禁用，也能对比上游 lock hash 找出过时技能并按需重装。移除 Workspace 只删注册表项，不动用户目录。
+对话能力来自 DSH（DeepSeek Harness）headless 内核，只驱动会话，不出界面。Manager 的领域能力同时以 MCP server（daemon 内 `/mcp` 与 `skill-creator mcp` stdio 两种形态）供给内核与外部 client，写入类调用一律先产 proposal，等人批准后才执行。Workspace/Provider 投影、权限边界与跨路由体验属于 Skill Creator 自己，不经 ccski。内核不可用时 daemon 降级为 Manager-only 面，不阻塞启动。
+
+</details>
+
+## 技能操作集中到一个窗口
+
+Workspaces 是首页。它把 Global Workspace（`~`，各 Agent 的全局技能目录）与手动导入的 Workspace 聚合在一起，每个 Provider 卡片列出技能数、可用性与写入状态；技能可以查看、校验与启停，也能对比上游 lock hash 找出过时技能并按需重装。移除 Workspace 只删注册表项，不动用户目录。
+
+首页的四张快捷操作卡（Create skill, Import workspace, Scan a repo, Discover sources）会把 Agent 面板切到对应模式并带上预填提示。
 
 ![Workspaces 首页：标题与说明下方是 Create skill、Import workspace、Scan a repo、Discover sources 四张快捷操作卡，Global Workspace 区的 Provider 卡片列出技能数、可用项数与操作入口](/blog-assets/2026-09-15-skill-creator-v2-0-0/workspaces.png)
 
@@ -30,33 +38,43 @@ Creator 负责写。在已导入的 Workspace.Provider 里新建技能，或加�
 
 ![Creator 页按类别分组列出当前范围内的技能，每张卡片有名称与一行描述，顶部提供 New skill 与 Open existing 按钮](/blog-assets/2026-09-15-skill-creator-v2-0-0/creator.png)
 
-Repository 负责装。输入 Git 源（仅接受 https），扫描会话固定到一个 commit，预览与安装复用同一份临时快照；多选已导入的 Workspace.Provider 作为目标，逐项安装、逐项复核，只有通过验证的结果才拿到本地技能 ID。Discover 页另有 curated 与自建源列表。
+Repository 负责装。输入 https Git 源，扫描会话固定到一个 commit，预览与安装复用同一份临时快照；多选已导入的 Workspace.Provider 作为目标，逐项安装、逐项复核，只有通过验证的结果才拿到本地技能 ID。Discover 页内置 Anthropic Skills 与 Vercel Labs Skills 两个源，也可以追加自己的 Git URL。
 
 ![Repository 的 Discover 页列出源卡片（Skills Library v1 指向 github.com/jixoai/skills-library，Agent Skills 指向 github.com/vercel-labs/skills），右上角是 New scan 入口](/blog-assets/2026-09-15-skill-creator-v2-0-0/repository.png)
 
-安全上，mutation 由 server 把 workspace 与 provider 解析到真实根目录再执行，WebUI 不拼输出路径；安装目标只能是已导入的可写 Workspace.Provider，写不进 `~`。
+<details><summary>安全边界</summary>
 
-## 模型路由
+mutation 由 server 把 workspace 与 provider 解析到真实根目录再执行，WebUI 不拼输出路径；安装目标只能是已导入的可写 Workspace.Provider，写不进 `~`。
 
-v2.0 把模型配置从一份长表单重做成一组标签页。每个 provider endpoint 一个 tab，自带身份图标、凭据、endpoint、模型列表与移除按钮；从目录里添加立即生效，重复添加自动编号（`zai-2`、`Z.ai (1)`）。
+</details>
 
-模型级的配置项覆盖六件事：modelId 补全跨 provider 进行并过滤命名空间 ID，显示名自动生成，推理强度用标签选择（默认 `low/high/max`，标准档位带补全），上下文窗口与最大输出 token 接受 `0.5M`、`253k` 这类简写，输入输出类型默认值取自 models.dev，连通测试一键覆盖全部九种协议。
+## 模型配置拆成路由标签页，改动即时生效
 
-## Agent 面板
+每个 provider endpoint 一个 tab，身份图标/凭据/模型列表/移除按钮都在 tab 里；从目录里添加立即生效，重复添加自动编号（`zai-2`、`Z.ai (1)`）。加路由、换 key 都即时生效，不用重启内核。
 
-面板重做。assistant 消息通栏显示，用户消息右对齐成气泡；thinking、tool、todo 行可折叠展开；上下文计量条按当前模型的容量显示剩余空间。`/compact` 菜单手动压缩上下文，auto-compact 在 `inputTokens >= contextWindow - maxOutputTokens` 时自动触发，转录里留下可见标记。
+模型级的配置覆盖六件事：modelId 补全跨 provider 进行并过滤命名空间 ID，显示名自动生成，推理强度用标签选择（默认 `low/high/max`，标准档位带补全），上下文窗口与最大输出 token 接受 `0.5M`、`253k` 这类简写，输入输出类型默认值取自 models.dev，连通测试一键覆盖全部九种协议。
 
-`$` 触发技能名补全，把技能直接引进对话。面板宽度在 320-720px 之间可调，窄屏转为抽屉覆盖；收起只是隐藏，不销毁会话，草稿按会话隔离，每个角色首次使用时才创建会话。
+## 对话面板重做，上下文余量可见
+
+assistant 消息通栏显示，用户消息右对齐成气泡；thinking/tool/todo 行可折叠展开；上下文计量条按当前模型的容量显示剩余空间。`/compact` 菜单手动压缩上下文，auto-compact 在 `inputTokens >= contextWindow - maxOutputTokens` 时自动触发，转录里留下可见标记。
+
+`$` 触发技能名补全，把技能直接带进对话。面板宽度在 320-720px 之间可调，窄屏转为抽屉覆盖；收起只是隐藏，不销毁会话，草稿按会话隔离，每个角色首次使用时才创建会话。新会话的状态是 Create, Manage, Explore, General 四张模式卡。
 
 ![Agent 面板的新会话状态：会话选择器下方是 Create、Manage、Explore、General 四张模式卡，底部 composer 带附件与模型入口](/blog-assets/2026-09-15-skill-creator-v2-0-0/agent-panel.png)
 
-## 原生文件与图片选择
+## 附件选择走系统文件对话框
 
 附件按钮直接唤起系统文件对话框（daemon 侧经 `@xmorse/rfd`），选中后真实路径进入 prompt attachments，daemon 侧做大小守卫；图片由 jSquash 在服务端生成缩略图预览。
 
-2.0.1（2026-09-15）修了一个阻断问题：macOS 上这个对话框此前打不开，异步对话框在非 GUI 宿主进程里 panic，RPC promise 永远挂起，只能重启恢复。现在同步对话框跑在独立子进程里，panic 被隔离，10 分钟看门狗兜底，失败会弹 toast；第二个客户端并发请求会收到明确的「对话框已打开」拒绝。见 [v2.0.1 changelog](https://github.com/jixoai/skill-creator/releases/tag/v2.0.1)。
+2.0.1 修了 macOS 上的一个阻断问题：对话框此前打不开，附件按钮没有任何反馈，只能重启恢复。现在失败会弹 toast，第二个客户端并发请求会收到明确的「对话框已打开」拒绝。见 [v2.0.1 changelog](https://github.com/jixoai/skill-creator/releases/tag/v2.0.1)。
 
-## 其他变更
+<details><summary>机理：为什么此前打不开</summary>
+
+异步对话框在非 GUI 宿主进程里 panic，RPC promise 永远挂起。2.0.1 改为在独立子进程里跑同步对话框，panic 被隔离，另有 10 分钟看门狗兜底。
+
+</details>
+
+## 其余变更
 
 会话管理进了设置页。Settings → Sessions 按日期列出会话，可逐行删除，内核会话有标记且受保护；保留策略 `sessionCleanupDays` 默认 30 天，daemon 启动时执行，另有 Clean-now 立即清理。只清产品转录，`$DSH_HOME` 的内核日志不动。
 
@@ -68,7 +86,7 @@ v2.0 把模型配置从一份长表单重做成一组标签页。每个 provider
 
 破坏性变更有三条。
 
-1. 持久化状态加载即收窄。`workspaces.json` 与技能管家（steward，维护工作流）存储里的未知字段按无兼容策略丢弃，不迁移也不重写。要保留回滚能力，升级前先做一次备份。
+1. 持久化状态加载即收窄。`workspaces.json` 与技能管家（steward）的内部存储里的未知字段按无兼容策略丢弃，不迁移也不重写。要保留回滚能力，升级前先做一次备份。
 
    ```bash
    cp -r ~/.skill-creator ~/.skill-creator.bak
@@ -76,6 +94,8 @@ v2.0 把模型配置从一份长表单重做成一组标签页。每个 provider
 
 2. CLI 与 daemon 版本必须一致，不一致时 CLI 会替换 daemon。
 3. Node 最低版本 24.0.0（内核持久化用 `node:zlib` 的 zstd）。
+
+破坏性口径：区间内带 `!` 标记的提交只有 1 个（`feat!` 退役 hosted DSH web 组合）；上面三条迁移动作出自 CHANGELOG 的 Breaking 节。
 
 安装与启动：
 
@@ -92,7 +112,7 @@ macOS 与 Windows 走原生窗口；Linux 默认 web 模式（纯托盘加系统
 
 ## 致谢
 
-六轮独立评审（codex）给出最终 PASS 9.6/10。DSH（DeepSeek Harness）提供内核与 dsh-webui 的面板设计语法；`@xmorse/rfd`、jSquash、models.dev 与 ccski SDK 是本次亮点的直接依赖。
+六轮独立评审（codex 评审代理）给出最终 PASS 9.6/10。DSH（DeepSeek Harness）提供内核与 dsh-webui 的面板设计语法；`@xmorse/rfd`, jSquash, models.dev 与 ccski SDK 是本次亮点的直接依赖。
 
 ## 链接
 
