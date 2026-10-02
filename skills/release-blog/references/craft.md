@@ -97,12 +97,22 @@ Every 亮点 section opens with what the reader can now DO or which
 everyday problem stops hurting, in plain words, before any mechanism —
 and each writing layer stays on its own rung of the abstraction
 ladder (Hayakawa, *Language in Thought and Action*): headings sit at
-the impression level (what improved — noun phrases, no numbers, no
-mechanism words), the lead sentence at the fact level (what shipped,
-numbers live here), the body at the behavior level, `<details>` at
-the mechanism level. Level mismatch is the tell: a heading that
-enumerates mechanisms ("任务清单带行号") or a body that talks
-impressions without facts is on the wrong rung. Plain language lowers
+the impression level (what improved — a benefit phrase naming the
+improvement, no numbers, no mechanism/object nouns), the lead
+sentence at the fact level (what shipped, numbers live here), the
+body at the behavior level, `<details>` at the mechanism level.
+Level mismatch is the tell: a heading that enumerates mechanisms
+("任务清单带行号") or a body that talks impressions without facts
+is on the wrong rung. **Impression-level test + examples (2026-10-02,
+two blind rounds)**: ask "does this heading answer *what got better*
+or *which thing changed*?" — the latter is wrong-rung even when it
+names a real product noun. Accepted (Owner-approved v13~v14 post):
+「提醒按需展开」「证据定位更精确」「扩展 Agent 工具支持」— verb-led
+benefit phrases. Rejected (blind drafts, all ruled too mechanical):
+「Apply 任务证据」「更完整的 CLI 证据通道」「任务勾选与计数对齐 CLI」
+— object/mechanism nouns pass the old "noun phrase" wording yet sit
+on the fact/mechanism rung; "noun phrase" was the drafting bug, the
+correct form is the benefit phrase (verb or result noun both fine). Plain language lowers
 the reader's processing cost, never the information density — deleting
 facts to sound simple is dumbing down, not plain language (2026-10-02
 openspecui v13~v14: dense v1 and diluted v2 both rejected by the
