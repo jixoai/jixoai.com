@@ -96,23 +96,34 @@ D15. **Abstraction-ladder placement (plain-language value first).**
 Every 亮点 section opens with what the reader can now DO or which
 everyday problem stops hurting, in plain words, before any mechanism —
 and each writing layer stays on its own rung of the abstraction
-ladder (Hayakawa, *Language in Thought and Action*): headings sit at
-the impression level (what improved — a benefit phrase naming the
-improvement, no numbers, no mechanism/object nouns), the lead
-sentence at the fact level (what shipped, numbers live here), the
-body at the behavior level, `<details>` at the mechanism level.
-Level mismatch is the tell: a heading that enumerates mechanisms
-("任务清单带行号") or a body that talks impressions without facts
-is on the wrong rung. **Impression-level test + examples (2026-10-02,
-two blind rounds)**: ask "does this heading answer *what got better*
-or *which thing changed*?" — the latter is wrong-rung even when it
-names a real product noun. Accepted (Owner-approved v13~v14 post):
-「提醒按需展开」「证据定位更精确」「扩展 Agent 工具支持」— verb-led
-benefit phrases. Rejected (blind drafts, all ruled too mechanical):
-「Apply 任务证据」「更完整的 CLI 证据通道」「任务勾选与计数对齐 CLI」
-— object/mechanism nouns pass the old "noun phrase" wording yet sit
-on the fact/mechanism rung; "noun phrase" was the drafting bug, the
-correct form is the benefit phrase (verb or result noun both fine). Plain language lowers
+ladder (Hayakawa, *Language in Thought and Action*). The ladder top
+splits into TWO different rungs that drafts keep collapsing (Owner
+re-grading 2026-10-02, blind round 3):
+
+- **Main title + subtitle — the reader-category rung**: which aspect
+  of the reader's world improved. An intuitive, broad category the
+  reader already has (体验/呈现/支持/可靠性…) plus a direction verb
+  (改进/扩展/补充…). Canonical: 「改进视觉体验，补充更多 Agent 支持」
+  「改进信息呈现，扩展 Agent 支持」. Judgement question: **does this
+  name the reader's aspect, or a product object?** — answer "object"
+  (even a well-benefited one) and it is wrong-rung. Rejected at this
+  rung (blind round 3): 「apply 证据补全与 Agent 工具扩容」「执行前
+  证据更完整，工具支持更广」 — compressed object properties; they
+  describe the release's objects, not the reader's world.
+- **Section headings — the benefit-action rung** (half a rung lower,
+  on purpose): a behavior/effect phrase; may name ONE object, focus
+  on what it now does. Accepted: 「提醒按需展开」「勾选与计数不再
+  分叉」. Rejected: 「apply 证据」「版本检查与归档标记」 — bare object
+  inventories with no action.
+- Lead sentence — the fact rung (what shipped, numbers live here).
+- Body — the behavior rung; `<details>` — the mechanism rung.
+
+Level mismatch is the tell: a main title that names product objects,
+a section heading that is a bare object list, or a body that talks
+categories without facts — each is on the wrong rung. The 2026-10-02
+drafting bug was grading everything as "benefit phrase": benefit
+phrases bound to objects (「证据更完整」) still sit below the reader
+category, which is why they read as compressed facts, not impressions. Plain language lowers
 the reader's processing cost, never the information density — deleting
 facts to sound simple is dumbing down, not plain language (2026-10-02
 openspecui v13~v14: dense v1 and diluted v2 both rejected by the
