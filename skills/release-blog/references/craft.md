@@ -134,10 +134,11 @@ declarative ("It's done."-grade), never as exclamation stacking.
 
 ### 2.2 Revision passes (run in this order; a failed gate stops the pass chain)
 
-R1. **对账 (ledger).** Word-count class (里程碑 1500-3000 / 例行 ≤1000),
-must-keep facts (L1 body, changelog, openspec archive), frontmatter repo/
-version. Nothing added beyond the sources. [gaubee-writer 约束关, qu-ai-wei
-step 1, release-blog workflow]
+R1. **对账 (ledger).** Weight class as magnitude guidance only — never a
+gate (Owner 2026-10-02; counting tool if needed: Intl.Segmenter, punctuation
+stripped, visible body only), must-keep facts (L1 body, changelog, openspec
+archive), frontmatter repo/version. Nothing added beyond the sources.
+[gaubee-writer 约束关, qu-ai-wei step 1, release-blog workflow]
 
 R2. **追责 (fact audit).** Every strong assertion: who observed, on what,
 applying to what range? Hunt strength upgrades (D7 list). Unsourced → cut,
